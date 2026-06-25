@@ -1,0 +1,518 @@
+=== PROJECT MIGRATION AUDIT REPORT ===
+
+---------------------------------------------------------------------------------------------------
+Project Name                             | Location Name             | Complaints | Current    | New Status     
+---------------------------------------------------------------------------------------------------
+1500 MW Bhavali PSP                      | Accommodation Block 1     | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Accommodation Block 2     | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Camp A                    | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Camp B                    | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Camp C                    | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Dining Area               | 1          | Active     | Active         
+1500 MW Bhavali PSP                      | Kitchen Area              | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Toilet Block A            | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Toilet Block B            | 0          | Active     | Active         
+1500 MW Bhavali PSP                      | Water Tank Area           | 0          | Active     | Active         
+Agra Metro                               | Accommodation Block 1     | 0          | Active     | Active         
+Agra Metro                               | Accommodation Block 2     | 0          | Active     | Active         
+Agra Metro                               | Camp A                    | 0          | Active     | Active         
+Agra Metro                               | Camp B                    | 0          | Active     | Active         
+Agra Metro                               | Camp C                    | 0          | Active     | Active         
+Agra Metro                               | Dining Area               | 0          | Active     | Active         
+Agra Metro                               | Kitchen Area              | 0          | Active     | Active         
+Agra Metro                               | Toilet Block A            | 0          | Active     | Active         
+Agra Metro                               | Toilet Block B            | 0          | Active     | Active         
+Agra Metro                               | Water Tank Area           | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Accommodation Block 1     | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Accommodation Block 2     | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Camp A                    | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Camp B                    | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Camp C                    | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Dining Area               | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Kitchen Area              | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Toilet Block A            | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Toilet Block B            | 0          | Active     | Active         
+BARAPULLAH BRIDGE PROJECT                | Water Tank Area           | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Accommodation Block 1     | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Accommodation Block 2     | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Camp A                    | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Camp B                    | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Camp C                    | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Dining Area               | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Kitchen Area              | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Toilet Block A            | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Toilet Block B            | 0          | Active     | Active         
+CMRL P2 C4 ECV 01                        | Water Tank Area           | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Accommodation Block 1     | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Accommodation Block 2     | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Camp A                    | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Camp B                    | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Camp C                    | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Dining Area               | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Kitchen Area              | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Toilet Block A            | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Toilet Block B            | 0          | Active     | Active         
+CMRL PH II CP 08 EV01                    | Water Tank Area           | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Accommodation Block 1     | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Accommodation Block 2     | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Camp A                    | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Camp B                    | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Camp C                    | 1          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Dining Area               | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Kitchen Area              | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Toilet Block A            | 0          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Toilet Block B            | 1          | Active     | Active         
+CMRL PH II CP 10 EV03                    | Water Tank Area           | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Accommodation Block 1     | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Accommodation Block 2     | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Camp A                    | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Camp B                    | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Camp C                    | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Dining Area               | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Kitchen Area              | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Toilet Block A            | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Toilet Block B            | 0          | Active     | Active         
+CMRL PH II- C5 - ECV02                   | Water Tank Area           | 0          | Active     | Active         
+CMRL TU02                                | Accommodation Block 1     | 0          | Active     | Active         
+CMRL TU02                                | Accommodation Block 2     | 0          | Active     | Active         
+CMRL TU02                                | Camp A                    | 0          | Active     | Active         
+CMRL TU02                                | Camp B                    | 0          | Active     | Active         
+CMRL TU02                                | Camp C                    | 0          | Active     | Active         
+CMRL TU02                                | Dining Area               | 0          | Active     | Active         
+CMRL TU02                                | Kitchen Area              | 1          | Active     | Active         
+CMRL TU02                                | Toilet Block A            | 0          | Active     | Active         
+CMRL TU02                                | Toilet Block B            | 0          | Active     | Active         
+CMRL TU02                                | Water Tank Area           | 0          | Active     | Active         
+Cochin Dry Dock                          | Accommodation Block 1     | 0          | Active     | Active         
+Cochin Dry Dock                          | Accommodation Block 2     | 0          | Active     | Active         
+Cochin Dry Dock                          | Camp A                    | 0          | Active     | Active         
+Cochin Dry Dock                          | Camp B                    | 0          | Active     | Active         
+Cochin Dry Dock                          | Camp C                    | 1          | Active     | Active         
+Cochin Dry Dock                          | Dining Area               | 0          | Active     | Active         
+Cochin Dry Dock                          | Kitchen Area              | 0          | Active     | Active         
+Cochin Dry Dock                          | Toilet Block A            | 0          | Active     | Active         
+Cochin Dry Dock                          | Toilet Block B            | 0          | Active     | Active         
+Cochin Dry Dock                          | Water Tank Area           | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Accommodation Block 1     | 1          | Active     | Active         
+Control Building at BARC Tarapur         | Accommodation Block 2     | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Camp A                    | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Camp B                    | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Camp C                    | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Dining Area               | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Kitchen Area              | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Toilet Block A            | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Toilet Block B            | 0          | Active     | Active         
+Control Building at BARC Tarapur         | Water Tank Area           | 0          | Active     | Active         
+DMRC DC09                                | Accommodation Block 1     | 0          | Active     | Active         
+DMRC DC09                                | Accommodation Block 2     | 0          | Active     | Active         
+DMRC DC09                                | Camp A                    | 0          | Active     | Active         
+DMRC DC09                                | Camp B                    | 0          | Active     | Active         
+DMRC DC09                                | Camp C                    | 1          | Active     | Active         
+DMRC DC09                                | Dining Area               | 0          | Active     | Active         
+DMRC DC09                                | Kitchen Area              | 0          | Active     | Active         
+DMRC DC09                                | Toilet Block A            | 0          | Active     | Active         
+DMRC DC09                                | Toilet Block B            | 0          | Active     | Active         
+DMRC DC09                                | Water Tank Area           | 0          | Active     | Active         
+Dibang                                   | Accommodation Block 1     | 0          | Active     | Active         
+Dibang                                   | Accommodation Block 2     | 0          | Active     | Active         
+Dibang                                   | Camp A                    | 1          | Active     | Active         
+Dibang                                   | Camp B                    | 0          | Active     | Active         
+Dibang                                   | Camp C                    | 0          | Active     | Active         
+Dibang                                   | Dining Area               | 0          | Active     | Active         
+Dibang                                   | Kitchen Area              | 0          | Active     | Active         
+Dibang                                   | Toilet Block A            | 0          | Active     | Active         
+Dibang                                   | Toilet Block B            | 0          | Active     | Active         
+Dibang                                   | Water Tank Area           | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Accommodation Block 1     | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Accommodation Block 2     | 1          | Active     | Active         
+Ethihad Rail - Sharjah University        | Camp A                    | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Camp B                    | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Camp C                    | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Dining Area               | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Kitchen Area              | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Toilet Block A            | 0          | Active     | Active         
+Ethihad Rail - Sharjah University        | Toilet Block B            | 1          | Active     | Active         
+Ethihad Rail - Sharjah University        | Water Tank Area           | 0          | Active     | Active         
+GHAVP                                    | Accommodation Block 1     | 0          | Active     | Active         
+GHAVP                                    | Accommodation Block 2     | 0          | Active     | Active         
+GHAVP                                    | Camp A                    | 0          | Active     | Active         
+GHAVP                                    | Camp B                    | 0          | Active     | Active         
+GHAVP                                    | Camp C                    | 0          | Active     | Active         
+GHAVP                                    | Dining Area               | 0          | Active     | Active         
+GHAVP                                    | Kitchen Area              | 1          | Active     | Active         
+GHAVP                                    | Toilet Block A            | 0          | Active     | Active         
+GHAVP                                    | Toilet Block B            | 0          | Active     | Active         
+GHAVP                                    | Water Tank Area           | 0          | Active     | Active         
+Gandhi Sagar                             | Accommodation Block 1     | 0          | Active     | Active         
+Gandhi Sagar                             | Accommodation Block 2     | 0          | Active     | Active         
+Gandhi Sagar                             | Camp A                    | 0          | Active     | Active         
+Gandhi Sagar                             | Camp B                    | 0          | Active     | Active         
+Gandhi Sagar                             | Camp C                    | 0          | Active     | Active         
+Gandhi Sagar                             | Dining Area               | 0          | Active     | Active         
+Gandhi Sagar                             | Kitchen Area              | 0          | Active     | Active         
+Gandhi Sagar                             | Toilet Block A            | 1          | Active     | Active         
+Gandhi Sagar                             | Toilet Block B            | 0          | Active     | Active         
+Gandhi Sagar                             | Water Tank Area           | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Accommodation Block 1     | 1          | Active     | Active         
+High Speed Rail C4-Section 1             | Accommodation Block 2     | 1          | Active     | Active         
+High Speed Rail C4-Section 1             | Camp A                    | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Camp B                    | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Camp C                    | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Dining Area               | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Kitchen Area              | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Toilet Block A            | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Toilet Block B            | 0          | Active     | Active         
+High Speed Rail C4-Section 1             | Water Tank Area           | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Accommodation Block 1     | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Accommodation Block 2     | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Camp A                    | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Camp B                    | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Camp C                    | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Dining Area               | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Kitchen Area              | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Toilet Block A            | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Toilet Block B            | 0          | Active     | Active         
+High Speed Rail C4-Section 2             | Water Tank Area           | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Accommodation Block 1     | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Accommodation Block 2     | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Camp A                    | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Camp B                    | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Camp C                    | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Dining Area               | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Kitchen Area              | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Toilet Block A            | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Toilet Block B            | 0          | Active     | Active         
+High Speed Rail C4-Section 3             | Water Tank Area           | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Accommodation Block 1     | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Accommodation Block 2     | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Camp A                    | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Camp B                    | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Camp C                    | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Dining Area               | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Kitchen Area              | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Toilet Block A            | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Toilet Block B            | 0          | Active     | Active         
+High Speed Rail C4-Section 4             | Water Tank Area           | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Accommodation Block 1     | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Accommodation Block 2     | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Camp A                    | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Camp B                    | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Camp C                    | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Dining Area               | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Kitchen Area              | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Toilet Block A            | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Toilet Block B            | 0          | Active     | Active         
+High Speed Rail C4-Section 5             | Water Tank Area           | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Accommodation Block 1     | 1          | Active     | Active         
+KKNPP 5&6 erection package               | Accommodation Block 2     | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Camp A                    | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Camp B                    | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Camp C                    | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Dining Area               | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Kitchen Area              | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Toilet Block A            | 1          | Active     | Active         
+KKNPP 5&6 erection package               | Toilet Block B            | 0          | Active     | Active         
+KKNPP 5&6 erection package               | Water Tank Area           | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Accommodation Block 1     | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Accommodation Block 2     | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Camp A                    | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Camp B                    | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Camp C                    | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Dining Area               | 1          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Kitchen Area              | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Toilet Block A            | 1          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Toilet Block B            | 0          | Active     | Active         
+KUDANKULAM PROJECT 5&6 MEP               | Water Tank Area           | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Accommodation Block 1     | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Accommodation Block 2     | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Camp A                    | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Camp B                    | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Camp C                    | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Dining Area               | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Kitchen Area              | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Toilet Block A            | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Toilet Block B            | 0          | Active     | Active         
+KUDANKULAM PROJECT HTS & SFSF            | Water Tank Area           | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Accommodation Block 1     | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Accommodation Block 2     | 1          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Camp A                    | 1          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Camp B                    | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Camp C                    | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Dining Area               | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Kitchen Area              | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Toilet Block A            | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Toilet Block B            | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 3&4                | Water Tank Area           | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Accommodation Block 1     | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Accommodation Block 2     | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Camp A                    | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Camp B                    | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Camp C                    | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Dining Area               | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Kitchen Area              | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Toilet Block A            | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Toilet Block B            | 0          | Active     | Active         
+KUDANKULAM PROJECT RB 5&6                | Water Tank Area           | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Accommodation Block 1     | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Accommodation Block 2     | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Camp A                    | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Camp B                    | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Camp C                    | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Dining Area               | 1          | Active     | Active         
+Kolkatta Metro UG1                       | Kitchen Area              | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Toilet Block A            | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Toilet Block B            | 0          | Active     | Active         
+Kolkatta Metro UG1                       | Water Tank Area           | 0          | Active     | Active         
+Kopili HEP                               | Accommodation Block 1     | 0          | Active     | Active         
+Kopili HEP                               | Accommodation Block 2     | 0          | Active     | Active         
+Kopili HEP                               | Camp A                    | 0          | Active     | Active         
+Kopili HEP                               | Camp B                    | 1          | Active     | Active         
+Kopili HEP                               | Camp C                    | 0          | Active     | Active         
+Kopili HEP                               | Dining Area               | 0          | Active     | Active         
+Kopili HEP                               | Kitchen Area              | 0          | Active     | Active         
+Kopili HEP                               | Toilet Block A            | 0          | Active     | Active         
+Kopili HEP                               | Toilet Block B            | 0          | Active     | Active         
+Kopili HEP                               | Water Tank Area           | 0          | Active     | Active         
+LIGO                                     | Accommodation Block 1     | 0          | Active     | Active         
+LIGO                                     | Accommodation Block 2     | 0          | Active     | Active         
+LIGO                                     | Camp A                    | 0          | Active     | Active         
+LIGO                                     | Camp B                    | 0          | Active     | Active         
+LIGO                                     | Camp C                    | 0          | Active     | Active         
+LIGO                                     | Dining Area               | 0          | Active     | Active         
+LIGO                                     | Kitchen Area              | 0          | Active     | Active         
+LIGO                                     | Toilet Block A            | 0          | Active     | Active         
+LIGO                                     | Toilet Block B            | 0          | Active     | Active         
+LIGO                                     | Water Tank Area           | 0          | Active     | Active         
+Lakhwar                                  | Accommodation Block 1     | 0          | Active     | Active         
+Lakhwar                                  | Accommodation Block 2     | 0          | Active     | Active         
+Lakhwar                                  | Camp A                    | 0          | Active     | Active         
+Lakhwar                                  | Camp B                    | 0          | Active     | Active         
+Lakhwar                                  | Camp C                    | 0          | Active     | Active         
+Lakhwar                                  | Dining Area               | 0          | Active     | Active         
+Lakhwar                                  | Kitchen Area              | 0          | Active     | Active         
+Lakhwar                                  | Toilet Block A            | 0          | Active     | Active         
+Lakhwar                                  | Toilet Block B            | 0          | Active     | Active         
+Lakhwar                                  | Water Tank Area           | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Accommodation Block 1     | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Accommodation Block 2     | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Camp A                    | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Camp B                    | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Camp C                    | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Dining Area               | 1          | Active     | Active         
+MAHSR C3-Section 1                       | Kitchen Area              | 1          | Active     | Active         
+MAHSR C3-Section 1                       | Toilet Block A            | 1          | Active     | Active         
+MAHSR C3-Section 1                       | Toilet Block B            | 0          | Active     | Active         
+MAHSR C3-Section 1                       | Water Tank Area           | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Accommodation Block 1     | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Accommodation Block 2     | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Camp A                    | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Camp B                    | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Camp C                    | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Dining Area               | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Kitchen Area              | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Toilet Block A            | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Toilet Block B            | 0          | Active     | Active         
+MAHSR C3-Section 2                       | Water Tank Area           | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Accommodation Block 1     | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Accommodation Block 2     | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Camp A                    | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Camp B                    | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Camp C                    | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Dining Area               | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Kitchen Area              | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Toilet Block A            | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Toilet Block B            | 0          | Active     | Active         
+MAHSR C3-Section 3                       | Water Tank Area           | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Accommodation Block 1     | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Accommodation Block 2     | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Camp A                    | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Camp B                    | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Camp C                    | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Dining Area               | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Kitchen Area              | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Toilet Block A            | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Toilet Block B            | 0          | Active     | Active         
+MAHSR C3-Section 4                       | Water Tank Area           | 0          | Active     | Active         
+MAHSR C5                                 | Accommodation Block 1     | 0          | Active     | Active         
+MAHSR C5                                 | Accommodation Block 2     | 0          | Active     | Active         
+MAHSR C5                                 | Camp A                    | 0          | Active     | Active         
+MAHSR C5                                 | Camp B                    | 0          | Active     | Active         
+MAHSR C5                                 | Camp C                    | 0          | Active     | Active         
+MAHSR C5                                 | Dining Area               | 0          | Active     | Active         
+MAHSR C5                                 | Kitchen Area              | 0          | Active     | Active         
+MAHSR C5                                 | Toilet Block A            | 0          | Active     | Active         
+MAHSR C5                                 | Toilet Block B            | 1          | Active     | Active         
+MAHSR C5                                 | Water Tank Area           | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Accommodation Block 1     | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Accommodation Block 2     | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Camp A                    | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Camp B                    | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Camp C                    | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Dining Area               | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Kitchen Area              | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Toilet Block A            | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Toilet Block B            | 0          | Active     | Active         
+MCRP-01 Haji Ali Car Park                | Water Tank Area           | 0          | Active     | Active         
+MTHL extension                           | Accommodation Block 1     | 0          | Active     | Active         
+MTHL extension                           | Accommodation Block 2     | 0          | Active     | Active         
+MTHL extension                           | Camp A                    | 0          | Active     | Active         
+MTHL extension                           | Camp B                    | 0          | Active     | Active         
+MTHL extension                           | Camp C                    | 0          | Active     | Active         
+MTHL extension                           | Dining Area               | 0          | Active     | Active         
+MTHL extension                           | Kitchen Area              | 0          | Active     | Active         
+MTHL extension                           | Toilet Block A            | 0          | Active     | Active         
+MTHL extension                           | Toilet Block B            | 0          | Active     | Active         
+MTHL extension                           | Water Tank Area           | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Accommodation Block 1     | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Accommodation Block 2     | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Camp A                    | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Camp B                    | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Camp C                    | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Dining Area               | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Kitchen Area              | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Toilet Block A            | 0          | Active     | Active         
+MUMBAI METRO UGC01                       | Toilet Block B            | 1          | Active     | Active         
+MUMBAI METRO UGC01                       | Water Tank Area           | 0          | Active     | Active         
+Orange Gate                              | Accommodation Block 1     | 0          | Active     | Active         
+Orange Gate                              | Accommodation Block 2     | 0          | Active     | Active         
+Orange Gate                              | Camp A                    | 0          | Active     | Active         
+Orange Gate                              | Camp B                    | 0          | Active     | Active         
+Orange Gate                              | Camp C                    | 0          | Active     | Active         
+Orange Gate                              | Dining Area               | 1          | Active     | Active         
+Orange Gate                              | Kitchen Area              | 0          | Active     | Active         
+Orange Gate                              | Toilet Block A            | 0          | Active     | Active         
+Orange Gate                              | Toilet Block B            | 0          | Active     | Active         
+Orange Gate                              | Water Tank Area           | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Accommodation Block 1     | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Accommodation Block 2     | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Camp A                    | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Camp B                    | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Camp C                    | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Dining Area               | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Kitchen Area              | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Toilet Block A            | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Toilet Block B            | 0          | Active     | Active         
+Orange Gate Urban Road Tunnel Project    | Water Tank Area           | 0          | Active     | Active         
+PHEP Bhutan                              | Accommodation Block 1     | 0          | Active     | Active         
+PHEP Bhutan                              | Accommodation Block 2     | 0          | Active     | Active         
+PHEP Bhutan                              | Camp A                    | 0          | Active     | Active         
+PHEP Bhutan                              | Camp B                    | 0          | Active     | Active         
+PHEP Bhutan                              | Camp C                    | 0          | Active     | Active         
+PHEP Bhutan                              | Dining Area               | 0          | Active     | Active         
+PHEP Bhutan                              | Kitchen Area              | 0          | Active     | Active         
+PHEP Bhutan                              | Toilet Block A            | 1          | Active     | Active         
+PHEP Bhutan                              | Toilet Block B            | 0          | Active     | Active         
+PHEP Bhutan                              | Water Tank Area           | 0          | Active     | Active         
+Pakaldul HEP                             | Accommodation Block 1     | 1          | Active     | Active         
+Pakaldul HEP                             | Accommodation Block 2     | 1          | Active     | Active         
+Pakaldul HEP                             | Camp A                    | 0          | Active     | Active         
+Pakaldul HEP                             | Camp B                    | 0          | Active     | Active         
+Pakaldul HEP                             | Camp C                    | 0          | Active     | Active         
+Pakaldul HEP                             | Dining Area               | 0          | Active     | Active         
+Pakaldul HEP                             | Kitchen Area              | 0          | Active     | Active         
+Pakaldul HEP                             | Toilet Block A            | 0          | Active     | Active         
+Pakaldul HEP                             | Toilet Block B            | 1          | Active     | Active         
+Pakaldul HEP                             | Water Tank Area           | 1          | Active     | Active         
+Patna metro PC03                         | Accommodation Block 1     | 1          | Active     | Active         
+Patna metro PC03                         | Accommodation Block 2     | 0          | Active     | Active         
+Patna metro PC03                         | Camp A                    | 0          | Active     | Active         
+Patna metro PC03                         | Camp B                    | 0          | Active     | Active         
+Patna metro PC03                         | Camp C                    | 0          | Active     | Active         
+Patna metro PC03                         | Dining Area               | 0          | Active     | Active         
+Patna metro PC03                         | Kitchen Area              | 0          | Active     | Active         
+Patna metro PC03                         | Toilet Block A            | 0          | Active     | Active         
+Patna metro PC03                         | Toilet Block B            | 0          | Active     | Active         
+Patna metro PC03                         | Water Tank Area           | 0          | Active     | Active         
+Patna metro PC08R                        | Accommodation Block 1     | 0          | Active     | Active         
+Patna metro PC08R                        | Accommodation Block 2     | 0          | Active     | Active         
+Patna metro PC08R                        | Camp A                    | 0          | Active     | Active         
+Patna metro PC08R                        | Camp B                    | 0          | Active     | Active         
+Patna metro PC08R                        | Camp C                    | 0          | Active     | Active         
+Patna metro PC08R                        | Dining Area               | 0          | Active     | Active         
+Patna metro PC08R                        | Kitchen Area              | 0          | Active     | Active         
+Patna metro PC08R                        | Toilet Block A            | 0          | Active     | Active         
+Patna metro PC08R                        | Toilet Block B            | 0          | Active     | Active         
+Patna metro PC08R                        | Water Tank Area           | 0          | Active     | Active         
+RVNL 2                                   | Accommodation Block 1     | 0          | Active     | Active         
+RVNL 2                                   | Accommodation Block 2     | 0          | Active     | Active         
+RVNL 2                                   | Camp A                    | 0          | Active     | Active         
+RVNL 2                                   | Camp B                    | 0          | Active     | Active         
+RVNL 2                                   | Camp C                    | 0          | Active     | Active         
+RVNL 2                                   | Dining Area               | 1          | Active     | Active         
+RVNL 2                                   | Kitchen Area              | 0          | Active     | Active         
+RVNL 2                                   | Toilet Block A            | 0          | Active     | Active         
+RVNL 2                                   | Toilet Block B            | 0          | Active     | Active         
+RVNL 2                                   | Water Tank Area           | 0          | Active     | Active         
+RVNL-pkg 4                               | Accommodation Block 1     | 0          | Active     | Active         
+RVNL-pkg 4                               | Accommodation Block 2     | 0          | Active     | Active         
+RVNL-pkg 4                               | Camp A                    | 0          | Active     | Active         
+RVNL-pkg 4                               | Camp B                    | 0          | Active     | Active         
+RVNL-pkg 4                               | Camp C                    | 0          | Active     | Active         
+RVNL-pkg 4                               | Dining Area               | 0          | Active     | Active         
+RVNL-pkg 4                               | Kitchen Area              | 0          | Active     | Active         
+RVNL-pkg 4                               | Toilet Block A            | 0          | Active     | Active         
+RVNL-pkg 4                               | Toilet Block B            | 0          | Active     | Active         
+RVNL-pkg 4                               | Water Tank Area           | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Accommodation Block 1     | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Accommodation Block 2     | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Camp A                    | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Camp B                    | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Camp C                    | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Dining Area               | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Kitchen Area              | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Toilet Block A            | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Toilet Block B            | 0          | Active     | Active         
+SEA BIRD PROJECT-MWc04                   | Water Tank Area           | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Accommodation Block 1     | 1          | Active     | Active         
+Saidongar Pumped Storage Project         | Accommodation Block 2     | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Camp A                    | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Camp B                    | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Camp C                    | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Dining Area               | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Kitchen Area              | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Toilet Block A            | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Toilet Block B            | 0          | Active     | Active         
+Saidongar Pumped Storage Project         | Water Tank Area           | 0          | Active     | Active         
+Sitamma sagar                            | Accommodation Block 1     | 0          | Active     | Active         
+Sitamma sagar                            | Accommodation Block 2     | 0          | Active     | Active         
+Sitamma sagar                            | Camp A                    | 0          | Active     | Active         
+Sitamma sagar                            | Camp B                    | 1          | Active     | Active         
+Sitamma sagar                            | Camp C                    | 0          | Active     | Active         
+Sitamma sagar                            | Dining Area               | 0          | Active     | Active         
+Sitamma sagar                            | Kitchen Area              | 0          | Active     | Active         
+Sitamma sagar                            | Toilet Block A            | 0          | Active     | Active         
+Sitamma sagar                            | Toilet Block B            | 0          | Active     | Active         
+Sitamma sagar                            | Water Tank Area           | 0          | Active     | Active         
+TWCC Factory                             | Accommodation Block 1     | 0          | Active     | Active         
+TWCC Factory                             | Accommodation Block 2     | 0          | Active     | Active         
+TWCC Factory                             | Camp A                    | 0          | Active     | Active         
+TWCC Factory                             | Camp B                    | 1          | Active     | Active         
+TWCC Factory                             | Camp C                    | 0          | Active     | Active         
+TWCC Factory                             | Dining Area               | 0          | Active     | Active         
+TWCC Factory                             | Kitchen Area              | 0          | Active     | Active         
+TWCC Factory                             | Toilet Block A            | 0          | Active     | Active         
+TWCC Factory                             | Toilet Block B            | 0          | Active     | Active         
+TWCC Factory                             | Water Tank Area           | 0          | Active     | Active         
+Teesta Sikkim                            | Accommodation Block 1     | 0          | Active     | Active         
+Teesta Sikkim                            | Accommodation Block 2     | 0          | Active     | Active         
+Teesta Sikkim                            | Camp A                    | 0          | Active     | Active         
+Teesta Sikkim                            | Camp B                    | 0          | Active     | Active         
+Teesta Sikkim                            | Camp C                    | 0          | Active     | Active         
+Teesta Sikkim                            | Dining Area               | 0          | Active     | Active         
+Teesta Sikkim                            | Kitchen Area              | 0          | Active     | Active         
+Teesta Sikkim                            | Toilet Block A            | 0          | Active     | Active         
+Teesta Sikkim                            | Toilet Block B            | 0          | Active     | Active         
+Teesta Sikkim                            | Water Tank Area           | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Accommodation Block 1     | 1          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Accommodation Block 2     | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Camp A                    | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Camp B                    | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Camp C                    | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Dining Area               | 1          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Kitchen Area              | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Toilet Block A            | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Toilet Block B            | 0          | Active     | Active         
+VIZAG VESSEL PROJECT                     | Water Tank Area           | 0          | Active     | Active         
+---------------------------------------------------------------------------------------------------
+Applying project master data updates...
+Django Cache cleared successfully.

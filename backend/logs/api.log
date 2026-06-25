@@ -1,0 +1,551 @@
+2026-06-22 15:53:28,329 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:53:28,421 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:53:34,451 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:53:34,469 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:54:32,599 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:54:32,599 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 15:54:33,029 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 15:54:33,029 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:01:21,632 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:01:21,633 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:01:39,890 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:01:39,891 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:03:34,830 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:03:34,831 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:03:41,849 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-22 16:04:38,410 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:04:38,411 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:04:55,425 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:04:55,426 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:05:19,434 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:05:19,434 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:12,761 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:12,761 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:13,506 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:13,507 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:24,185 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:24,186 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:30,850 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-22 16:06:37,060 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:37,060 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:37,546 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:37,546 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:42,041 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:42,042 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:51,888 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:51,889 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:06:52,217 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:06:52,219 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:07:25,605 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:07:25,606 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:07:32,675 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-22 16:08:26,621 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:08:26,622 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:08:54,537 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:08:54,537 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:09:09,250 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:09:09,251 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:09:27,542 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:09:27,542 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:09:39,562 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:09:39,562 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:16:01,327 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:16:01,328 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 16:16:07,788 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-22 16:16:12,796 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 16:16:12,797 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 17:15:50,751 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 17:15:50,752 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-22 17:16:15,970 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-22 17:16:15,971 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:15:53,882 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:15:53,883 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:16:13,378 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:16:13,379 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:16:54,786 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:16:54,787 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:17:07,287 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 06:17:35,438 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:17:35,439 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:38:24,558 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:38:24,559 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:38:38,901 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 06:40:39,538 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:40:39,539 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:43:24,370 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:43:24,371 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:43:27,696 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 06:49:32,017 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 06:49:32,018 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 06:49:35,307 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 07:04:35,682 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:04:35,682 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:04:41,138 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 07:04:54,481 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:04:54,482 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:05:15,711 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:05:15,711 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:09:36,472 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:09:36,473 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:09:37,600 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:09:37,601 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:14:23,696 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:14:23,697 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:14:44,873 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:14:44,874 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:15:13,102 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:15:13,103 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 07:19:15,410 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 07:19:15,410 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 09:54:35,919 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 09:54:35,920 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 09:54:48,900 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 09:54:48,901 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 09:55:03,345 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 09:55:03,346 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 09:56:07,918 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 09:56:07,919 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 09:56:09,164 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 09:56:09,165 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 10:01:31,260 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 10:01:31,261 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 10:18:33,692 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 10:18:33,692 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 10:18:34,756 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 10:18:34,757 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 10:57:03,386 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 10:57:03,386 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:07:23,426 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:07:23,427 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:07:24,116 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:07:24,116 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:07:28,269 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:07:28,270 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:07:28,270 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:07:28,719 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:07:28,719 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:07:28,719 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:32:10,731 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:32:10,731 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:32:10,731 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:45:13,968 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:45:13,969 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:45:13,969 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:45:13,970 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:45:47,177 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:45:47,177 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:45:47,178 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:45:47,178 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:45:50,946 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 11:52:32,520 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:52:32,520 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:52:32,520 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:52:33,110 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:52:33,110 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:52:33,110 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:52:43,471 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:52:43,472 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:52:43,472 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:52:44,126 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:52:44,126 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:52:44,126 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:53:35,777 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:53:35,777 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:53:35,777 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 11:54:25,990 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:54:25,990 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:54:25,991 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:54:25,991 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:54:38,762 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 11:54:38,763 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 11:54:38,764 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 11:54:38,764 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 11:54:42,453 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 13:47:52,023 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 13:47:52,024 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 13:47:52,024 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 13:47:52,724 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 13:47:52,724 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 13:47:52,725 [ERROR] api.apps: Error during startup validation: Startup Validation Error: Invalid key configured for OpenAI Speech Provider. Received key format or prefix mismatch.
+2026-06-23 14:03:34,593 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:34,593 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:34,594 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:34,594 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:03:34,920 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:34,920 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:34,921 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:34,921 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:03:41,673 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:41,673 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:41,673 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:03:41,674 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:41,674 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:03:42,094 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:42,095 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:42,095 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:03:42,095 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:42,096 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:03:48,388 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:48,388 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:48,388 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:03:48,389 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:48,389 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:03:59,396 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:03:59,396 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:03:59,396 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:03:59,396 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:03:59,397 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:04:02,498 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 14:30:14,625 [INFO] api.apps: Speech Provider: OpenAI
+2026-06-23 14:30:14,627 [INFO] api.apps: Translation Provider: OpenAI
+2026-06-23 14:30:14,627 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:30:14,627 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:30:14,628 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:38:14,272 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:38:14,272 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:38:14,272 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:38:14,273 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:38:14,273 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:38:14,758 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:38:14,758 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:38:14,758 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:38:14,759 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:38:14,759 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:38:25,960 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:38:25,960 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:38:25,960 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:38:25,961 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:38:25,961 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:39:16,029 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:39:16,029 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:39:16,029 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:39:16,030 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:39:16,030 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:39:16,124 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:39:16,124 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:39:16,124 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:39:16,125 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:39:16,126 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:39:35,701 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:39:35,701 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:39:35,701 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:39:35,702 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:39:35,702 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:39:36,062 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:39:36,062 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:39:36,062 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:39:36,062 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:39:36,062 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:39:58,902 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:39:58,902 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:39:58,903 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:39:58,903 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:39:58,903 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:40:23,460 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:40:23,460 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:40:23,460 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:40:23,461 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:40:23,462 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:40:26,608 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 14:41:05,977 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:41:05,978 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:41:05,978 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:41:05,978 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:41:05,978 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 14:41:06,705 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 14:41:06,706 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 14:41:06,706 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 14:41:06,706 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 14:41:06,707 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:15:44,394 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:15:44,394 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:15:44,394 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:15:44,394 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:15:44,394 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:18:39,894 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:18:39,894 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:18:39,894 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:18:39,895 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:18:39,896 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:21:05,863 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:21:05,863 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:21:05,863 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:21:05,864 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:21:05,864 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:24:00,586 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:24:00,587 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:24:00,587 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:24:00,589 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:24:00,590 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:24:02,673 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:24:02,674 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:24:02,674 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:24:02,675 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:24:02,675 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:47:08,949 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:47:08,949 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:47:08,949 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:47:08,950 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:47:08,951 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:47:09,866 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:47:09,866 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:47:09,866 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:47:09,868 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:47:09,868 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:53:47,261 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:53:47,261 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:53:47,262 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:53:47,262 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:53:47,263 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:53:49,264 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:53:49,264 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:53:49,264 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:53:49,264 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:53:49,264 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 15:58:30,185 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 15:58:30,185 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 15:58:30,185 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 15:58:30,186 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 15:58:30,186 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 16:04:55,986 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 16:04:55,987 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 16:04:55,987 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 16:04:55,987 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 16:04:55,988 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 16:04:59,785 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-23 16:57:04,818 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 16:57:04,818 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 16:57:04,818 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 16:57:04,819 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 16:57:04,819 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:07:08,784 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:07:08,784 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:07:08,784 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:07:08,785 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:07:08,785 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:07:46,232 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:07:46,232 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:07:46,232 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:07:46,233 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:07:46,233 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:07:56,571 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:07:56,571 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:07:56,571 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:07:56,573 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:07:56,573 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:07:56,707 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:07:56,707 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:07:56,707 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:07:56,708 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:07:56,708 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:08:10,349 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:08:10,349 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:08:10,349 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:08:10,350 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:08:10,350 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:08:48,628 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:08:48,629 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:08:48,629 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:08:48,629 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:08:48,629 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:09:12,546 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:09:12,546 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:09:12,546 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:09:12,546 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:09:12,547 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:09:12,643 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:09:12,644 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:09:12,644 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:09:12,646 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:09:12,646 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:09:28,403 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:09:28,403 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:09:28,403 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:09:28,404 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:09:28,404 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:10:32,759 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:10:32,759 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:10:32,759 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:10:32,761 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:10:32,761 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:29:13,689 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:29:13,690 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:29:13,690 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:29:13,691 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:29:13,691 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:30:21,696 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:30:21,696 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:30:21,697 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:30:21,697 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:30:21,697 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:30:49,237 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:30:49,237 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:30:49,237 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:30:49,239 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:30:49,239 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-23 17:30:49,590 [INFO] api.apps: Speech Provider: Gemini
+2026-06-23 17:30:49,591 [INFO] api.apps: Translation Provider: Gemini
+2026-06-23 17:30:49,591 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-23 17:30:49,592 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-23 17:30:49,592 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:09:48,098 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:09:48,099 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:09:48,099 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:09:48,100 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:09:48,101 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:09:49,647 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:09:49,647 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:09:49,648 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:09:49,649 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:09:49,649 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:11:37,501 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:11:37,501 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:11:37,501 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:11:37,502 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:11:37,503 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:12:29,063 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:12:29,064 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:12:29,064 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:12:29,065 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:12:29,066 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:13:09,565 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:13:09,565 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:13:09,566 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:13:09,567 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:13:09,567 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:13:16,127 [WARNING] api.lockout: Account 'lockout_test_user' locked out for 15 minutes due to 5 consecutive failed login attempts.
+2026-06-24 10:40:22,347 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:40:22,347 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:40:22,347 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:40:22,349 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:40:22,350 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 10:40:23,473 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 10:40:23,473 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 10:40:23,473 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 10:40:23,475 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 10:40:23,475 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 13:29:37,746 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 13:29:37,747 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 13:29:37,747 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 13:29:37,748 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 13:29:37,748 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 13:31:12,566 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 13:31:12,567 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 13:31:12,567 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 13:31:12,568 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 13:31:12,568 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-24 13:31:23,365 [INFO] api.apps: Speech Provider: Gemini
+2026-06-24 13:31:23,365 [INFO] api.apps: Translation Provider: Gemini
+2026-06-24 13:31:23,366 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-24 13:31:23,367 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-24 13:31:23,367 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 10:02:35,242 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 10:02:35,242 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 10:02:35,244 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 10:02:35,244 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 10:02:35,245 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 10:02:42,341 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 10:02:42,342 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 10:02:42,342 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 10:02:42,343 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 10:02:42,344 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 10:02:43,958 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 10:02:43,958 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 10:02:43,959 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 10:02:43,960 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 10:02:43,960 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:14:37,032 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:14:37,033 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:14:37,034 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:14:37,035 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:14:37,037 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:14:39,104 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:14:39,104 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:14:39,104 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:14:39,106 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:14:39,107 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:19:37,283 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:19:37,283 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:19:37,283 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:19:37,284 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:19:37,285 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:24:27,836 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:24:27,837 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:24:27,837 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:24:27,837 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:24:27,838 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:24:29,443 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:24:29,444 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:24:29,444 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:24:29,446 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:24:29,446 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 12:26:15,867 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 12:26:15,867 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 12:26:15,868 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 12:26:15,869 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 12:26:15,870 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 14:10:38,974 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 14:10:38,975 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 14:10:38,975 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 14:10:38,977 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 14:10:38,977 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 14:10:40,627 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 14:10:40,627 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 14:10:40,628 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 14:10:40,629 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 14:10:40,629 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 14:30:34,219 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 14:30:34,219 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 14:30:34,220 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 14:30:34,220 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 14:30:34,221 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 14:36:18,602 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 14:36:18,605 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 14:36:18,610 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 14:36:18,617 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 14:36:18,621 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 14:44:30,327 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 14:44:30,328 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 14:44:30,328 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 14:44:30,329 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 14:44:30,330 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 15:54:14,917 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 15:54:14,918 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 15:54:14,918 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 15:54:14,919 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 15:54:14,920 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 15:54:16,697 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 15:54:16,697 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 15:54:16,698 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 15:54:16,699 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 15:54:16,699 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 16:23:34,580 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 16:23:34,581 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 16:23:34,581 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 16:23:34,582 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 16:23:34,582 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 16:23:35,994 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 16:23:35,994 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 16:23:35,994 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 16:23:35,995 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 16:23:35,996 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 16:53:01,085 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 16:53:01,086 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 16:53:01,086 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 16:53:01,087 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 16:53:01,088 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 16:53:02,455 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 16:53:02,455 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 16:53:02,456 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 16:53:02,456 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 16:53:02,457 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 18:37:49,390 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 18:37:49,390 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 18:37:49,390 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 18:37:49,391 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 18:37:49,392 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.
+2026-06-25 18:37:50,738 [INFO] api.apps: Speech Provider: Gemini
+2026-06-25 18:37:50,738 [INFO] api.apps: Translation Provider: Gemini
+2026-06-25 18:37:50,739 [INFO] api.apps: OPENAI_API_KEY Loaded: NO
+2026-06-25 18:37:50,740 [WARNING] api.apps: Startup Validation WARNING: Cloudinary is not configured. Media storage operations might fail.
+2026-06-25 18:37:50,740 [INFO] api.apps: Startup Validation INFO: Running on SQLite database engine. PostgreSQL is not active.

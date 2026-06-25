@@ -1,26 +1,2265 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --safety-yellow: #eab308;
+  --safety-orange: #ea580c;
+  --charcoal: #1e293b;
+  --slate-light: #f1f5f9;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-safety-yellow: #eab308;
+  --color-safety-orange: #ea580c;
+  --color-charcoal: #1e293b;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Safety Hazard Stripe Utility */
+.bg-hazard-stripes {
+  background-size: 20px 20px;
+  background-image: linear-gradient(
+    45deg,
+    #eab308 25%,
+    #0f172a 25%,
+    #0f172a 50%,
+    #eab308 50%,
+    #eab308 75%,
+    #0f172a 75%,
+    #0f172a 100%
+  );
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseBorder {
+  0%, 100% {
+    border-color: #0f172a;
+  }
+  50% {
+    border-color: #ea580c;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-border {
+  animation: pulseBorder 1.5s infinite ease-in-out;
+}
+
+/* Neo-brutalist / Heavy Industrial styling helpers */
+.border-industrial {
+  border: 3px solid #0f172a;
+}
+
+.border-industrial-sm {
+  border: 2px solid #0f172a;
+}
+
+.shadow-industrial-sm {
+  box-shadow: 2px 2px 0px 0px #0f172a;
+}
+
+.shadow-industrial {
+  box-shadow: 4px 4px 0px 0px #0f172a;
+}
+
+.shadow-industrial-lg {
+  box-shadow: 8px 8px 0px 0px #0f172a;
+}
+
+.shadow-industrial-orange {
+  box-shadow: 4px 4px 0px 0px #ea580c;
+}
+
+/* Active touch feedback */
+.active-press:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #0f172a;
+}
+
+.active-press-orange:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px #ea580c;
+}
+
+/* Custom Scrollbar for mobile overlay */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+
+/* ==========================================================================
+   ADMIN DASHBOARD ACCESSIBILITY, SCROLLBARS & READABILITY OVERRIDES
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scrolling Containers Smooth Behavior */
+.dashboard-main-scroll,
+.complaint-table-scroll,
+.notification-drawer-scroll,
+.user-management-scroll,
+.audit-log-scroll,
+.modal-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom Dark theme scrollbar override */
+.admin-dashboard-container ::-webkit-scrollbar,
+.notification-drawer-scroll ::-webkit-scrollbar,
+.complaint-table-scroll ::-webkit-scrollbar,
+.user-management-scroll ::-webkit-scrollbar,
+.audit-log-scroll ::-webkit-scrollbar,
+.modal-scroll ::-webkit-scrollbar,
+.dashboard-main-scroll ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.admin-dashboard-container ::-webkit-scrollbar-track,
+.notification-drawer-scroll ::-webkit-scrollbar-track,
+.complaint-table-scroll ::-webkit-scrollbar-track,
+.user-management-scroll ::-webkit-scrollbar-track,
+.audit-log-scroll ::-webkit-scrollbar-track,
+.modal-scroll ::-webkit-scrollbar-track,
+.dashboard-main-scroll ::-webkit-scrollbar-track {
+  background: #020617; /* Very dark slate-950 */
+}
+.admin-dashboard-container ::-webkit-scrollbar-thumb,
+.notification-drawer-scroll ::-webkit-scrollbar-thumb,
+.complaint-table-scroll ::-webkit-scrollbar-thumb,
+.user-management-scroll ::-webkit-scrollbar-thumb,
+.audit-log-scroll ::-webkit-scrollbar-thumb,
+.modal-scroll ::-webkit-scrollbar-thumb,
+.dashboard-main-scroll ::-webkit-scrollbar-thumb {
+  background: #1e293b; /* slate-800 */
+  border-radius: 4px;
+}
+.admin-dashboard-container ::-webkit-scrollbar-thumb:hover,
+.notification-drawer-scroll ::-webkit-scrollbar-thumb:hover,
+.complaint-table-scroll ::-webkit-scrollbar-thumb:hover,
+.user-management-scroll ::-webkit-scrollbar-thumb:hover,
+.audit-log-scroll ::-webkit-scrollbar-thumb:hover,
+.modal-scroll ::-webkit-scrollbar-thumb:hover,
+.dashboard-main-scroll ::-webkit-scrollbar-thumb:hover {
+  background: #ea580c; /* amber/safety-orange highlight */
+}
+
+/* Overall container context */
+.admin-dashboard-container {
+  font-size: 15px;
+}
+
+/* 1. KPI card labels: 15px minimum */
+.admin-dashboard-container .kpi-card-label,
+.admin-dashboard-container span.kpi-card-label {
+  font-size: 15px !important;
+}
+
+/* 2. KPI values: 36px minimum */
+.admin-dashboard-container .kpi-card-value {
+  font-size: 36px !important;
+  line-height: 1.1 !important;
+}
+
+/* 3. Table headers: 15px minimum */
+.admin-dashboard-container table.dashboard-table th,
+.admin-dashboard-container .user-management-table th,
+.admin-dashboard-container .audit-log-table th {
+  font-size: 15px !important;
+  padding-top: 14px !important;
+  padding-bottom: 14px !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* 4. Table cells: 15px minimum (Table row height: 18px vertical padding) */
+.admin-dashboard-container table.dashboard-table td,
+.admin-dashboard-container .user-management-table td,
+.admin-dashboard-container .audit-log-table td {
+  font-size: 15px !important;
+  padding-top: 18px !important;
+  padding-bottom: 18px !important;
+}
+
+/* 5. Filter labels & inputs: 15px minimum */
+.admin-dashboard-container .filter-label,
+.admin-dashboard-container label {
+  font-size: 15px !important;
+}
+
+.admin-dashboard-container select,
+.admin-dashboard-container input[type="text"],
+.admin-dashboard-container input[type="date"] {
+  font-size: 15px !important;
+  padding: 10px 14px !important;
+}
+
+/* 6. Chart axis labels: 14px minimum */
+.admin-dashboard-container svg text {
+  font-size: 14px !important;
+}
+
+/* 7. Chart legends: 14px minimum */
+.admin-dashboard-container .chart-legend,
+.admin-dashboard-container .chart-legend span,
+.admin-dashboard-container .chart-legend-label,
+.admin-dashboard-container .chart-legend-value {
+  font-size: 14px !important;
+}
+
+/* 8. Modal labels & values: 16px minimum */
+.admin-modal label,
+.admin-modal span.modal-label,
+.admin-modal .modal-label,
+.admin-modal span.font-black.uppercase {
+  font-size: 16px !important;
+}
+
+.admin-modal span.font-bold,
+.admin-modal .font-bold,
+.admin-modal p,
+.admin-modal select,
+.admin-modal input {
+  font-size: 16px !important;
+}
+
+.admin-modal select {
+  padding: 10px 16px !important;
+}
+
+/* 9. Navigation tabs: 15px minimum */
+.admin-dashboard-container .nav-tab {
+  font-size: 15px !important;
+}
+
+/* 10. Buttons: 15px minimum */
+.admin-dashboard-container button,
+.admin-dashboard-container .dashboard-btn {
+  font-size: 15px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+/* 11. Notification drawer text: 15px minimum */
+.notification-drawer,
+.notification-drawer p,
+.notification-drawer span,
+.notification-drawer button {
+  font-size: 15px !important;
+}
+
+/* 12. Intelligence cards / general cards: 16px minimum */
+.admin-dashboard-container .intelligence-card,
+.admin-dashboard-container .intelligence-card span,
+.admin-dashboard-container .intelligence-card p,
+.admin-dashboard-container .kpi-card,
+.admin-dashboard-container .dashboard-card {
+  font-size: 16px !important;
+}
+
+/* --- Spacing Enhancements --- */
+
+/* Add vertical spacing between dashboard sections: 32px */
+.admin-dashboard-container .dashboard-section,
+.admin-dashboard-container .dashboard-card {
+  margin-bottom: 32px !important;
+}
+
+/* Improve padding inside cards, filter panel, and modals */
+.admin-dashboard-container .kpi-card {
+  padding: 24px !important; /* Increased from 20px */
+}
+
+.admin-dashboard-container .intelligence-card {
+  padding: 22px !important;
+}
+
+.admin-dashboard-container .filter-panel {
+  padding: 20px !important;
+  gap: 20px !important;
+}
+
+.admin-dashboard-container .dashboard-card {
+  padding: 24px !important;
+}
+
+.admin-modal.dashboard-modal {
+  padding: 32px !important; /* Increased to 32px */
+  gap: 24px !important;
+}
+
+/* --- Premium Animations & Transitions (150ms-250ms) --- */
+.nav-tab {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.admin-dashboard-container rect,
+.admin-dashboard-container circle,
+.admin-dashboard-container path {
+  transition: fill 200ms ease, stroke 200ms ease, stroke-width 200ms ease, r 200ms ease !important;
+}
+
+.admin-dashboard-container button,
+.admin-dashboard-container select,
+.admin-dashboard-container input {
+  transition: all 150ms ease-out !important;
+}
+
+/* Modal scale-in & fade-in */
+@keyframes modalScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.admin-modal {
+  animation: modalScaleIn 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+/* Sliding notification drawer slide-in-from-right */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.notification-drawer {
+  animation: slideInRight 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+/* Filter badge fade-in transition */
+@keyframes fadeInBadge {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.filter-badge {
+  animation: fadeInBadge 180ms ease-out forwards !important;
+}
+
+
+/* ==========================================================================
+   PHASE 6.1A — ENTERPRISE DESIGN SYSTEM TOKENS
+   Single authoritative palette for both themes.
+   ========================================================================== */
+
+.theme-dark {
+  /* ── Backgrounds ── */
+  --bg:              #020817;
+  --bg-card:         #0F172A;
+  --bg-secondary:    #111827;
+  --bg-input:        #020817;
+  --bg-hover:        #172554;
+  --bg-selected:     #1D4ED8;
+
+  /* ── Borders ── */
+  --border:          #1E293B;
+  --border-color:    #1E293B;
+
+  /* ── Brand ── */
+  --primary:         #3B82F6;
+  --primary-hover:   #2563EB;
+  --primary-glow:    rgba(59, 130, 246, 0.35);
+  --secondary:       #06B6D4;
+  --secondary-hover: #0891B2;
+
+  /* ── Semantic ── */
+  --success:         #22C55E;
+  --success-bg:      rgba(34, 197, 94, 0.12);
+  --success-border:  rgba(34, 197, 94, 0.35);
+  --warning:         #F59E0B;
+  --warning-bg:      rgba(245, 158, 11, 0.12);
+  --warning-border:  rgba(245, 158, 11, 0.35);
+  --danger:          #EF4444;
+  --danger-bg:       rgba(239, 68, 68, 0.12);
+  --danger-border:   rgba(239, 68, 68, 0.35);
+  --info:            #6366F1;
+  --info-bg:         rgba(99, 102, 241, 0.12);
+  --info-border:     rgba(99, 102, 241, 0.35);
+
+  /* ── Text ── */
+  --text:            #F8FAFC;
+  --text-primary:    #F8FAFC;
+  --text-secondary:  #CBD5E1;
+  --text-muted:      #94A3B8;
+
+  /* ── Scrollbar ── */
+  --scrollbar-track:       #020817;
+  --scrollbar-thumb:       #1E293B;
+  --scrollbar-thumb-hover: #3B82F6;
+
+  /* ── Legacy compat aliases ── */
+  --bg-primary:      #020817;
+  --accent-color:    #3B82F6;
+}
+
+.theme-light {
+  /* ── Backgrounds ── */
+  --bg:              #F8FAFC;
+  --bg-card:         #FFFFFF;
+  --bg-secondary:    #F1F5F9;
+  --bg-input:        #FFFFFF;
+  --bg-hover:        #DBEAFE;
+  --bg-selected:     #BFDBFE;
+
+  /* ── Borders ── */
+  --border:          #CBD5E1;
+  --border-color:    #CBD5E1;
+
+  /* ── Brand ── */
+  --primary:         #2563EB;
+  --primary-hover:   #1D4ED8;
+  --primary-glow:    rgba(37, 99, 235, 0.20);
+  --secondary:       #0891B2;
+  --secondary-hover: #0E7490;
+
+  /* ── Semantic ── */
+  --success:         #16A34A;
+  --success-bg:      rgba(22, 163, 74, 0.10);
+  --success-border:  rgba(22, 163, 74, 0.30);
+  --warning:         #D97706;
+  --warning-bg:      rgba(217, 119, 6, 0.10);
+  --warning-border:  rgba(217, 119, 6, 0.30);
+  --danger:          #DC2626;
+  --danger-bg:       rgba(220, 38, 38, 0.10);
+  --danger-border:   rgba(220, 38, 38, 0.30);
+  --info:            #4F46E5;
+  --info-bg:         rgba(79, 70, 229, 0.10);
+  --info-border:     rgba(79, 70, 229, 0.30);
+
+  /* ── Text ── */
+  --text:            #0F172A;
+  --text-primary:    #0F172A;
+  --text-secondary:  #334155;
+  --text-muted:      #64748B;
+
+  /* ── Scrollbar ── */
+  --scrollbar-track:       #F1F5F9;
+  --scrollbar-thumb:       #CBD5E1;
+  --scrollbar-thumb-hover: #2563EB;
+
+  /* ── Legacy compat aliases ── */
+  --bg-primary:      #F8FAFC;
+  --accent-color:    #2563EB;
+}
+
+/* ==========================================================================
+   THEME-DRIVEN COMPONENT OVERRIDES  (variable-mapped, both themes)
+   ========================================================================== */
+
+/* Container root */
+.theme-light.admin-dashboard-container,
+.theme-light .admin-dashboard-container {
+  background-color: var(--bg) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Header */
+.theme-light header {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light header h1,
+.theme-light header span { color: var(--text-primary) !important; }
+.theme-light header button {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light header button:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+.theme-light main {
+  background-color: var(--bg) !important;
+}
+
+/* Cards */
+.theme-light .kpi-card,
+.theme-light .intelligence-card,
+.theme-light .filter-panel,
+.theme-light .dashboard-card,
+.theme-light .bg-slate-900,
+.theme-light .bg-slate-900\/60,
+.theme-light .bg-slate-950 {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .kpi-card {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04) !important;
+}
+.theme-light .kpi-card-value { color: var(--text-primary) !important; }
+.theme-light .intelligence-card span { color: var(--text-primary) !important; }
+
+/* Filter panel inputs */
+.theme-light .filter-panel h3 { color: var(--text-primary) !important; }
+.theme-light .filter-panel select,
+.theme-light .filter-panel input {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .filter-panel select:focus,
+.theme-light .filter-panel input:focus { border-color: var(--primary) !important; }
+
+/* Headings */
+.theme-light h3,
+.theme-light h4 { color: var(--text-primary) !important; }
+
+/* Tables */
+.theme-light table { background-color: var(--bg-card) !important; }
+.theme-light tr { border-color: var(--border) !important; }
+.theme-light tr:hover { background-color: var(--bg-hover) !important; }
+.theme-light thead tr {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+.theme-light table button {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+.theme-light table button:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+/* Nav tabs */
+.theme-light .nav-tab { color: var(--text-muted) !important; }
+.theme-light .nav-tab.bg-slate-900 {
+  background-color: var(--bg-card) !important;
+  color: var(--primary) !important;
+  border-top-color: var(--primary) !important;
+}
+
+/* Modal */
+.theme-light .admin-modal {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .admin-modal h3,
+.theme-light .admin-modal h2 { color: var(--text-primary) !important; }
+.theme-light .admin-modal label { color: var(--text-secondary) !important; }
+.theme-light .admin-modal select,
+.theme-light .admin-modal input,
+.theme-light .admin-modal p,
+.theme-light .admin-modal .bg-slate-950,
+.theme-light .admin-modal .bg-slate-900 {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .admin-modal button {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+.theme-light .admin-modal button:hover {
+  background-color: var(--primary-hover) !important;
+}
+
+/* Notification drawer */
+.theme-light .notification-drawer {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .notification-drawer h3 { color: var(--text-primary) !important; }
+.theme-light .notification-drawer input {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+.theme-light .notification-drawer .bg-slate-955,
+.theme-light .notification-drawer .bg-slate-950,
+.theme-light .notification-drawer .bg-slate-950\/20 {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+}
+.theme-light .notification-drawer p { color: var(--text-secondary) !important; }
+.theme-light .notification-drawer span { color: var(--text-secondary) !important; }
+
+/* Scrollbar customizations */
+.theme-light ::-webkit-scrollbar-track,
+.theme-light.admin-dashboard-container ::-webkit-scrollbar-track,
+.theme-light .notification-drawer-scroll ::-webkit-scrollbar-track,
+.theme-light .complaint-table-scroll ::-webkit-scrollbar-track,
+.theme-light .user-management-scroll ::-webkit-scrollbar-track,
+.theme-light .audit-log-scroll ::-webkit-scrollbar-track,
+.theme-light .modal-scroll ::-webkit-scrollbar-track,
+.theme-light .dashboard-main-scroll ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track) !important;
+}
+
+.theme-light ::-webkit-scrollbar-thumb,
+.theme-light.admin-dashboard-container ::-webkit-scrollbar-thumb,
+.theme-light .notification-drawer-scroll ::-webkit-scrollbar-thumb,
+.theme-light .complaint-table-scroll ::-webkit-scrollbar-thumb,
+.theme-light .user-management-scroll ::-webkit-scrollbar-thumb,
+.theme-light .audit-log-scroll ::-webkit-scrollbar-thumb,
+.theme-light .modal-scroll ::-webkit-scrollbar-thumb,
+.theme-light .dashboard-main-scroll ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb) !important;
+}
+
+.theme-light ::-webkit-scrollbar-thumb:hover,
+.theme-light.admin-dashboard-container ::-webkit-scrollbar-thumb:hover,
+.theme-light .notification-drawer-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-light .complaint-table-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-light .user-management-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-light .audit-log-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-light .modal-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-light .dashboard-main-scroll ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover) !important;
+}
+
+.theme-dark ::-webkit-scrollbar-track,
+.theme-dark.admin-dashboard-container ::-webkit-scrollbar-track,
+.theme-dark .notification-drawer-scroll ::-webkit-scrollbar-track,
+.theme-dark .complaint-table-scroll ::-webkit-scrollbar-track,
+.theme-dark .user-management-scroll ::-webkit-scrollbar-track,
+.theme-dark .audit-log-scroll ::-webkit-scrollbar-track,
+.theme-dark .modal-scroll ::-webkit-scrollbar-track,
+.theme-dark .dashboard-main-scroll ::-webkit-scrollbar-track {
+  background: #020617 !important;
+}
+
+.theme-dark ::-webkit-scrollbar-thumb,
+.theme-dark.admin-dashboard-container ::-webkit-scrollbar-thumb,
+.theme-dark .notification-drawer-scroll ::-webkit-scrollbar-thumb,
+.theme-dark .complaint-table-scroll ::-webkit-scrollbar-thumb,
+.theme-dark .user-management-scroll ::-webkit-scrollbar-thumb,
+.theme-dark .audit-log-scroll ::-webkit-scrollbar-thumb,
+.theme-dark .modal-scroll ::-webkit-scrollbar-thumb,
+.theme-dark .dashboard-main-scroll ::-webkit-scrollbar-thumb {
+  background: #1e293b !important;
+}
+
+.theme-dark ::-webkit-scrollbar-thumb:hover,
+.theme-dark.admin-dashboard-container ::-webkit-scrollbar-thumb:hover,
+.theme-dark .notification-drawer-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-dark .complaint-table-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-dark .user-management-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-dark .audit-log-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-dark .modal-scroll ::-webkit-scrollbar-thumb:hover,
+.theme-dark .dashboard-main-scroll ::-webkit-scrollbar-thumb:hover {
+  background: #ea580c !important;
+}
+
+/* ==========================================================================
+   UNIFIED CSS VARIABLE-DRIVEN DESIGN SYSTEM & MICRO-INTERACTIONS
+   (Phase 6.1A — uses tokens defined in theme blocks above)
+   ==========================================================================
+
+/* Base style mappings using variables */
+.admin-dashboard-container {
+  background-color: var(--bg) !important;
+  color: var(--text-primary) !important;
+}
+
+header {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.kpi-card, .intelligence-card, .filter-panel, .dashboard-card, .admin-modal, .notification-drawer {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.kpi-card-value {
+  color: var(--text-primary) !important;
+}
+
+/* Redesign for visual spacing, readability, and hierarchy */
+.admin-dashboard-container .dashboard-card,
+.admin-dashboard-container .dashboard-section {
+  margin-bottom: 40px !important; /* Increased whitespace spacing */
+}
+
+.admin-dashboard-container .kpi-card {
+  padding: 32px 24px !important; /* Larger KPI cards */
+  min-height: 140px !important;
+}
+
+.admin-dashboard-container .kpi-card-value {
+  font-size: 40px !important; /* Larger typography for KPI values */
+  font-weight: 900 !important;
+}
+
+.admin-dashboard-container .kpi-card-label {
+  font-size: 16px !important; /* Clearer titles */
+  font-weight: 800 !important;
+}
+
+.admin-dashboard-container .dashboard-card {
+  padding: 32px !important; /* Larger content cards */
+}
+
+/* Table overrides for larger text and whitespace */
+.admin-dashboard-container table.dashboard-table td,
+.admin-dashboard-container .user-management-table td,
+.admin-dashboard-container .audit-log-table td {
+  font-size: 16px !important; /* Larger table cell text */
+  padding-top: 20px !important; /* More vertical padding */
+  padding-bottom: 20px !important;
+}
+
+.admin-dashboard-container table.dashboard-table th,
+.admin-dashboard-container .user-management-table th,
+.admin-dashboard-container .audit-log-table th {
+  font-size: 16px !important; /* Larger table header text */
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+/* Micro-interactions: Card Hover Lift (translateY(-6px) + glow) */
+.kpi-card, .dashboard-card, .intelligence-card {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease !important;
+}
+.kpi-card:hover, .dashboard-card:hover, .intelligence-card:hover {
+  transform: translateY(-6px) !important;
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.2), 0 0 16px var(--primary-glow) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Micro-interactions: Button hover translateY(-2px) + glow elevation */
+button, .btn {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
+}
+button:active:not(:disabled), .btn:active:not(:disabled) {
+  transform: translateY(0px) !important;
+}
+
+/* Micro-interactions: Table row hover transitions */
+tr {
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s ease !important;
+}
+tr:hover {
+  background-color: var(--bg-hover) !important;
+}
+.theme-light tr:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+/* Micro-interactions: Chart hover scale & glow */
+.recharts-responsive-container:hover, svg:hover {
+  filter: drop-shadow(0 0 12px var(--primary-glow)) !important;
+  transition: filter 0.3s ease !important;
+}
+
+svg g.group {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease !important;
+}
+
+svg g.group:hover {
+  transform: scale(1.025) !important;
+  opacity: 0.95;
+}
+
+/* Smooth tooltips transition */
+.recharts-tooltip-wrapper {
+  transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+/* ==========================================================================
+   DARK THEME CHART & KPI READABILITY OVERRIDES
+   ========================================================================== */
+
+.theme-dark svg text {
+  fill: #f8fafc !important; /* High brightness text */
+  font-weight: 600 !important;
+}
+
+.theme-dark svg line {
+  stroke: #475569 !important; /* Visible gridlines */
+  stroke-opacity: 0.9 !important;
+}
+
+.theme-dark .chart-legend,
+.theme-dark .chart-legend span,
+.theme-dark .chart-legend-label,
+.theme-dark .chart-legend-value {
+  color: #f8fafc !important; /* High contrast legend */
+}
+
+/* Tooltip visibility in dark theme */
+.theme-dark .chart-tooltip,
+.theme-dark .recharts-tooltip-wrapper,
+.theme-dark .intelligent-tooltip {
+  background-color: #0f172a !important;
+  color: #f8fafc !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+/* KPI visibility & contrast */
+.theme-dark .kpi-card,
+.theme-dark .kpi-value,
+.theme-dark .kpi-label {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Ensure no chart text is below 14px and default sizes are robust */
+.admin-dashboard-container svg text {
+  font-size: 15px !important;
+}
+
+/* ==========================================================================
+   PHASE 6.1A — ENTERPRISE DESIGN SYSTEM COMPONENT CLASSES
+   ========================================================================== */
+
+/* ── Status Badges ──────────────────────────────────────────────────────── */
+/* Consistent sizing, border-radius, padding and contrast for all statuses   */
+
+.ds-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.25rem;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1.4;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+/* Completed — green / success */
+.ds-badge-completed,
+.ds-badge-success {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success-border);
+}
+
+/* Resolved — blue / primary */
+.ds-badge-resolved,
+.ds-badge-primary {
+  background-color: rgba(59,130,246,0.12);
+  color: var(--primary);
+  border-color: rgba(59,130,246,0.35);
+}
+.theme-light .ds-badge-resolved,
+.theme-light .ds-badge-primary {
+  background-color: rgba(37,99,235,0.10);
+  color: var(--primary);
+  border-color: rgba(37,99,235,0.30);
+}
+
+/* Pending — amber / warning */
+.ds-badge-pending,
+.ds-badge-warning {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border-color: var(--warning-border);
+}
+
+/* In Progress — slightly deeper amber/orange */
+.ds-badge-inprogress {
+  background-color: rgba(234,88,12,0.12);
+  color: #F97316;
+  border-color: rgba(234,88,12,0.35);
+}
+.theme-light .ds-badge-inprogress {
+  background-color: rgba(194,65,12,0.08);
+  color: #C2410C;
+  border-color: rgba(194,65,12,0.30);
+}
+
+/* Rejected — red / danger */
+.ds-badge-rejected,
+.ds-badge-danger {
+  background-color: var(--danger-bg);
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+/* Info / Secondary */
+.ds-badge-info {
+  background-color: var(--info-bg);
+  color: var(--info);
+  border-color: var(--info-border);
+}
+
+/* ── Button Variants ────────────────────────────────────────────────────── */
+
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  font-weight: 800;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.ds-btn:hover:not(:disabled) { transform: translateY(-1px); }
+.ds-btn:active:not(:disabled) { transform: translateY(0); }
+.ds-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Primary */
+.ds-btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+.ds-btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* Secondary / Slate */
+.ds-btn-secondary {
+  background-color: #1E293B;
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+.theme-light .ds-btn-secondary {
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+.ds-btn-secondary:hover:not(:disabled) {
+  background-color: #273549;
+  color: var(--text-primary);
+}
+.theme-light .ds-btn-secondary:hover:not(:disabled) {
+  background-color: var(--bg-hover);
+}
+
+/* Danger */
+.ds-btn-danger {
+  background-color: var(--danger);
+  color: #ffffff;
+  border-color: var(--danger);
+}
+.ds-btn-danger:hover:not(:disabled) {
+  background-color: #DC2626;
+  box-shadow: 0 0 0 3px var(--danger-border);
+}
+.theme-light .ds-btn-danger:hover:not(:disabled) { background-color: #B91C1C; }
+
+/* Success */
+.ds-btn-success {
+  background-color: var(--success);
+  color: #ffffff;
+  border-color: var(--success);
+}
+.ds-btn-success:hover:not(:disabled) {
+  background-color: #16A34A;
+  box-shadow: 0 0 0 3px var(--success-border);
+}
+.theme-light .ds-btn-success:hover:not(:disabled) { background-color: #15803D; }
+
+/* ── Standardized Inputs & Selects ──────────────────────────────────────── */
+
+.ds-input,
+.ds-select {
+  display: block;
+  width: 100%;
+  background-color: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.55rem 0.875rem;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 0;
+  appearance: none;
+}
+.ds-input:focus,
+.ds-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-glow);
+}
+.ds-input::placeholder { color: var(--text-muted); }
+
+/* ── Table Design System ────────────────────────────────────────────────── */
+
+.ds-table-head {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+.theme-dark .ds-table-head {
+  background-color: #020817 !important;
+}
+
+.ds-table-row {
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.15s ease;
+}
+.ds-table-row:hover {
+  background-color: var(--bg-hover) !important;
+}
+/* Alternating rows for dark theme */
+.theme-dark .ds-table-row:nth-child(even) {
+  background-color: rgba(15, 23, 42, 0.5);
+}
+.theme-light .ds-table-row:nth-child(even) {
+  background-color: var(--bg-secondary);
+}
+
+/* ── Chart Color System ─────────────────────────────────────────────────── */
+/* These apply to the SVG-based custom charts in the dashboard */
+
+/* Dark theme chart grid lines */
+.theme-dark .admin-dashboard-container svg line {
+  stroke: #1E293B !important;
+  stroke-opacity: 0.8 !important;
+}
+/* Light theme chart grid lines */
+.theme-light .admin-dashboard-container svg line {
+  stroke: #CBD5E1 !important;
+  stroke-opacity: 0.6 !important;
+}
+/* Chart text visibility */
+.theme-dark svg text {
+  fill: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+.theme-light svg text {
+  fill: var(--text-secondary) !important;
+  font-weight: 600 !important;
+}
+.theme-dark .chart-legend,
+.theme-dark .chart-legend span,
+.theme-dark .chart-legend-label,
+.theme-dark .chart-legend-value {
+  color: var(--text-primary) !important;
+}
+.theme-light .chart-legend,
+.theme-light .chart-legend span,
+.theme-light .chart-legend-label,
+.theme-light .chart-legend-value {
+  color: var(--text-primary) !important;
+}
+
+/* Tooltip — both themes */
+.theme-dark .chart-tooltip,
+.theme-dark .recharts-tooltip-wrapper,
+.theme-dark .intelligent-tooltip {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--primary) !important;
+}
+.theme-light .chart-tooltip,
+.theme-light .recharts-tooltip-wrapper,
+.theme-light .intelligent-tooltip {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--primary) !important;
+}
+
+/* ==========================================================================
+   PHASE 6.1B — PREMIUM ENTERPRISE POLISH
+   ========================================================================== */
+
+.enterprise-card {
+  background: linear-gradient(145deg, var(--bg-card) 0%, color-mix(in srgb, var(--bg-card) 92%, var(--primary) 8%) 100%) !important;
+  border-color: var(--border) !important;
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.08),
+    0 2px 4px -2px rgb(0 0 0 / 0.06),
+    inset 0 1px 0 rgb(255 255 255 / 0.04) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.theme-light .enterprise-card {
+  box-shadow:
+    0 4px 12px -2px rgb(0 0 0 / 0.06),
+    0 2px 6px -2px rgb(0 0 0 / 0.04),
+    inset 0 1px 0 rgb(255 255 255 / 0.9) !important;
+}
+
+.enterprise-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border)) !important;
+  box-shadow:
+    0 16px 32px -8px rgb(0 0 0 / 0.18),
+    0 0 20px var(--primary-glow) !important;
+}
+
+.admin-dashboard-container .modal-title,
+.admin-modal h2,
+.admin-modal .modal-title {
+  font-size: 26px !important;
+  line-height: 1.2 !important;
+}
+
+.admin-dashboard-container .section-heading,
+.admin-dashboard-container h3.text-xl {
+  font-size: 20px !important;
+}
+
+.pagination-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.pagination-controls {
+  gap: 12px !important;
+}
+
+.fullscreen-image-viewer {
+  z-index: 99999 !important;
+}
+
+.theme-dark ::-webkit-scrollbar-thumb:hover,
+.theme-dark.admin-dashboard-container ::-webkit-scrollbar-thumb:hover {
+  background: var(--primary) !important;
+}
+
+.admin-dashboard-container .ds-select,
+.admin-dashboard-container input[type="date"] {
+  border-radius: 8px !important;
+  min-height: 44px;
+}
+
+.admin-dashboard-container .filter-panel input[type="date"] {
+  color-scheme: dark;
+}
+
+.theme-light .admin-dashboard-container .filter-panel input[type="date"] {
+  color-scheme: light;
+}
+
+.admin-dashboard-container table.dashboard-table td .ds-badge-inprogress {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  line-height: 1.5;
+  padding: 0.35rem 0.65rem;
+  font-size: 12px;
+}
+
+
+/* KPI text-shadow only in dark theme */
+.theme-dark .kpi-card,
+.theme-dark .kpi-value,
+.theme-dark .kpi-label {
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.07) !important;
+}
+
+/* ── Scrollbar tokens — enforce via CSS vars ─────────────────────────────── */
+
+.admin-dashboard-container ::-webkit-scrollbar-track,
+.notification-drawer-scroll ::-webkit-scrollbar-track,
+.complaint-table-scroll ::-webkit-scrollbar-track,
+.user-management-scroll ::-webkit-scrollbar-track,
+.audit-log-scroll ::-webkit-scrollbar-track,
+.modal-scroll ::-webkit-scrollbar-track,
+.dashboard-main-scroll ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track) !important;
+}
+.admin-dashboard-container ::-webkit-scrollbar-thumb,
+.notification-drawer-scroll ::-webkit-scrollbar-thumb,
+.complaint-table-scroll ::-webkit-scrollbar-thumb,
+.user-management-scroll ::-webkit-scrollbar-thumb,
+.audit-log-scroll ::-webkit-scrollbar-thumb,
+.modal-scroll ::-webkit-scrollbar-thumb,
+.dashboard-main-scroll ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb) !important;
+  border-radius: 4px;
+}
+.admin-dashboard-container ::-webkit-scrollbar-thumb:hover,
+.notification-drawer-scroll ::-webkit-scrollbar-thumb:hover,
+.complaint-table-scroll ::-webkit-scrollbar-thumb:hover,
+.user-management-scroll ::-webkit-scrollbar-thumb:hover,
+.audit-log-scroll ::-webkit-scrollbar-thumb:hover,
+.modal-scroll ::-webkit-scrollbar-thumb:hover,
+.dashboard-main-scroll ::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover) !important;
+}
+
+/* ==========================================================================
+   PHASE 6.1D — PREMIUM ENTERPRISE DESIGN SYSTEM (FINAL)
+   Inspired by Linear, Vercel, Stripe, Apple Human Interface Guidelines
+   ========================================================================== */
+
+.admin-dashboard-container.theme-dark {
+  /* ── Premium Dark Theme ── */
+  --bg: #09090B;
+  --bg-card: #121214;
+  --bg-secondary: #18181B;
+  --bg-input: #09090B;
+  --bg-hover: #1F1F23;
+  --bg-selected: #27272A;
+  --border: #27272A;
+  --border-color: #27272A;
+  --border-hover: #3F3F46;
+  
+  /* ── Brand Colors ── */
+  --primary: #6366F1;
+  --primary-hover: #818CF8;
+  --primary-glow: rgba(99, 102, 241, 0.25);
+  --secondary: #06B6D4;
+  --secondary-hover: #22D3EE;
+  
+  /* ── Semantic Colors ── */
+  --success: #22C55E;
+  --success-bg: rgba(34, 197, 94, 0.15);
+  --success-border: rgba(34, 197, 94, 0.4);
+  --warning: #F59E0B;
+  --warning-bg: rgba(245, 158, 11, 0.15);
+  --warning-border: rgba(245, 158, 11, 0.4);
+  --danger: #EF4444;
+  --danger-bg: rgba(239, 68, 68, 0.15);
+  --danger-border: rgba(239, 68, 68, 0.4);
+  --info: #3B82F6;
+  --info-bg: rgba(59, 130, 246, 0.15);
+  --info-border: rgba(59, 130, 246, 0.4);
+  
+  /* ── Text Colors ── */
+  --text-primary: #FAFAFA;
+  --text-secondary: #A1A1AA;
+  --text-muted: #71717A;
+  --text-disabled: #52525B;
+  
+  /* ── Scrollbar ── */
+  --scrollbar-track: #09090B;
+  --scrollbar-thumb: #27272A;
+  --scrollbar-thumb-hover: #6366F1;
+  
+  /* ── Effects ── */
+  --card-radius: 20px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.admin-dashboard-container.theme-light {
+  /* ── Premium Light Theme ── */
+  --bg: #FAFAFA;
+  --bg-card: #FFFFFF;
+  --bg-secondary: #F4F4F5;
+  --bg-input: #FFFFFF;
+  --bg-hover: #E4E4E7;
+  --bg-selected: #E0E7FF;
+  --border: #E4E4E7;
+  --border-color: #E4E4E7;
+  --border-hover: #D4D4D8;
+  
+  /* ── Brand Colors ── */
+  --primary: #4F46E5;
+  --primary-hover: #6366F1;
+  --primary-glow: rgba(79, 70, 229, 0.18);
+  --secondary: #0891B2;
+  --secondary-hover: #06B6D4;
+  
+  /* ── Semantic Colors ── */
+  --success: #16A34A;
+  --success-bg: rgba(22, 163, 74, 0.12);
+  --success-border: rgba(22, 163, 74, 0.35);
+  --warning: #D97706;
+  --warning-bg: rgba(217, 119, 6, 0.12);
+  --warning-border: rgba(217, 119, 6, 0.35);
+  --danger: #DC2626;
+  --danger-bg: rgba(220, 38, 38, 0.12);
+  --danger-border: rgba(220, 38, 38, 0.35);
+  --info: #2563EB;
+  --info-bg: rgba(37, 99, 235, 0.12);
+  --info-border: rgba(37, 99, 235, 0.35);
+  
+  /* ── Text Colors ── */
+  --text-primary: #18181B;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --text-disabled: #A1A1AA;
+  
+  /* ── Scrollbar ── */
+  --scrollbar-track: #F4F4F5;
+  --scrollbar-thumb: #D4D4D8;
+  --scrollbar-thumb-hover: #4F46E5;
+  
+  /* ── Effects ── */
+  --card-radius: 20px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(79, 70, 229, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.admin-dashboard-container {
+  font-size: 16px;
+  background-color: var(--bg) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .desktop-shell {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+.admin-dashboard-container .dashboard-main {
+  max-width: 1920px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.admin-dashboard-container .dashboard-title {
+  font-size: 36px !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.admin-dashboard-container .dashboard-subtitle {
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.admin-dashboard-container .section-heading {
+  font-size: 22px !important;
+  line-height: 1.25 !important;
+  color: var(--text-primary) !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.admin-dashboard-container .card-title {
+  font-size: 20px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .kpi-card-label {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  color: var(--text-secondary) !important;
+}
+
+.admin-dashboard-container .kpi-card-value {
+  font-size: 42px !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+}
+
+.admin-dashboard-container table.dashboard-table th {
+  font-size: 16px !important;
+  padding: 20px 24px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  color: var(--text-secondary) !important;
+  background-color: var(--bg-secondary) !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+
+.admin-dashboard-container table.dashboard-table td {
+  font-size: 16px !important;
+  padding: 24px 24px !important;
+  vertical-align: middle;
+  font-weight: 500 !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.admin-dashboard-container table.dashboard-table tr:hover td {
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container table.dashboard-table td:nth-child(2),
+.admin-dashboard-container table.dashboard-table th:nth-child(2) { min-width: 200px; }
+.admin-dashboard-container table.dashboard-table td:nth-child(3),
+.admin-dashboard-container table.dashboard-table th:nth-child(3) { min-width: 180px; }
+.admin-dashboard-container table.dashboard-table td:nth-child(4),
+.admin-dashboard-container table.dashboard-table th:nth-child(4) { min-width: 180px; }
+
+.admin-dashboard-container .admin-modal .modal-title,
+.admin-dashboard-container .admin-modal h2 {
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.1 !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .admin-modal,
+.admin-dashboard-container .admin-modal p,
+.admin-dashboard-container .admin-modal label {
+  font-size: 16px !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .admin-modal label {
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
+}
+
+.admin-dashboard-container .enterprise-card,
+.admin-dashboard-container .dashboard-card,
+.admin-dashboard-container .kpi-card,
+.admin-dashboard-container .intelligence-card,
+.admin-dashboard-container .chart-card,
+.admin-dashboard-container .filter-panel-enterprise,
+.admin-dashboard-container .complaints-table-panel {
+  background: linear-gradient(145deg, var(--bg-card) 0%, color-mix(in srgb, var(--bg-card) 95%, var(--primary) 5%) 100%) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--card-radius, 20px) !important;
+  box-shadow: var(--shadow-card) !important;
+  color: var(--text-primary) !important;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-dashboard-container .enterprise-card::before,
+.admin-dashboard-container .dashboard-card::before,
+.admin-dashboard-container .kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  pointer-events: none;
+}
+
+.theme-light .admin-dashboard-container .enterprise-card::before,
+.theme-light .admin-dashboard-container .dashboard-card::before,
+.theme-light .admin-dashboard-container .kpi-card::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+}
+
+.admin-dashboard-container .enterprise-card:hover,
+.admin-dashboard-container .dashboard-card:hover,
+.admin-dashboard-container .kpi-card:hover,
+.admin-dashboard-container .chart-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border)) !important;
+}
+
+.admin-dashboard-container .btn-enterprise {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 46px;
+  padding: 0.75rem 1.35rem;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+  cursor: pointer;
+}
+
+.admin-dashboard-container .btn-enterprise:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--primary-glow);
+}
+
+.admin-dashboard-container .btn-enterprise-primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.admin-dashboard-container .btn-enterprise-primary:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+.admin-dashboard-container .btn-enterprise-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.admin-dashboard-container .btn-enterprise-success {
+  background: var(--success);
+  color: #fff;
+  border-color: var(--success);
+}
+
+.admin-dashboard-container .btn-enterprise-disabled {
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  border-color: var(--border);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.admin-dashboard-container .filter-panel-enterprise {
+  gap: 24px !important;
+  padding: 28px !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise label,
+.admin-dashboard-container .filter-label {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--text-secondary) !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise select,
+.admin-dashboard-container .filter-panel-enterprise input[type="text"],
+.admin-dashboard-container .filter-panel-enterprise input[type="date"],
+.admin-dashboard-container .ds-select,
+.admin-dashboard-container .ds-input {
+  min-height: 48px !important;
+  font-size: 16px !important;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  background-color: var(--bg-input) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise select:hover,
+.admin-dashboard-container .filter-panel-enterprise input[type="text"]:hover,
+.admin-dashboard-container .filter-panel-enterprise input[type="date"]:hover,
+.admin-dashboard-container .ds-select:hover,
+.admin-dashboard-container .ds-input:hover {
+  border-color: var(--border-hover) !important;
+  background-color: var(--bg-hover) !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise select:focus,
+.admin-dashboard-container .filter-panel-enterprise input[type="text"]:focus,
+.admin-dashboard-container .filter-panel-enterprise input[type="date"]:focus,
+.admin-dashboard-container .ds-select:focus,
+.admin-dashboard-container .ds-input:focus {
+  outline: none !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-glow) !important;
+  background-color: var(--bg-input) !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise input[type="date"] {
+  color-scheme: dark;
+}
+
+.admin-dashboard-container.theme-light .filter-panel-enterprise input[type="date"] {
+  color-scheme: light;
+}
+
+.admin-dashboard-container .ds-badge {
+  font-size: 15px !important;
+  padding: 0.35rem 0.75rem !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  transition: transform 0.15s ease, filter 0.15s ease !important;
+}
+
+.admin-dashboard-container .ds-badge:hover {
+  transform: scale(1.05) !important;
+  filter: brightness(1.1) !important;
+}
+
+.admin-dashboard-container .pagination-btn {
+  min-height: 48px;
+  min-width: 48px;
+  font-size: 16px !important;
+  border-radius: 12px !important;
+  font-weight: 700 !important;
+  transition: transform 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+
+.admin-dashboard-container .pagination-btn:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+}
+
+.admin-dashboard-container .pagination-btn:active:not(:disabled) {
+  transform: translateY(0) !important;
+}
+
+.admin-dashboard-container .nav-tab {
+  font-size: 16px !important;
+  padding: 14px 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-dashboard-container .nav-tab:hover {
+  transform: translateY(-1px) !important;
+}
+
+.admin-dashboard-container .nav-tab.active {
+  transform: translateY(-2px) !important;
+}
+
+.donut-chart-wrap {
+  position: relative;
+  width: 340px;
+  height: 340px;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.donut-chart-wrap--large {
+  width: min(480px, 42vw);
+  height: min(480px, 42vw);
+  min-width: 360px;
+  min-height: 360px;
+}
+
+.donut-chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  display: block;
+}
+
+.donut-slice {
+  cursor: pointer;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.donut-slice:hover {
+  opacity: 0.88;
+  filter: brightness(1.08);
+}
+
+.donut-slice--active {
+  filter: brightness(1.15) drop-shadow(0 0 8px var(--primary-glow));
+}
+
+.donut-chart-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  text-align: center;
+}
+
+.donut-chart-center-label {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.donut-chart-center-value {
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  margin-top: 6px;
+  color: var(--text-primary);
+}
+
+.donut-chart-wrap--large .donut-chart-center-label { font-size: 18px; }
+.donut-chart-wrap--large .donut-chart-center-value { font-size: 52px; }
+
+.donut-chart-empty {
+  width: 100%;
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 240px;
+}
+
+.donut-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.donut-legend-item:hover { 
+  background: var(--bg-hover);
+  transform: translateX(4px);
+}
+
+.donut-legend-item--active {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, var(--bg-secondary));
+  transform: translateX(4px);
+}
+
+.donut-legend-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.donut-legend-label {
+  font-size: 16px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.donut-legend-value {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: var(--text-primary);
+}
+
+.donut-chart-panel,
+.donut-expanded-layout {
+  width: 100%;
+  overflow: visible;
+}
+
+.chart-expanded-panel {
+  border-radius: var(--card-radius, 18px) !important;
+  overflow: visible !important;
+}
+
+.admin-dashboard-container svg text {
+  font-size: 16px !important;
+}
+
+.admin-dashboard-container header {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  padding: 18px 32px !important;
+}
+
+.admin-dashboard-container .admin-modal {
+  background: var(--bg-card) !important;
+  border-color: var(--border) !important;
+  border-radius: 20px !important;
+}
+
+.admin-dashboard-container .complaints-table-panel thead tr {
+  background: var(--bg-secondary) !important;
+}
+
+.admin-dashboard-container .complaints-table-panel tbody tr:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* Phase 6.1C — extended desktop polish */
+.admin-dashboard-container .dashboard-header {
+  background: linear-gradient(180deg, var(--bg-card) 0%, color-mix(in srgb, var(--bg-card) 96%, var(--primary) 4%) 100%) !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .dashboard-nav-bar {
+  background: var(--bg-secondary) !important;
+  border-bottom: 1px solid var(--border) !important;
+  padding-bottom: 0 !important;
+}
+
+.admin-dashboard-container .nav-tab {
+  border-top-width: 3px !important;
+  border-radius: 12px 12px 0 0 !important;
+  color: var(--text-muted) !important;
+  background: transparent !important;
+}
+
+.admin-dashboard-container .nav-tab[class*="border-blue-500"] {
+  background: var(--bg-card) !important;
+  border-top-color: var(--primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .card-title {
+  font-size: 18px !important;
+  line-height: 1.3 !important;
+  color: var(--text-primary) !important;
+}
+
+.admin-dashboard-container .intelligence-card span:first-child {
+  font-size: 16px !important;
+  color: var(--text-muted) !important;
+}
+
+.admin-dashboard-container .intelligence-card .text-lg,
+.admin-dashboard-container .intelligence-card .text-sm {
+  font-size: 20px !important;
+}
+
+.admin-dashboard-container .text-xs {
+  font-size: 15px !important;
+}
+
+.admin-dashboard-container .text-sm {
+  font-size: 16px !important;
+}
+
+.admin-dashboard-container .pagination-btn[class*="bg-blue-600"] {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.admin-dashboard-container .pagination-btn:not([disabled]):hover {
+  border-color: var(--primary) !important;
+}
+
+.admin-dashboard-container .dashboard-header button {
+  min-height: 42px;
+  padding: 0.6rem 1.1rem;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.admin-dashboard-container .dashboard-header button:hover {
+  transform: translateY(-1px);
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.admin-dashboard-container .filter-panel-enterprise .grid {
+  gap: 20px !important;
+}
+
+.admin-dashboard-container table.dashboard-table td:nth-child(8),
+.admin-dashboard-container table.dashboard-table th:nth-child(8) { min-width: 140px; }
+.admin-dashboard-container table.dashboard-table td:nth-child(9),
+.admin-dashboard-container table.dashboard-table th:nth-child(9) { min-width: 120px; }
+.admin-dashboard-container table.dashboard-table td:nth-child(10),
+.admin-dashboard-container table.dashboard-table th:nth-child(10) { min-width: 180px; }
+
+.admin-dashboard-container .complaint-table-scroll {
+  padding: 0 4px;
+}
+
+.admin-dashboard-container .admin-modal {
+  padding: 2.5rem !important;
+  box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.35) !important;
+}
+
+.admin-dashboard-container.theme-light .admin-modal {
+  box-shadow: 0 32px 64px -16px rgba(26, 29, 38, 0.18) !important;
+}
+
+.donut-expanded-layout {
+  min-height: 480px;
+  padding: 24px 16px;
+}
+
+@media (min-width: 1920px) {
+  .admin-dashboard-container .dashboard-main {
+    max-width: 100%;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  .donut-chart-wrap--large {
+    width: min(520px, 38vw);
+    height: min(520px, 38vw);
+  }
+}
+
+/* ==========================================================================
+   PREMIUM GLOSSY UI COMPONENTS
+   ========================================================================== */
+
+.admin-dashboard-container .btn-enterprise {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.25s ease !important;
+}
+
+.admin-dashboard-container .btn-enterprise-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, var(--primary-hover) 15%) 100%) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+}
+
+.admin-dashboard-container .btn-enterprise-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, color-mix(in srgb, var(--primary-hover) 90%, var(--primary) 10%) 100%) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.15) inset !important;
+}
+
+.admin-dashboard-container .btn-enterprise-secondary {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+}
+
+.admin-dashboard-container .btn-enterprise-secondary:hover:not(:disabled) {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12) !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise select,
+.admin-dashboard-container .filter-panel-enterprise input[type="text"],
+.admin-dashboard-container .filter-panel-enterprise input[type="date"] {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.admin-dashboard-container .filter-panel-enterprise select:focus,
+.admin-dashboard-container .filter-panel-enterprise input[type="text"]:focus,
+.admin-dashboard-container .filter-panel-enterprise input[type="date"]:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent) !important;
+}
+
+.admin-dashboard-container .pagination-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.admin-dashboard-container .pagination-btn:not([disabled]):hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.admin-dashboard-container .pagination-btn[class*="bg-blue-600"] {
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3) !important;
+}
+
+.admin-dashboard-container .pagination-btn[class*="bg-blue-600"]:hover {
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* ==========================================================================
+   PHASE 6.1F — FINAL ENTERPRISE POLISH & BUG FIXES
+   ========================================================================== */
+
+/* ── Fix: SVG text override was forcing 15px on ALL SVG text globally,
+   which broke the carefully sized small chart axis labels.
+   Scope it ONLY to non-chart SVG contexts (modals, icons).
+   Chart SVG labels use inline fontSize attributes which take precedence
+   only when specificity is lower — so we remove the !important scope. ── */
+
+/* Remove the overly broad svg text override — replaced by scoped rules below */
+.admin-dashboard-container svg text {
+  font-family: inherit;
+  /* No forced font-size — let inline SVG fontSize attributes control size */
+}
+
+/* Only force readable size for legend text (non-chart) */
+.admin-dashboard-container .donut-legend-label {
+  font-size: 15px !important;
+}
+.admin-dashboard-container .donut-legend-value {
+  font-size: 16px !important;
+}
+
+/* ── KPI Cards: enforce equal height across all viewports ── */
+.admin-dashboard-container .kpi-card {
+  min-height: 160px !important;
+  height: 160px !important;
+  flex-shrink: 0 !important;
+}
+
+/* ── Notification Drawer: premium redesign ── */
+.notification-drawer {
+  background: var(--bg-card) !important;
+  border-left: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.notification-drawer-item {
+  padding: 16px !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--border) !important;
+  background: var(--bg-secondary) !important;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease !important;
+  min-height: auto !important;
+}
+
+.notification-drawer-item:hover {
+  background: var(--bg-hover) !important;
+  border-color: color-mix(in srgb, var(--primary) 25%, var(--border)) !important;
+  transform: translateX(2px) !important;
+}
+
+.notification-drawer-item--unread {
+  border-left: 3px solid var(--warning) !important;
+  background: color-mix(in srgb, var(--warning) 6%, var(--bg-secondary)) !important;
+}
+
+/* ── Settings panels: proper enterprise card sizing ── */
+.admin-dashboard-container .settings-panel {
+  padding: 28px !important;
+  min-height: 120px;
+}
+
+.admin-dashboard-container .settings-metric-card {
+  padding: 24px 20px !important;
+  min-height: 100px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.admin-dashboard-container .settings-metric-value {
+  font-size: 28px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+}
+
+.admin-dashboard-container .settings-metric-label {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+}
+
+/* ── Diagnostics metric cards use enterprise-card background now ── */
+.admin-dashboard-container .bg-slate-950.border.border-slate-850 {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Dark theme: improve layer separation ── */
+.admin-dashboard-container.theme-dark {
+  --layer-1: rgba(255,255,255,0.02);
+  --layer-2: rgba(255,255,255,0.04);
+}
+
+/* Give inner diagnostic sub-cards subtle elevation from parent */
+.theme-dark .admin-dashboard-container .enterprise-card .enterprise-card {
+  background: color-mix(in srgb, var(--bg-card) 80%, var(--bg-secondary) 20%) !important;
+}
+
+/* ── Light theme: fix remaining low-contrast text issues ── */
+.theme-light .admin-dashboard-container .text-slate-500,
+.theme-light .admin-dashboard-container .text-slate-400,
+.theme-light .admin-dashboard-container .text-slate-600 {
+  color: var(--text-muted) !important;
+}
+
+.theme-light .admin-dashboard-container .text-slate-300,
+.theme-light .admin-dashboard-container .text-slate-200 {
+  color: var(--text-secondary) !important;
+}
+
+.theme-light .admin-dashboard-container .text-white {
+  color: var(--text-primary) !important;
+}
+
+/* Restore colored accents in light theme — don't override intentional colors */
+.theme-light .admin-dashboard-container .text-amber-400,
+.theme-light .admin-dashboard-container .text-amber-500,
+.theme-light .admin-dashboard-container .text-cyan-400,
+.theme-light .admin-dashboard-container .text-emerald-400,
+.theme-light .admin-dashboard-container .text-rose-400,
+.theme-light .admin-dashboard-container .text-indigo-400,
+.theme-light .admin-dashboard-container .text-blue-400 {
+  /* Keep intentional accent colors — do NOT override */
+  color: inherit;
+}
+
+/* Light theme table td: ensure readable contrast */
+.theme-light .admin-dashboard-container table td {
+  color: var(--text-primary) !important;
+}
+
+/* ── Notification drawer light theme ── */
+.theme-light .notification-drawer {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-light .notification-drawer-item {
+  background: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+/* ── Responsive chart grid ── */
+@media (min-width: 1024px) and (max-width: 1365px) {
+  .admin-dashboard-container .grid.lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1366px) and (max-width: 1599px) {
+  .admin-dashboard-container .dashboard-main {
+    max-width: 100%;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1920px) {
+  .admin-dashboard-container .grid.lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── Master data tab tables ── */
+.admin-dashboard-container .master-data-table th {
+  padding: 16px 20px !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  background: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border-bottom: 2px solid var(--border) !important;
+}
+
+.admin-dashboard-container .master-data-table td {
+  padding: 16px 20px !important;
+  font-size: 14px !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.admin-dashboard-container .master-data-table tr:hover td {
+  background: var(--bg-hover) !important;
+}
+
+/* ── Chart card equal heights ── */
+.admin-dashboard-container .chart-card {
+  min-height: 420px !important;
+}
+
+/* ── Improved settings panels (matching enterprise-card) ── */
+.admin-dashboard-container .settings-section {
+  background: linear-gradient(145deg, var(--bg-card) 0%, color-mix(in srgb, var(--bg-card) 95%, var(--primary) 5%) 100%) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-card) !important;
+  padding: 28px !important;
+}
+
+.admin-dashboard-container .settings-section:hover {
+  box-shadow: var(--shadow-card-hover) !important;
+  border-color: color-mix(in srgb, var(--primary) 20%, var(--border)) !important;
+}
+
+/* ── System health metric items ── */
+.admin-dashboard-container .health-metric-item {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 16px 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 64px;
+  transition: all 0.2s ease !important;
+}
+
+.admin-dashboard-container .health-metric-item:hover {
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border)) !important;
+  background: var(--bg-hover) !important;
+}
+
+/* ── Diagnostics inner metric cards ── */
+.admin-dashboard-container .diag-metric {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 16px !important;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease !important;
+}
+
+.admin-dashboard-container .diag-metric:hover {
+  border-color: color-mix(in srgb, var(--primary) 25%, var(--border)) !important;
+}
+
+.admin-dashboard-container .diag-metric-label {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--text-muted) !important;
+}
+
+.admin-dashboard-container .diag-metric-value {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  color: var(--text-primary) !important;
+  margin-top: 8px !important;
+}
+
+/* ── Remove dark scroll override for expanded chart modal (let it scroll) ── */
+.admin-dashboard-container .modal-scroll {
+  overscroll-behavior: contain;
+}
+
+/* ── Worker portal: ensure it doesn't inherit admin dashboard overrides ── */
+.worker-portal-container button:hover:not(:disabled) {
+  transform: none !important;
+  box-shadow: none !important;
 }
