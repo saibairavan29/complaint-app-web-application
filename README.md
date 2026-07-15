@@ -63,7 +63,15 @@ The system is partitioned into three key areas, each designed for specific user 
    ```
    *(Running on `http://localhost:3000`)*
 
-### Step 3: Populate Database Seeds (Optional)
+### Step 3 — Start Background Task Worker (Required for Voice Transcription)
+In a **third terminal**, run:
+```bash
+cd backend
+python manage.py qcluster
+```
+> ⚠️ Without this, all voice complaint transcriptions will silently queue and never process. Workers will submit voice complaints but no transcript will ever appear in the admin dashboard.
+
+### Step 4: Populate Database Seeds (Optional)
 To populate the database with project metadata and simulated complaint entries for testing, navigate to the `backend` folder and run:
 ```bash
 python manage.py seed_projects
@@ -86,3 +94,9 @@ Ensure all authentication policies, audit logs, timelines, and user lockout prot
 python verify_apis.py
 python verify_phase5_apis.py
 ```
+
+---
+
+## 📦 Production Deployment
+> 💡 Use `pip install -r backend/requirements-prod.txt` for production. The root `requirements.txt` is a development environment export.
+

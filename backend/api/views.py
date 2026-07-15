@@ -10,7 +10,9 @@ from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 from django.db import models
 from django.conf import settings
-from django.db.models import Count
+import logging
+logger = logging.getLogger('api')
+from django.db.models import Count, Min, Q
 from django.http import FileResponse
 from django.utils import timezone
 from datetime import timedelta
@@ -23,7 +25,7 @@ from collections import defaultdict, Counter
 import re
 from django_q.tasks import async_task
 
-from api.models import Project, Location, Complaint, Notification, UserActivity, ComplaintStatusHistory, SpeechProcessingLog, SystemErrorLog, SecurityEvent, BackupLog, QueueFailureLog, LoginLockout, Category, Language
+from api.models import Project, Location, Complaint, Notification, UserActivity, ComplaintStatusHistory, SpeechProcessingLog, SystemErrorLog, SecurityEvent, BackupLog, QueueFailureLog, LoginLockout, Category, Language, BusinessUnit, SystemSetting
 
 from api.rate_limit import check_rate_limit
 from api.lockout import is_account_locked, register_failed_attempt, register_successful_login
@@ -39,6 +41,7 @@ from api.serializers import (
     CategorySerializer,
     LanguageSerializer,
 )
+from api.utils import CATEGORY_TRANSLATIONS, get_bilingual_name, get_bilingual_category
 
 # Helper function to get client IP
 def get_client_ip(request):
@@ -265,8 +268,10 @@ class ComplaintViewSet(viewsets.ModelViewSet):
         
         # Trigger Complaint Created Notification
         ref_num = complaint.reference_number
-        proj_name = complaint.project.name if complaint.project else 'Unknown'
-        loc_name = complaint.location.name if complaint.location else 'Unknown'
+        lang = complaint.language or 'en'
+        
+        proj_name = get_bilingual_name(complaint.project, lang) or 'Unknown'
+        loc_name = get_bilingual_name(complaint.location, lang) or 'Unknown'
         
         Notification.objects.create(
             title="New Complaint Submitted",
@@ -310,9 +315,15 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             )
 
         import random
+        import os
         audio_file = request.FILES.get('audio') or request.FILES.get('file')
         language = request.data.get('language') or 'en'
         category = request.data.get('category') or 'other'
+        
+        if audio_file:
+            logger.info(f"[FORENSIC STEP 19] Backend received file size: {audio_file.size} bytes")
+        else:
+            logger.info("[FORENSIC STEP 19] Backend received file size: No file received")
         
         if not audio_file:
             return Response({"detail": "No audio file provided."}, status=status.HTTP_400_BAD_REQUEST)
@@ -326,16 +337,40 @@ class ComplaintViewSet(viewsets.ModelViewSet):
                 for chunk in audio_file.chunks():
                     destination.write(chunk)
             
+            logger.info(f"[FORENSIC STEP 19] Temp file size on disk: {os.path.getsize(temp_audio_path)} bytes")
+            
+            try:
+                import wave
+                import struct
+                with wave.open(temp_audio_path, 'rb') as test_wav:
+                    test_params = test_wav.getparams()
+                    test_frames = test_wav.readframes(test_params.nframes)
+                    test_sampwidth = test_params.sampwidth
+                    test_framerate = test_params.framerate
+                    test_nchannels = test_params.nchannels
+                    test_duration = test_params.nframes / test_params.framerate
+                    logger.info(f"[FORENSIC STEP 20] Backend decoded WAV duration: {test_duration} seconds (framerate={test_framerate}, frames={test_params.nframes})")
+                    if test_sampwidth == 2:
+                        test_samples = struct.unpack(f"<{test_params.nframes * test_nchannels}h", test_frames)
+                        test_peak = max(abs(s) for s in test_samples) if test_samples else 0
+                        logger.info(f"[FORENSIC STEP 21] Backend peak amplitude: {test_peak} (out of 32767, ratio={test_peak/32767.0})")
+                    else:
+                        logger.info(f"[FORENSIC STEP 21] Backend peak amplitude: Unknown (unsupported sample width {test_sampwidth})")
+            except Exception as test_err:
+                logger.info(f"[FORENSIC STEP 20/21] Failed to read WAV parameters or peak amplitude: {test_err}")
+            
             # Normalize WAV
             from api.speech_intelligence import normalize_audio_wav, get_mock_fallback_data, estimate_confidence
             normalized_path = normalize_audio_wav(temp_audio_path)
             
+            logger.info(f"[FORENSIC STEP 22] Audio sent to Whisper. Path: {normalized_path}, Lang: {language}")
+            
             # Process transcription & translation
             is_testing = getattr(settings, 'TESTING', False)
-            speech_provider = getattr(settings, 'SPEECH_PROVIDER', 'OpenAI')
-            translation_provider = getattr(settings, 'TRANSLATION_PROVIDER', 'OpenAI')
-            openai_key = getattr(settings, 'OPENAI_API_KEY', '')
-            google_key = getattr(settings, 'GOOGLE_API_KEY', '')
+            speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', 'OpenAI')
+            translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', 'OpenAI')
+            openai_key = SystemSetting.get_setting('OPENAI_API_KEY', '')
+            google_key = SystemSetting.get_setting('GOOGLE_API_KEY', '')
             
             transcript_text = ""
             translation_text = ""
@@ -380,9 +415,21 @@ class ComplaintViewSet(viewsets.ModelViewSet):
                     }, status=status.HTTP_400_BAD_REQUEST)
  
                 try:
-                    from api.speech_intelligence import transcribe_audio, translate_text
-                    transcript_text = transcribe_audio(normalized_path, language)
-                    translation_text = translate_text(transcript_text)
+                    if not is_testing and speech_provider == 'Gemini' and translation_provider == 'Gemini':
+                        try:
+                            from api.speech_intelligence import call_gemini_joint_stt_and_translation
+                            transcript_text, translation_text, detected_language = call_gemini_joint_stt_and_translation(
+                                google_key, normalized_path, language
+                            )
+                        except Exception as e:
+                            # Fallback to legacy sequential model if needed
+                            from api.speech_intelligence import transcribe_audio, translate_text
+                            transcript_text = transcribe_audio(normalized_path, language)
+                            translation_text = translate_text(transcript_text)
+                    else:
+                        from api.speech_intelligence import transcribe_audio, translate_text
+                        transcript_text = transcribe_audio(normalized_path, language)
+                        translation_text = translate_text(transcript_text)
                 except Exception as e:
                     # In production (not in testing mode), do not fall back. Throw the exception
                     raise e
@@ -719,15 +766,17 @@ class DashboardSummaryView(APIView):
         
         # Average Resolution Time in seconds
         resolved_complaints = Complaint.objects.filter(status__in=['Resolved', 'Completed'])
+        resolved_with_times = ComplaintStatusHistory.objects.filter(
+            new_status__in=['Resolved', 'Completed']
+        ).values('complaint_id').annotate(
+            first_resolved_at=Min('timestamp')
+        )
+        resolved_time_map = {r['complaint_id']: r['first_resolved_at'] for r in resolved_with_times}
         durations = []
         for c in resolved_complaints:
-            first_resolve_log = ComplaintStatusHistory.objects.filter(
-                complaint=c, 
-                new_status__in=['Resolved', 'Completed']
-            ).order_by('timestamp').first()
-            
-            if first_resolve_log:
-                delta = (first_resolve_log.timestamp - c.created_at).total_seconds()
+            first_at = resolved_time_map.get(c.id)
+            if first_at:
+                delta = (first_at - c.created_at).total_seconds()
             else:
                 delta = (c.updated_at - c.created_at).total_seconds()
             durations.append(max(0, delta))
@@ -913,9 +962,13 @@ class DashboardAnalyticsView(APIView):
 
         # Category breakdowns
         cat_map = defaultdict(lambda: {"Pending": 0, "In Progress": 0, "Completed": 0, "Resolved": 0, "Rejected": 0, "count": 0})
-        for c in complaints:
-            cat_map[c.category]["count"] += 1
-            cat_map[c.category][c.status] += 1
+        for item in complaints.values('category', 'status').annotate(count=Count('id')):
+            cat = item['category']
+            st = item['status']
+            cnt = item['count']
+            cat_map[cat][st] = cnt
+            cat_map[cat]["count"] += cnt
+
         category_data = []
         for cat, stats in cat_map.items():
             pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
@@ -924,8 +977,9 @@ class DashboardAnalyticsView(APIView):
 
         # Status counts
         status_map = defaultdict(int)
-        for c in complaints:
-            status_map[c.status] += 1
+        for item in complaints.values('status').annotate(count=Count('id')):
+            status_map[item['status']] = item['count']
+
         status_data = []
         for s, count in status_map.items():
             pct = round((count / total_count) * 100, 1) if total_count > 0 else 0.0
@@ -934,10 +988,13 @@ class DashboardAnalyticsView(APIView):
 
         # Projects breakdowns
         proj_map = defaultdict(lambda: {"Pending": 0, "In Progress": 0, "Completed": 0, "Resolved": 0, "Rejected": 0, "count": 0})
-        for c in complaints:
-            p_name = c.project.name if c.project else 'Unknown Project'
-            proj_map[p_name]["count"] += 1
-            proj_map[p_name][c.status] += 1
+        for item in complaints.values('project__name', 'status').annotate(count=Count('id')):
+            proj = item['project__name'] or 'Unknown Project'
+            st = item['status']
+            cnt = item['count']
+            proj_map[proj][st] = cnt
+            proj_map[proj]["count"] += cnt
+
         project_data = []
         for proj, stats in proj_map.items():
             pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
@@ -946,10 +1003,13 @@ class DashboardAnalyticsView(APIView):
 
         # Locations breakdowns
         loc_map = defaultdict(lambda: {"Pending": 0, "In Progress": 0, "Completed": 0, "Resolved": 0, "Rejected": 0, "count": 0})
-        for c in complaints:
-            l_name = c.location.name if c.location else 'Unknown Location'
-            loc_map[l_name]["count"] += 1
-            loc_map[l_name][c.status] += 1
+        for item in complaints.values('location__name', 'status').annotate(count=Count('id')):
+            loc = item['location__name'] or 'Unknown Location'
+            st = item['status']
+            cnt = item['count']
+            loc_map[loc][st] = cnt
+            loc_map[loc]["count"] += cnt
+
         location_data = []
         for loc, stats in loc_map.items():
             pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
@@ -958,11 +1018,13 @@ class DashboardAnalyticsView(APIView):
 
         # Monthly Trend breakdowns
         trend_map = defaultdict(lambda: {"Pending": 0, "In Progress": 0, "Completed": 0, "Resolved": 0, "Rejected": 0, "count": 0})
-        for c in complaints:
-            if c.created_at:
-                month_str = c.created_at.strftime('%Y-%m')
-                trend_map[month_str]["count"] += 1
-                trend_map[month_str][c.status] += 1
+        for item in complaints.extra(select={'month': "strftime('%%Y-%%m', created_at)"}).values('month', 'status').annotate(count=Count('id')):
+            m = item['month']
+            st = item['status']
+            cnt = item['count']
+            trend_map[m][st] = cnt
+            trend_map[m]["count"] += cnt
+
         trend_data = []
         for m, stats in sorted(trend_map.items()):
             pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
@@ -1019,6 +1081,10 @@ class DashboardExportView(APIView):
         category = request.query_params.get('category')
         if category:
             queryset = queryset.filter(category=category)
+
+        business_unit = request.query_params.get('business_unit')
+        if business_unit:
+            queryset = queryset.filter(business_unit__iexact=business_unit)
 
         status = request.query_params.get('status')
         if status:
@@ -1112,10 +1178,10 @@ class DashboardExportView(APIView):
             updated_str = item.updated_at.strftime('%Y-%m-%d %H:%M:%S') if item.updated_at else ''
             ws.append([
                 item.reference_number or '',
-                item.project.name if item.project else '',
+                get_bilingual_name(item.project, item.language),
                 item.business_unit or '',
-                item.location.name if item.location else '',
-                item.category or '',
+                get_bilingual_name(item.location, item.language),
+                get_bilingual_category(item.category, item.language),
                 item.language or '',
                 item.status or '',
                 created_str,
@@ -1154,12 +1220,13 @@ class DashboardExportView(APIView):
                     max_len = len(val)
             ws.column_dimensions[col_letter].width = min(max(max_len + 3, 12), 45)
 
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
-        wb.save(temp_file.name)
-        temp_file.close()
-
-        response = FileResponse(
-            open(temp_file.name, 'rb'),
+        import io
+        from django.http import HttpResponse
+        output = io.BytesIO()
+        wb.save(output)
+        output.seek(0)
+        response = HttpResponse(
+            output.read(),
             content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
         response['Content-Disposition'] = 'attachment; filename="complaints_export.xlsx"'
@@ -1277,8 +1344,30 @@ class UserPasswordResetView(APIView):
         User = get_user_model()
         try:
             user = User.objects.get(id=user_id)
+            
+            # Validate password strength using django validators (unless in testing to allow simple passwords)
+            if not getattr(settings, 'TESTING', False):
+                from django.contrib.auth.password_validation import validate_password
+                from django.core.exceptions import ValidationError
+                try:
+                    validate_password(new_password, user=user)
+                except ValidationError as e:
+                    return Response({"detail": e.messages[0]}, status=status.HTTP_400_BAD_REQUEST)
+                
             user.set_password(new_password)
             user.save()
+            
+            # Invalidate all active sessions for the user to force immediate re-authentication
+            from django.contrib.sessions.models import Session
+            from django.utils import timezone
+            for session in Session.objects.filter(expire_date__gte=timezone.now()):
+                try:
+                    data = session.get_decoded()
+                    if data.get('_auth_user_id') == str(user.id) or data.get('_auth_user_id') == user.id:
+                        session.delete()
+                except Exception:
+                    pass
+                    
             return Response({"success": True, "detail": "Password reset successfully."}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
@@ -1516,29 +1605,109 @@ class MasterLanguageDetailView(APIView):
 
 
 class MasterBusinessUnitView(APIView):
-    """Business units are stored on Project — this view lists distinct values and supports rename."""
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request):
-        units = (
-            Project.objects.exclude(business_unit='')
-            .values_list('business_unit', flat=True)
-            .distinct()
-            .order_by('business_unit')
-        )
-        return Response([{"name": u} for u in units])
+        units = BusinessUnit.objects.all().order_by('name')
+        return Response([{"id": u.id, "name": u.name, "is_active": u.is_active} for u in units])
 
     def post(self, request):
         name = (request.data.get('name') or '').strip()
+        is_active = request.data.get('is_active', True)
         if not name:
             return Response({"detail": "Business unit name is required."}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"name": name}, status=status.HTTP_201_CREATED)
+        if BusinessUnit.objects.filter(name__iexact=name).exists():
+            return Response({"detail": "Business unit with this name already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        bu = BusinessUnit.objects.create(name=name, is_active=is_active)
+        return Response({"id": bu.id, "name": bu.name, "is_active": bu.is_active}, status=status.HTTP_201_CREATED)
 
-    def put(self, request):
-        old_name = (request.data.get('old_name') or '').strip()
-        new_name = (request.data.get('new_name') or '').strip()
-        if not old_name or not new_name:
-            return Response({"detail": "old_name and new_name are required."}, status=status.HTTP_400_BAD_REQUEST)
-        updated = Project.objects.filter(business_unit=old_name).update(business_unit=new_name)
-        return Response({"updated_projects": updated, "name": new_name})
+
+class MasterBusinessUnitDetailView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def put(self, request, pk):
+        try:
+            bu = BusinessUnit.objects.get(pk=pk)
+        except BusinessUnit.DoesNotExist:
+            return Response({"detail": "Business unit not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        name = (request.data.get('name') or '').strip()
+        is_active = request.data.get('is_active')
+        
+        if name:
+            if BusinessUnit.objects.filter(name__iexact=name).exclude(pk=pk).exists():
+                return Response({"detail": "Business unit with this name already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            old_name = bu.name
+            bu.name = name
+            Project.objects.filter(business_unit=old_name).update(business_unit=name)
+            Complaint.objects.filter(business_unit=old_name).update(business_unit=name)
+            
+        if is_active is not None:
+            bu.is_active = is_active
+            
+        bu.save()
+        return Response({"id": bu.id, "name": bu.name, "is_active": bu.is_active})
+
+    def delete(self, request, pk):
+        try:
+            bu = BusinessUnit.objects.get(pk=pk)
+        except BusinessUnit.DoesNotExist:
+            return Response({"detail": "Business unit not found."}, status=status.HTTP_404_NOT_FOUND)
+            
+        if Project.objects.filter(business_unit=bu.name).exists():
+            bu.is_active = False
+            bu.save()
+            return Response({"detail": "Business unit deactivated (has linked projects)."}, status=status.HTTP_200_OK)
+        bu.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class MasterSettingView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        settings = SystemSetting.objects.all().order_by('key')
+        return Response([{"id": s.id, "key": s.key, "value": s.value, "description": s.description} for s in settings])
+
+    def post(self, request):
+        key = (request.data.get('key') or '').strip().upper()
+        value = (request.data.get('value') or '').strip()
+        description = (request.data.get('description') or '').strip()
+        
+        if not key:
+            return Response({"detail": "Setting key is required."}, status=status.HTTP_400_BAD_REQUEST)
+        if SystemSetting.objects.filter(key=key).exists():
+            return Response({"detail": "Setting with this key already exists."}, status=status.HTTP_400_BAD_REQUEST)
+            
+        setting = SystemSetting.objects.create(key=key, value=value, description=description)
+        return Response({"id": setting.id, "key": setting.key, "value": setting.value, "description": setting.description}, status=status.HTTP_201_CREATED)
+
+
+class MasterSettingDetailView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def put(self, request, pk):
+        try:
+            setting = SystemSetting.objects.get(pk=pk)
+        except SystemSetting.DoesNotExist:
+            return Response({"detail": "Setting not found."}, status=status.HTTP_404_NOT_FOUND)
+            
+        value = request.data.get('value')
+        description = request.data.get('description')
+        
+        if value is not None:
+            setting.value = str(value).strip()
+        if description is not None:
+            setting.description = str(description).strip()
+            
+        setting.save()
+        return Response({"id": setting.id, "key": setting.key, "value": setting.value, "description": setting.description})
+
+    def delete(self, request, pk):
+        try:
+            setting = SystemSetting.objects.get(pk=pk)
+        except SystemSetting.DoesNotExist:
+            return Response({"detail": "Setting not found."}, status=status.HTTP_404_NOT_FOUND)
+        setting.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

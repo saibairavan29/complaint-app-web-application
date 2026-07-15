@@ -229,7 +229,7 @@ html {
 }
 
 /* 6. Chart axis labels: 14px minimum */
-.admin-dashboard-container svg text {
+.admin-dashboard-container svg text.force-global-svg-text-size {
   font-size: 14px !important;
 }
 
@@ -274,12 +274,21 @@ html {
   padding-bottom: 10px !important;
 }
 
-/* 11. Notification drawer text: 15px minimum */
-.notification-drawer,
-.notification-drawer p,
-.notification-drawer span,
-.notification-drawer button {
+/* 11. Notification drawer text scale */
+.notification-drawer p {
+  font-size: 13.5px !important;
+  line-height: 1.5 !important;
+}
+.notification-drawer span {
+  font-size: 12px !important;
+}
+.notification-drawer h3 {
   font-size: 15px !important;
+  font-weight: 850 !important;
+}
+.notification-drawer button {
+  font-size: 11px !important;
+  font-weight: 800 !important;
 }
 
 /* 12. Intelligence cards / general cards: 16px minimum */
@@ -527,10 +536,25 @@ html {
 .theme-light .dashboard-card,
 .theme-light .bg-slate-900,
 .theme-light .bg-slate-900\/60,
+.theme-light .bg-slate-955,
 .theme-light .bg-slate-950 {
-  background-color: var(--bg-card) !important;
-  border-color: var(--border) !important;
+  background-color: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
   color: var(--text-primary) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 15px 35px -10px rgba(15, 23, 42, 0.05), 0 0 1px 1px rgba(255, 255, 255, 0.8) inset !important;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 250ms cubic-bezier(0.16, 1, 0.3, 1), border-color 250ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.theme-light .kpi-card:hover,
+.theme-light .intelligence-card:hover,
+.theme-light .filter-panel:hover,
+.theme-light .dashboard-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(37, 99, 235, 0.15) !important;
+  border-color: rgba(37, 99, 235, 0.25) !important;
 }
 .theme-light .kpi-card {
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.06), 0 2px 4px -2px rgb(0 0 0 / 0.04) !important;
@@ -729,18 +753,26 @@ header {
 }
 
 .admin-dashboard-container .kpi-card {
-  padding: 32px 24px !important; /* Larger KPI cards */
-  min-height: 140px !important;
+  padding: 24px !important;
+  min-height: 145px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
 }
 
 .admin-dashboard-container .kpi-card-value {
-  font-size: 40px !important; /* Larger typography for KPI values */
+  font-size: 44px !important;
   font-weight: 900 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.03em !important;
 }
 
 .admin-dashboard-container .kpi-card-label {
-  font-size: 16px !important; /* Clearer titles */
-  font-weight: 800 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
 }
 
 .admin-dashboard-container .dashboard-card {
@@ -855,9 +887,9 @@ svg g.group:hover {
 }
 
 /* Ensure no chart text is below 14px and default sizes are robust */
-.admin-dashboard-container svg text {
-  font-size: 15px !important;
-}
+/* .admin-dashboard-container svg text.force-global-svg-text-size-large {
+  font-size: 16px !important;
+} */
 
 /* ==========================================================================
    PHASE 6.1A — ENTERPRISE DESIGN SYSTEM COMPONENT CLASSES
@@ -878,6 +910,52 @@ svg g.group:hover {
   line-height: 1.4;
   white-space: nowrap;
   border: 1px solid transparent;
+}
+
+/* Speech & Translation Badges */
+.ds-speech-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 850;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem !important;
+  border-radius: 6px !important;
+  border: 1px solid transparent !important;
+  font-size: 10px !important;
+  line-height: 1.2 !important;
+  transition: all 0.2s ease !important;
+}
+
+.theme-light .ds-speech-badge-processing {
+  background-color: rgba(37, 99, 235, 0.08) !important;
+  color: #1d4ed8 !important;
+  border-color: rgba(37, 99, 235, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(37, 99, 235, 0.05) !important;
+}
+.theme-light .ds-speech-badge-retrying {
+  background-color: rgba(217, 119, 6, 0.08) !important;
+  color: #b45309 !important;
+  border-color: rgba(217, 119, 6, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(217, 119, 6, 0.05) !important;
+}
+.theme-light .ds-speech-badge-completed {
+  background-color: rgba(16, 185, 129, 0.08) !important;
+  color: #047857 !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(16, 185, 129, 0.05) !important;
+}
+.theme-light .ds-speech-badge-failed {
+  background-color: rgba(239, 68, 68, 0.08) !important;
+  color: #b91c1c !important;
+  border-color: rgba(239, 68, 68, 0.2) !important;
+  box-shadow: 0 1px 2px rgba(239, 68, 68, 0.05) !important;
+}
+.theme-light .ds-speech-badge-pending {
+  background-color: rgba(100, 116, 139, 0.08) !important;
+  color: #475569 !important;
+  border-color: rgba(100, 116, 139, 0.2) !important;
 }
 
 /* Completed — green / success */
@@ -1240,105 +1318,105 @@ svg g.group:hover {
    ========================================================================== */
 
 .admin-dashboard-container.theme-dark {
-  /* ── Premium Dark Theme ── */
-  --bg: #09090B;
-  --bg-card: #121214;
-  --bg-secondary: #18181B;
-  --bg-input: #09090B;
-  --bg-hover: #1F1F23;
-  --bg-selected: #27272A;
-  --border: #27272A;
-  --border-color: #27272A;
-  --border-hover: #3F3F46;
+  /* ── Premium Dark Theme (Dark blue, charcoal, graphite, elegant royal accents) ── */
+  --bg: #04060d;
+  --bg-card: rgba(10, 15, 30, 0.75);
+  --bg-secondary: #0e1329;
+  --bg-input: #050817;
+  --bg-hover: #172045;
+  --bg-selected: #243377;
+  --border: rgba(59, 130, 246, 0.15);
+  --border-color: rgba(59, 130, 246, 0.15);
+  --border-hover: rgba(59, 130, 246, 0.35);
   
   /* ── Brand Colors ── */
-  --primary: #6366F1;
-  --primary-hover: #818CF8;
-  --primary-glow: rgba(99, 102, 241, 0.25);
-  --secondary: #06B6D4;
-  --secondary-hover: #22D3EE;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --primary-glow: rgba(59, 130, 246, 0.35);
+  --secondary: #6366f1;
+  --secondary-hover: #818cf8;
   
   /* ── Semantic Colors ── */
-  --success: #22C55E;
-  --success-bg: rgba(34, 197, 94, 0.15);
-  --success-border: rgba(34, 197, 94, 0.4);
-  --warning: #F59E0B;
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.15);
+  --success-border: rgba(16, 185, 129, 0.4);
+  --warning: #f59e0b;
   --warning-bg: rgba(245, 158, 11, 0.15);
   --warning-border: rgba(245, 158, 11, 0.4);
-  --danger: #EF4444;
+  --danger: #ef4444;
   --danger-bg: rgba(239, 68, 68, 0.15);
   --danger-border: rgba(239, 68, 68, 0.4);
-  --info: #3B82F6;
+  --info: #3b82f6;
   --info-bg: rgba(59, 130, 246, 0.15);
   --info-border: rgba(59, 130, 246, 0.4);
   
   /* ── Text Colors ── */
-  --text-primary: #FAFAFA;
-  --text-secondary: #A1A1AA;
-  --text-muted: #71717A;
-  --text-disabled: #52525B;
+  --text-primary: #ffffff;
+  --text-secondary: #f1f5f9;
+  --text-muted: #a1a1aa;
+  --text-disabled: #52525b;
   
   /* ── Scrollbar ── */
-  --scrollbar-track: #09090B;
-  --scrollbar-thumb: #27272A;
-  --scrollbar-thumb-hover: #6366F1;
+  --scrollbar-track: #04060d;
+  --scrollbar-thumb: #1e295d;
+  --scrollbar-thumb-hover: #3b82f6;
   
   /* ── Effects ── */
   --card-radius: 20px;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(99, 102, 241, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  --shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --shadow-card-hover: 0 12px 40px 0 rgba(59, 130, 246, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .admin-dashboard-container.theme-light {
-  /* ── Premium Light Theme ── */
-  --bg: #FAFAFA;
-  --bg-card: #FFFFFF;
-  --bg-secondary: #F4F4F5;
-  --bg-input: #FFFFFF;
-  --bg-hover: #E4E4E7;
-  --bg-selected: #E0E7FF;
-  --border: #E4E4E7;
-  --border-color: #E4E4E7;
-  --border-hover: #D4D4D8;
+  /* ── Premium Light Theme (Clean, elegant, subtle glossy finish) ── */
+  --bg: #f4f6fa;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-secondary: #f8fafc;
+  --bg-input: #ffffff;
+  --bg-hover: #f1f5f9;
+  --bg-selected: rgba(37, 99, 235, 0.08);
+  --border: rgba(226, 232, 240, 0.8);
+  --border-color: rgba(226, 232, 240, 0.8);
+  --border-hover: #cbd5e1;
   
   /* ── Brand Colors ── */
-  --primary: #4F46E5;
-  --primary-hover: #6366F1;
-  --primary-glow: rgba(79, 70, 229, 0.18);
-  --secondary: #0891B2;
-  --secondary-hover: #06B6D4;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-glow: rgba(37, 99, 235, 0.15);
+  --secondary: #0891b2;
+  --secondary-hover: #06b6d4;
   
   /* ── Semantic Colors ── */
-  --success: #16A34A;
-  --success-bg: rgba(22, 163, 74, 0.12);
-  --success-border: rgba(22, 163, 74, 0.35);
-  --warning: #D97706;
-  --warning-bg: rgba(217, 119, 6, 0.12);
-  --warning-border: rgba(217, 119, 6, 0.35);
-  --danger: #DC2626;
-  --danger-bg: rgba(220, 38, 38, 0.12);
-  --danger-border: rgba(220, 38, 38, 0.35);
-  --info: #2563EB;
-  --info-bg: rgba(37, 99, 235, 0.12);
-  --info-border: rgba(37, 99, 235, 0.35);
+  --success: #16a34a;
+  --success-bg: rgba(22, 163, 74, 0.1);
+  --success-border: rgba(22, 163, 74, 0.3);
+  --warning: #d97706;
+  --warning-bg: rgba(217, 119, 6, 0.1);
+  --warning-border: rgba(217, 119, 6, 0.3);
+  --danger: #dc2626;
+  --danger-bg: rgba(220, 38, 38, 0.1);
+  --danger-border: rgba(220, 38, 38, 0.3);
+  --info: #2563eb;
+  --info-bg: rgba(37, 99, 235, 0.1);
+  --info-border: rgba(37, 99, 235, 0.3);
   
   /* ── Text Colors ── */
-  --text-primary: #18181B;
-  --text-secondary: #52525B;
-  --text-muted: #71717A;
-  --text-disabled: #A1A1AA;
+  --text-primary: #0f172a;
+  --text-secondary: #1e293b;
+  --text-muted: #334155;
+  --text-disabled: #475569;
   
   /* ── Scrollbar ── */
-  --scrollbar-track: #F4F4F5;
-  --scrollbar-thumb: #D4D4D8;
-  --scrollbar-thumb-hover: #4F46E5;
+  --scrollbar-track: #f4f6fa;
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #2563eb;
   
   /* ── Effects ── */
   --card-radius: 20px;
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(79, 70, 229, 0.2), inset 0 1px 0 rgba(255, 255, 255, 1);
-  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 1);
+  --shadow-card: 0 8px 32px 0 rgba(31, 38, 135, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --shadow-card-hover: 0 12px 40px 0 rgba(37, 99, 235, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .admin-dashboard-container {
@@ -1354,9 +1432,9 @@ svg g.group:hover {
 }
 
 .admin-dashboard-container .dashboard-main {
-  max-width: 1920px;
-  margin: 0 auto;
-  width: 100%;
+  max-width: 100% !important;
+  margin: 0 !important;
+  width: 100% !important;
 }
 
 .admin-dashboard-container .dashboard-title {
@@ -1465,7 +1543,7 @@ svg g.group:hover {
   border-radius: var(--card-radius, 20px) !important;
   box-shadow: var(--shadow-card) !important;
   color: var(--text-primary) !important;
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease !important;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1), border-color 260ms ease !important;
   position: relative;
   overflow: hidden;
 }
@@ -1493,9 +1571,9 @@ svg g.group:hover {
 .admin-dashboard-container .dashboard-card:hover,
 .admin-dashboard-container .kpi-card:hover,
 .admin-dashboard-container .chart-card:hover {
-  transform: translateY(-4px) !important;
+  transform: translateY(-3px) scale(1.006) !important;
   box-shadow: var(--shadow-card-hover) !important;
-  border-color: color-mix(in srgb, var(--primary) 30%, var(--border)) !important;
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border)) !important;
 }
 
 .admin-dashboard-container .btn-enterprise {
@@ -1606,12 +1684,19 @@ svg g.group:hover {
 }
 
 .admin-dashboard-container .ds-badge {
-  font-size: 15px !important;
-  padding: 0.35rem 0.75rem !important;
-  border-radius: 8px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
+  font-size: 10px !important;
+  padding: 0 !important;
+  width: 105px !important;
+  height: 24px !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
   transition: transform 0.15s ease, filter 0.15s ease !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
 }
 
 .admin-dashboard-container .ds-badge:hover {
@@ -1697,26 +1782,29 @@ svg g.group:hover {
   justify-content: center;
   pointer-events: none;
   text-align: center;
+  line-height: 1.1;
 }
 
 .donut-chart-center-label {
-  font-size: 16px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.12em !important;
+  color: var(--text-muted) !important;
+  opacity: 0.85;
 }
 
 .donut-chart-center-value {
-  font-size: 42px;
-  font-weight: 900;
-  line-height: 1;
-  margin-top: 6px;
-  color: var(--text-primary);
+  font-size: 44px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  margin-top: 4px !important;
+  color: var(--text-primary) !important;
+  letter-spacing: -0.03em !important;
 }
 
-.donut-chart-wrap--large .donut-chart-center-label { font-size: 18px; }
-.donut-chart-wrap--large .donut-chart-center-value { font-size: 52px; }
+.donut-chart-wrap--large .donut-chart-center-label { font-size: 13px !important; letter-spacing: 0.14em !important; }
+.donut-chart-wrap--large .donut-chart-center-value { font-size: 60px !important; margin-top: 6px !important; }
 
 .donut-chart-empty {
   width: 100%;
@@ -2013,7 +2101,7 @@ svg g.group:hover {
   font-size: 15px !important;
 }
 .admin-dashboard-container .donut-legend-value {
-  font-size: 16px !important;
+  font-size: 19px !important;
 }
 
 /* ── KPI Cards: enforce equal height across all viewports ── */
@@ -2262,4 +2350,1727 @@ svg g.group:hover {
 .worker-portal-container button:hover:not(:disabled) {
   transform: none !important;
   box-shadow: none !important;
+}
+
+/* ==========================================================================
+   PHASE 6.1F-2 — ENTERPRISE UI, CHARTS & DESKTOP RESPONSIVENESS OVERRIDES
+   ========================================================================== */
+
+/* Smooth, instant-feel theme transitions */
+.admin-dashboard-container,
+.admin-dashboard-container header,
+.admin-dashboard-container .nav-tab,
+.admin-dashboard-container .enterprise-card,
+.admin-dashboard-container .dashboard-card,
+.admin-dashboard-container .kpi-card,
+.admin-dashboard-container .intelligence-card,
+.admin-dashboard-container .chart-card,
+.admin-dashboard-container .filter-panel-enterprise,
+.admin-dashboard-container .complaints-table-panel,
+.admin-dashboard-container select,
+.admin-dashboard-container input,
+.admin-dashboard-container button,
+.admin-dashboard-container table,
+.admin-dashboard-container tr,
+.admin-dashboard-container td,
+.admin-dashboard-container th,
+.admin-dashboard-container span,
+.admin-dashboard-container h1,
+.admin-dashboard-container h2,
+.admin-dashboard-container h3,
+.admin-dashboard-container h4,
+.admin-dashboard-container p,
+.admin-dashboard-container div {
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 150ms cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1),
+              fill 150ms cubic-bezier(0.4, 0, 0.2, 1),
+              stroke 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Glossy glassmorphic card effects */
+.admin-dashboard-container .enterprise-card,
+.admin-dashboard-container .dashboard-card,
+.admin-dashboard-container .kpi-card,
+.admin-dashboard-container .intelligence-card,
+.admin-dashboard-container .chart-card,
+.admin-dashboard-container .filter-panel-enterprise,
+.admin-dashboard-container .complaints-table-panel {
+  background: linear-gradient(135deg, var(--bg-card) 0%, color-mix(in srgb, var(--bg-card) 95%, var(--primary) 5%) 100%) !important;
+  backdrop-filter: blur(16px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
+  border-radius: 20px !important;
+  box-shadow: var(--shadow-card) !important;
+}
+
+.admin-dashboard-container .enterprise-card::after,
+.admin-dashboard-container .dashboard-card::after,
+.admin-dashboard-container .kpi-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%) !important;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.theme-light .admin-dashboard-container .enterprise-card::after,
+.theme-light .admin-dashboard-container .dashboard-card::after,
+.theme-light .admin-dashboard-container .kpi-card::after {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 100%) !important;
+}
+
+/* Card and button hover lifts & glows */
+.admin-dashboard-container .enterprise-card:hover,
+.admin-dashboard-container .dashboard-card:hover,
+.admin-dashboard-container .kpi-card:hover,
+.admin-dashboard-container .chart-card:hover,
+.admin-dashboard-container .filter-panel-enterprise:hover,
+.admin-dashboard-container .complaints-table-panel:hover {
+  transform: translateY(-4px) scale(1.008) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border)) !important;
+}
+
+.admin-dashboard-container button:hover:not(:disabled),
+.admin-dashboard-container .btn-enterprise:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
+}
+
+.admin-dashboard-container button:active:not(:disabled),
+.admin-dashboard-container .btn-enterprise:active:not(:disabled) {
+  transform: translateY(0.5px) scale(0.98) !important;
+  box-shadow: 0 2px 6px var(--primary-glow) !important;
+}
+
+/* Pagination design */
+.admin-dashboard-container .pagination-btn {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.admin-dashboard-container .pagination-btn:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.02) !important;
+  border-color: var(--primary) !important;
+  color: var(--text-primary) !important;
+  background: var(--bg-hover) !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
+}
+.admin-dashboard-container .pagination-btn:active:not(:disabled) {
+  transform: translateY(0.5px) scale(0.98) !important;
+}
+.admin-dashboard-container .pagination-btn:disabled {
+  opacity: 0.4 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+.admin-dashboard-container .pagination-btn.bg-blue-600,
+.admin-dashboard-container .pagination-btn[class*="bg-blue-600"] {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+/* Donut slice and legend sync highlights */
+.donut-slice {
+  cursor: pointer;
+  transition: opacity 250ms cubic-bezier(0.4, 0, 0.2, 1), 
+              transform 250ms cubic-bezier(0.4, 0, 0.2, 1), 
+              filter 250ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transform-origin: 120px 120px;
+}
+
+.donut-slice--active {
+  stroke: var(--text-primary);
+  stroke-width: 2.5px;
+}
+
+.donut-slice--highlighted {
+  transform: scale(1.05) !important;
+  filter: brightness(1.1) drop-shadow(0 4px 12px rgba(59, 130, 246, 0.4)) !important;
+}
+
+.donut-slice--dimmed {
+  opacity: 0.35 !important;
+}
+
+.donut-legend-item {
+  transition: transform 150ms cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 150ms cubic-bezier(0.16, 1, 0.3, 1), 
+              border-color 150ms cubic-bezier(0.16, 1, 0.3, 1), 
+              opacity 150ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.donut-legend-item--highlighted {
+  transform: translateY(-2px) scale(1.02) !important;
+  border-color: var(--primary) !important;
+  background-color: var(--bg-hover) !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
+}
+
+.donut-legend-item--dimmed {
+  opacity: 0.5 !important;
+}
+
+/* Fluid responsive layout container sizing */
+.admin-dashboard-container .dashboard-main {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 1.5rem 2rem !important;
+}
+
+.admin-dashboard-container .dashboard-header {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 1rem 2rem !important;
+}
+
+.admin-dashboard-container .dashboard-nav-bar {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 2rem !important;
+  padding-right: 2rem !important;
+}
+
+/* Charts Grid Desktop Reflow */
+@media (min-width: 1440px) {
+  .donut-chart-panel {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+  .donut-chart-panel .donut-legend {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    min-width: 100% !important;
+    gap: 8px !important;
+  }
+  .donut-chart-panel .donut-legend-item {
+    width: auto !important;
+    min-width: 130px !important;
+  }
+}
+
+/* Donut Legend wrap details for smaller sizes */
+@media (max-width: 1439px) {
+  .donut-chart-panel {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 20px !important;
+  }
+  .donut-chart-panel .donut-legend {
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    min-width: 100% !important;
+    gap: 8px !important;
+  }
+  .donut-chart-panel .donut-legend-item {
+    width: auto !important;
+    min-width: 130px !important;
+  }
+}
+
+/* Disable hover lifts and transforms inside the expanded modal to prevent layout shifts */
+.admin-modal,
+.admin-modal .enterprise-card,
+.admin-modal .enterprise-card:hover,
+.admin-modal .chart-expanded-panel:hover {
+  transform: none !important;
+  box-shadow: var(--shadow-card) !important;
+  border-color: var(--border) !important;
+}
+
+.admin-dashboard-container .expanded-card-static {
+  background: rgba(15, 23, 42, 0.45) !important;
+  backdrop-filter: blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.45), 0 0 1px 1px rgba(255, 255, 255, 0.08) inset !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  position: relative;
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.theme-light .admin-dashboard-container .expanded-card-static {
+  background: rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+  box-shadow: 0 30px 70px -10px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(255, 255, 255, 0.6) inset !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+}
+.admin-dashboard-container .expanded-card-static::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%) !important;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 24px !important;
+}
+.theme-light .admin-dashboard-container .expanded-card-static::after {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0) 100%) !important;
+}
+/* Absolutely NO hover translation/lift/jumping */
+.admin-dashboard-container .expanded-card-static:hover {
+  transform: none !important;
+}
+
+.donut-expanded-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 60px !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.donut-expanded-layout .donut-chart-wrap--large {
+  flex-shrink: 0 !important;
+}
+.donut-expanded-layout .donut-legend {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  min-width: 240px !important;
+  gap: 14px !important;
+  flex-wrap: nowrap !important;
+}
+.donut-expanded-layout .donut-legend-item {
+  width: 100% !important;
+  min-width: 0 !important;
+  justify-content: space-between !important;
+  display: flex !important;
+  padding: 8px 12px !important;
+}
+
+/* ── Premium Developer Diagnostics Panels ─────────────────────────────────── */
+.admin-dashboard-container .enterprise-card {
+  padding: 2rem !important;
+  gap: 1.5rem !important;
+}
+
+.admin-dashboard-container .enterprise-card .bg-slate-950,
+.admin-dashboard-container .enterprise-card .bg-slate-900\/50,
+.admin-dashboard-container .enterprise-card .bg-slate-950\/40 {
+  background-color: var(--bg-secondary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.admin-dashboard-container .enterprise-card .bg-slate-950:hover,
+.admin-dashboard-container .enterprise-card .bg-slate-900\/50:hover {
+  transform: translateY(-2px) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.admin-dashboard-container .enterprise-card .bg-slate-950 .text-lg,
+.admin-dashboard-container .enterprise-card .bg-slate-950 .text-xl,
+.admin-dashboard-container .enterprise-card .bg-slate-950 .text-2xl,
+.admin-dashboard-container .enterprise-card .bg-slate-950 .font-black {
+  font-size: 1.5rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .admin-dashboard-container .enterprise-card .bg-slate-950 .text-lg,
+.theme-dark .admin-dashboard-container .enterprise-card .bg-slate-950 .text-xl,
+.theme-dark .admin-dashboard-container .enterprise-card .bg-slate-950 .text-2xl,
+.theme-dark .admin-dashboard-container .enterprise-card .bg-slate-950 .font-black {
+  color: #ffffff !important;
+}
+
+.admin-dashboard-container .enterprise-card .bg-slate-950 span[class*="text-slate-5"] {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: var(--text-secondary) !important;
+  letter-spacing: 0.05em !important;
+}
+
+.admin-dashboard-container .enterprise-card table.dashboard-table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+}
+
+.admin-dashboard-container .enterprise-card table.dashboard-table th {
+  padding: 1.1rem 1.25rem !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  color: var(--text-secondary) !important;
+  background-color: var(--bg-hover) !important;
+  border-bottom: 2px solid var(--border) !important;
+  letter-spacing: 0.05em !important;
+}
+
+.admin-dashboard-container .enterprise-card table.dashboard-table td {
+  padding: 1.15rem 1.25rem !important;
+  font-size: 13.5px !important;
+  color: var(--text-primary) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.theme-dark .admin-dashboard-container .enterprise-card table.dashboard-table td {
+  color: var(--text-secondary) !important;
+}
+
+.admin-dashboard-container table.dashboard-table td .btn-enterprise,
+.admin-dashboard-container table.dashboard-table td button {
+  font-size: 11.5px !important;
+  padding: 6px 12px !important;
+  font-weight: 800 !important;
+  border-radius: 6px !important;
+}
+
+.admin-dashboard-container table.dashboard-table td .ds-badge {
+  font-size: 10.5px !important;
+  padding: 4px 10px !important;
+  font-weight: 800 !important;
+}
+
+/* ── Premium Complaint Detail Modal ─────────────────────────────────────── */
+.admin-modal {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.98) 100%) !important;
+  backdrop-filter: blur(24px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(110%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  color: var(--text-primary) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6) !important;
+  padding: 0 !important;
+}
+
+.theme-dark .admin-modal {
+  background: linear-gradient(135deg, rgba(13, 17, 28, 0.85) 0%, rgba(9, 11, 20, 0.95) 100%) !important;
+  backdrop-filter: blur(24px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(130%) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-modal .modal-title {
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .admin-modal .modal-title {
+  color: #ffffff !important;
+}
+
+.admin-modal .grid-cols-1 > div,
+.admin-modal .grid-cols-2 > div {
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  transition: all 0.2s ease;
+}
+
+.admin-modal .grid-cols-1 > div:hover,
+.admin-modal .grid-cols-2 > div:hover {
+  border-color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+
+.admin-modal .modal-label,
+.admin-modal span[class*="text-slate-5"] {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+.admin-modal span[class*="text-slate-200"] {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .admin-modal span[class*="text-slate-200"] {
+  color: #f1f5f9 !important;
+}
+
+.admin-modal .flex-col.bg-slate-950,
+.admin-modal .w-full.bg-slate-950,
+.admin-modal .bg-slate-950.flex.flex-col.gap-4 {
+  background-color: var(--bg-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+}
+
+.admin-modal .border-l {
+  border-color: var(--border) !important;
+}
+
+.admin-modal button.absolute {
+  border-radius: 8px !important;
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border) !important;
+  transition: all 0.15s ease !important;
+}
+
+.admin-modal button.absolute:hover {
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.admin-modal .rounded-full {
+  border-color: var(--bg-primary) !important;
+}
+
+.admin-modal .bg-slate-700 {
+  background-color: var(--text-muted) !important;
+}
+
+.admin-modal .text-slate-400 {
+  color: var(--text-secondary) !important;
+  font-weight: 700 !important;
+}
+
+.admin-modal .text-slate-500 {
+  color: var(--text-muted) !important;
+}
+
+.admin-modal .text-slate-300 {
+  color: var(--text-primary) !important;
+}
+
+.admin-modal .text-white {
+  color: var(--text-primary) !important;
+}
+
+.theme-dark .admin-modal .text-slate-300 {
+  color: #e2e8f0 !important;
+}
+
+.theme-dark .admin-modal .text-white {
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   PHASE 6.2B — PREMIUM ENTERPRISE LIGHT THEME POLISH OVERLAYS
+   ========================================================================== */
+
+.theme-light .admin-dashboard-container {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.theme-light .section-heading {
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: #0f172a !important;
+}
+
+.theme-light .kpi-card-label {
+  color: #64748b !important;
+  font-weight: 700 !important;
+}
+
+.theme-light .kpi-card-value {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.theme-light .settings-section {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04) !important;
+}
+
+.theme-light .health-metric-item {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* User Management Table Styles */
+.theme-light .user-management-table {
+  font-family: inherit !important;
+}
+.theme-light .user-management-table th {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  font-weight: 700 !important;
+  border-bottom: 2px solid #e2e8f0 !important;
+}
+.theme-light .user-management-table td {
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Donut legend font adjustments */
+.theme-light .donut-legend-label {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+.theme-light .donut-legend-value {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+/* Responsive Donut wrap scaling */
+.donut-chart-wrap {
+  position: relative;
+  width: min(240px, 100%);
+  height: auto;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+/* Modal and Drawer styling overlays */
+.theme-light .admin-modal {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.theme-light .notification-drawer {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(25px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05) !important;
+}
+.theme-light .notification-drawer h3 {
+  color: #0f172a !important;
+}
+.theme-light .notification-drawer button {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #475569 !important;
+}
+.theme-light .notification-drawer button:hover {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  color: #0f172a !important;
+}
+
+.theme-light .expanded-chart-close {
+  background-color: #f1f5f9 !important;
+  color: #475569 !important;
+  border-color: #e2e8f0 !important;
+}
+.theme-light .expanded-chart-close:hover {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* System diagnostics boxes contrast & borders */
+.theme-light .bg-slate-950,
+.theme-light .bg-slate-900,
+.theme-light .bg-slate-900\/50,
+.theme-light .bg-slate-900\/60,
+.theme-light .bg-slate-955,
+.theme-light .bg-slate-950\/20,
+.theme-light .bg-slate-950\/40,
+.theme-light .bg-slate-950\/60 {
+  background-color: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+.theme-light .border-slate-850,
+.theme-light .border-slate-900,
+.theme-light .border-slate-750,
+.theme-light .border-slate-800 {
+  border-color: #e2e8f0 !important;
+}
+
+.theme-light .text-slate-400,
+.theme-light .text-slate-500,
+.theme-light .text-slate-600 {
+  color: #64748b !important;
+}
+
+.theme-light .text-slate-350 {
+  color: #475569 !important;
+}
+
+.theme-light .text-slate-300,
+.theme-light .text-slate-200 {
+  color: #334155 !important;
+}
+
+.theme-light .text-slate-100,
+.theme-light .text-white {
+  color: #0f172a !important;
+}
+
+/* High contrast deep colors for indicators in Light Theme */
+.theme-light .text-emerald-400,
+.theme-light .text-emerald-500 {
+  color: #047857 !important;
+}
+.theme-light .text-rose-400,
+.theme-light .text-rose-455,
+.theme-light .text-rose-500 {
+  color: #b91c1c !important;
+}
+.theme-light .text-amber-400,
+.theme-light .text-amber-500 {
+  color: #b45309 !important;
+}
+.theme-light .text-sky-400,
+.theme-light .text-sky-500,
+.theme-light .text-blue-500 {
+  color: #1d4ed8 !important;
+}
+.theme-light .text-indigo-400,
+.theme-light .text-indigo-500 {
+  color: #4338ca !important;
+}
+.theme-light .text-cyan-400,
+.theme-light .text-cyan-500 {
+  color: #0e7490 !important;
+}
+
+/* Chart SVG overrides for Light Theme */
+.theme-light svg text {
+  fill: #475569 !important;
+}
+
+.theme-light svg line,
+.theme-light svg path.domain {
+  stroke: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Close buttons styling for both themes */
+.admin-close-btn {
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border) !important;
+  background: transparent !important;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border-radius: 8px !important;
+}
+.admin-close-btn:hover {
+  color: #ffffff !important;
+  border-color: #dc2626 !important;
+  background: #dc2626 !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* Expanded-chart modal close: always red hover */
+.expanded-chart-close:hover,
+.theme-light .expanded-chart-close:hover {
+  background-color: #dc2626 !important;
+  color: #ffffff !important;
+  border-color: #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4) !important;
+}
+
+/* ==========================================================================
+   PHASE 6.2D — FINAL ENTERPRISE UI POLISH
+   ========================================================================== */
+
+/* ── Task 3 & 4: KPI Visual Hierarchy — Power BI / Azure / Grafana style ── */
+.admin-dashboard-container .kpi-card {
+  padding: 28px 28px 20px 28px !important;
+  min-height: 165px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  border-left: 4px solid transparent !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Colored left-accent border per icon rank */
+.admin-dashboard-container .kpi-card .border-emerald-500\/30 { border-left-color: #10b981 !important; }
+.admin-dashboard-container .kpi-card .border-amber-500\/30  { border-left-color: #f59e0b !important; }
+.admin-dashboard-container .kpi-card .border-rose-500\/30   { border-left-color: #ef4444 !important; }
+.admin-dashboard-container .kpi-card .border-indigo-500\/30 { border-left-color: #6366f1 !important; }
+.admin-dashboard-container .kpi-card .border-cyan-500\/30   { border-left-color: #06b6d4 !important; }
+
+.admin-dashboard-container .kpi-card-label {
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  color: var(--text-muted) !important;
+  margin-bottom: 4px !important;
+}
+
+.admin-dashboard-container .kpi-card-value {
+  font-size: 52px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: -0.04em !important;
+  color: var(--text-primary) !important;
+  margin-top: 8px !important;
+}
+
+/* KPI icon container sizing boost */
+.admin-dashboard-container .kpi-card > div:first-child > div {
+  padding: 10px !important;
+  border-radius: 10px !important;
+}
+
+.admin-dashboard-container .kpi-card svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* ── Task 5: Intelligence & Diagnostics Typography ── */
+.admin-dashboard-container .intelligence-card,
+.admin-dashboard-container .intelligence-card p,
+.admin-dashboard-container .intelligence-card span {
+  font-size: 14px !important;
+}
+
+.admin-dashboard-container .intelligence-card .text-3xl,
+.admin-dashboard-container .intelligence-card .text-2xl {
+  font-size: 2rem !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+}
+
+.admin-dashboard-container .intelligence-card .text-xs {
+  font-size: 11px !important;
+}
+
+/* Diagnostics panels: larger values and labels */
+.admin-dashboard-container .enterprise-card .text-sm {
+  font-size: 13px !important;
+}
+
+.admin-dashboard-container .enterprise-card .text-lg {
+  font-size: 1.2rem !important;
+  font-weight: 800 !important;
+}
+
+.admin-dashboard-container .section-heading {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* ── Task 7: Donut Legend — White text, dark background, equal width (Expanded Modal Only) ── */
+.donut-expanded-layout .donut-legend-item {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  width: 100% !important;
+  justify-content: space-between !important;
+  padding: 10px 14px !important;
+}
+
+.donut-expanded-layout .donut-legend-label {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #f1f5f9 !important;
+  flex: 1;
+}
+
+.donut-expanded-layout .donut-legend-value {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+/* Ensure white text in light theme too (Expanded Modal Only) */
+.theme-light .donut-expanded-layout .donut-legend-item {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.theme-light .donut-expanded-layout .donut-legend-label {
+  color: #f1f5f9 !important;
+}
+
+.theme-light .donut-expanded-layout .donut-legend-value {
+  color: #ffffff !important;
+}
+
+/* Legend width equality */
+.donut-expanded-layout .donut-legend {
+  min-width: 220px !important;
+  gap: 10px !important;
+}
+
+/* ── Task 10: Master Data — badge auto-width, search spacing ── */
+.admin-dashboard-container .ds-badge {
+  font-size: 11px !important;
+  padding: 3px 10px !important;
+  width: auto !important;          /* Remove fixed 105px width */
+  min-width: 60px !important;
+  height: auto !important;         /* Remove fixed 24px height */
+  min-height: 22px !important;
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  white-space: nowrap !important;
+  box-sizing: border-box !important;
+}
+
+/* Master data search icon spacing */
+.admin-dashboard-container input.ds-input-search {
+  padding-left: 3.25rem !important;
+  padding-right: 1.25rem !important;
+  text-align: left !important;
+}
+.admin-dashboard-container input.ds-input-search::placeholder {
+  text-align: left !important;
+}
+
+/* ── Task 11: Settings — Segmented control Today/7 Days/30 Days ── */
+.admin-dashboard-container button[class*="px-2"][class*="py-0.5"] {
+  border-radius: 6px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.04em !important;
+  padding: 4px 10px !important;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease !important;
+}
+
+/* Active state for diagnostics day selectors */
+.admin-dashboard-container button.bg-amber-500 {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #1a1a1a !important;
+  border-color: #b45309 !important;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35) !important;
+}
+
+/* ── Task 12: Light Theme — Fix modal/table button overrides ── */
+/* Narrowed scope so semantic action buttons (green, emerald, purple) are NOT overridden */
+.theme-light .admin-modal button:not([class*="bg-green"]):not([class*="bg-emerald"]):not([class*="bg-purple"]):not([class*="bg-blue"]):not([class*="bg-rose"]):not([class*="bg-indigo"]):not([class*="bg-amber"]):not([class*="bg-sky"]):not([class*="bg-red"]) {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+
+.theme-light table button:not([class*="bg-"]) {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+
+/* Ensure hover styles work for semantic export buttons in light theme */
+.theme-light button[class*="bg-green-"]:hover   { filter: brightness(0.92) !important; }
+.theme-light button[class*="bg-emerald-"]:hover  { filter: brightness(0.92) !important; }
+.theme-light button[class*="bg-purple-"]:hover   { filter: brightness(0.92) !important; }
+.theme-light button[class*="bg-sky-"]:hover      { filter: brightness(0.92) !important; }
+.theme-light button[class*="bg-blue-"]:hover     { filter: brightness(0.92) !important; }
+
+/* ── Task 9: Notification Drawer Resize Handle ── */
+.notification-drawer-resize-handle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: ew-resize;
+  background: transparent;
+  z-index: 10;
+  transition: background 0.15s ease;
+}
+
+.notification-drawer-resize-handle:hover {
+  background: var(--primary);
+  opacity: 0.5;
+}
+
+.notification-drawer-resize-handle:active {
+  background: var(--primary);
+  opacity: 0.8;
+}
+
+/* Notification drawer card reflow on width change */
+.notification-drawer .notification-drawer-item {
+  min-width: 0 !important;
+  word-break: break-word !important;
+  white-space: normal !important;
+}
+
+.notification-drawer p {
+  white-space: normal !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+}
+
+.notification-drawer span.text-xs,
+.notification-drawer .font-mono {
+  white-space: nowrap !important;
+}
+
+/* ── Task 3: Responsive Dashboard Grid ── */
+@media (max-width: 1366px) {
+  .admin-dashboard-container .kpi-card-value {
+    font-size: 40px !important;
+  }
+
+  .admin-dashboard-container .kpi-card {
+    padding: 20px !important;
+    min-height: 145px !important;
+  }
+
+  .admin-dashboard-container .section-heading {
+    font-size: 16px !important;
+  }
+}
+
+@media (min-width: 1600px) {
+  .admin-dashboard-container .kpi-card-value {
+    font-size: 56px !important;
+  }
+
+  .admin-dashboard-container .kpi-card {
+    min-height: 180px !important;
+    padding: 32px !important;
+  }
+}
+
+@media (min-width: 1920px) {
+  .admin-dashboard-container .kpi-card-value {
+    font-size: 60px !important;
+  }
+
+  .admin-dashboard-container .kpi-card {
+    min-height: 200px !important;
+    padding: 36px !important;
+  }
+}
+
+/* Prevent dashboard overflow / clip at any viewport */
+.admin-dashboard-container {
+  overflow-x: hidden !important;
+}
+
+.admin-dashboard-container .desktop-shell {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Charts: allow independent resize */
+.admin-dashboard-container .chart-card svg {
+  max-width: 100% !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+/* Table horizontal scroll only when needed */
+.admin-dashboard-container .overflow-x-auto {
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* ── Task 8: Expanded Analytics Modal — Sticky Header ── */
+.admin-dashboard-container .expanded-card-static {
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.admin-dashboard-container .expanded-chart-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 20 !important;
+  background: linear-gradient(135deg, rgba(13, 17, 28, 0.98) 0%, rgba(9, 11, 20, 0.98) 100%) !important;
+  backdrop-filter: blur(24px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(130%) !important;
+  padding: 1.75rem 2.25rem 1.35rem 2.25rem !important;
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Light Theme overrides for modal header */
+.theme-light .expanded-chart-header {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.98) 100%) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Make the inner body of expanded modal scrollable */
+.admin-dashboard-container .expanded-chart-body {
+  overflow-y: auto !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+}
+
+/* ── Phase 6.2F: Settings & System Typography Enhancements ── */
+.settings-tab-container .section-heading {
+  font-size: 22px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.015em !important;
+}
+
+.settings-tab-container h4 {
+  font-size: 16.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.settings-tab-container p.text-sm {
+  font-size: 14.5px !important;
+  line-height: 1.6 !important;
+}
+
+.settings-tab-container table th {
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  padding: 16px 20px !important;
+}
+
+.settings-tab-container table td {
+  font-size: 14px !important;
+  padding: 14px 20px !important;
+}
+
+.settings-tab-container table td.font-mono,
+.settings-tab-container table td .font-mono {
+  font-size: 13.5px !important;
+}
+
+.settings-tab-container .ds-badge {
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  padding: 5px 12px !important;
+  min-height: 26px !important;
+  border-radius: 6px !important;
+}
+
+.settings-tab-container button {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+}
+
+.settings-tab-container button[class*="px-2"][class*="py-0.5"] {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 6px 14px !important;
+  border-radius: 8px !important;
+}
+
+.settings-tab-container .text-xs {
+  font-size: 13.5px !important;
+}
+
+.settings-tab-container .text-sm {
+  font-size: 14.5px !important;
+}
+
+.settings-tab-container .text-lg {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+}
+
+.settings-tab-container .text-[9px] {
+  font-size: 12px !important;
+  font-weight: 800 !important;
+}
+
+.settings-tab-container .text-[10px] {
+  font-size: 12.5px !important;
+  font-weight: 800 !important;
+}
+
+.settings-tab-container .text-[8px] {
+  font-size: 11.5px !important;
+  font-weight: 750 !important;
+}
+
+.settings-tab-container select,
+.settings-tab-container input {
+  font-size: 14.5px !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+}
+
+.settings-tab-container .enterprise-card {
+  padding: 28px !important;
+  border-radius: 16px !important;
+}
+
+/* ── Spacing Consistency overrides ── */
+.admin-dashboard-container .desktop-shell,
+.admin-dashboard-container .dashboard-main {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 24px !important; /* Standard equal spacing between all dashboard rows */
+}
+
+.admin-dashboard-container .charts-grid {
+  gap: 24px !important; /* Standard equal spacing between chart cards */
+}
+
+/* ── Task 13: Standardized Premium Button System ── */
+.admin-dashboard-container button,
+.admin-dashboard-container .btn-enterprise,
+.admin-dashboard-container .dashboard-btn {
+  font-family: inherit !important;
+  font-weight: 800 !important;
+  border-radius: 8px !important;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+}
+
+/* Primary buttons (Export, Create User, etc.) */
+.admin-dashboard-container .btn-enterprise-primary {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2) !important;
+}
+.admin-dashboard-container .btn-enterprise-primary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 85%, #ffffff 15%) !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4) !important;
+}
+
+/* Secondary outline buttons (Expand, Edit, Cancel, etc.) */
+.admin-dashboard-container .btn-enterprise-secondary {
+  background: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border) !important;
+}
+.admin-dashboard-container .btn-enterprise-secondary:hover:not(:disabled) {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: color-mix(in srgb, var(--primary) 30%, var(--border)) !important;
+}
+
+/* Premium View / Update Action Button */
+.admin-dashboard-container .btn-view-update {
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  padding: 10px 20px !important;
+  min-width: 140px !important;
+  border-radius: 8px !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 80%, #a5b4fc) 100%) !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.2) !important;
+  transition: all 150ms cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.admin-dashboard-container .btn-view-update:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--primary) 70%, #a5b4fc) 100%) !important;
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35) !important;
+  transform: translateY(-2px) scale(1.02) !important;
+}
+
+.admin-dashboard-container .btn-view-update:active {
+  transform: translateY(0.5px) scale(0.98) !important;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2) !important;
+}
+
+/* Close buttons styling */
+.admin-dashboard-container .admin-close-btn {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  transition: all 150ms ease !important;
+}
+.admin-dashboard-container .admin-close-btn:hover {
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--primary) !important;
+  transform: rotate(90deg) !important;
+}
+
+/* ── Premium Fluid Glass styling adjustments ── */
+.theme-dark .admin-dashboard-container .enterprise-card,
+.theme-dark .admin-dashboard-container .dashboard-card {
+  background: linear-gradient(135deg, rgba(13, 17, 28, 0.75) 0%, rgba(9, 11, 20, 0.9) 100%) !important;
+  backdrop-filter: blur(20px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(120%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.theme-light .admin-dashboard-container .enterprise-card,
+.theme-light .admin-dashboard-container .dashboard-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.95) 100%) !important;
+  backdrop-filter: blur(20px) saturate(110%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(110%) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Soften macro hover scale effects */
+.admin-dashboard-container .enterprise-card:hover,
+.admin-dashboard-container .dashboard-card:hover,
+.admin-dashboard-container .kpi-card:hover,
+.admin-dashboard-container .chart-card:hover,
+.admin-dashboard-container .filter-panel-enterprise:hover,
+.admin-dashboard-container .complaints-table-panel:hover {
+  transform: translateY(-2px) scale(1.002) !important;
+  box-shadow: var(--shadow-card-hover) !important;
+}
+
+/* ── Light Theme Global Panel & Border Contrast Fixes ── */
+.theme-light .admin-dashboard-container .bg-slate-900,
+.theme-light .admin-dashboard-container .bg-slate-950,
+.theme-light .admin-dashboard-container .bg-slate-900\/60,
+.theme-light .admin-dashboard-container .bg-slate-900\/50,
+.theme-light .admin-dashboard-container .bg-slate-955,
+.theme-light .admin-dashboard-container .bg-slate-950\/40,
+.theme-light .admin-dashboard-container .bg-slate-950\/70 {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+.theme-light .admin-dashboard-container .border-slate-700,
+.theme-light .admin-dashboard-container .border-slate-750,
+.theme-light .admin-dashboard-container .border-slate-800,
+.theme-light .admin-dashboard-container .border-slate-850,
+.theme-light .admin-dashboard-container .border-slate-900 {
+  border-color: var(--border) !important;
+}
+
+/* ── Light Theme Global Button Restorations ── */
+.theme-light .admin-dashboard-container button.btn-enterprise-secondary,
+.theme-light .admin-dashboard-container button.bg-slate-800,
+.theme-light .admin-dashboard-container button.bg-slate-900,
+.theme-light .admin-dashboard-container button.bg-slate-900\/60 {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+}
+.theme-light .admin-dashboard-container button.btn-enterprise-secondary:hover,
+.theme-light .admin-dashboard-container button.bg-slate-800:hover,
+.theme-light .admin-dashboard-container button.bg-slate-900:hover,
+.theme-light .admin-dashboard-container button.bg-slate-900\/60:hover {
+  background-color: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--primary) !important;
+}
+
+.theme-light .admin-dashboard-container button.btn-enterprise-primary,
+.theme-light .admin-dashboard-container button.bg-blue-600,
+.theme-light .admin-dashboard-container button.bg-amber-500 {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 2px 8px var(--primary-glow) !important;
+}
+.theme-light .admin-dashboard-container button.btn-enterprise-primary:hover,
+.theme-light .admin-dashboard-container button.bg-blue-600:hover,
+.theme-light .admin-dashboard-container button.bg-amber-500:hover {
+  background: var(--primary-hover) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 14px var(--primary-glow) !important;
+}
+
+/* ── Settings Panel & Diagnostics Spacing/Typography ── */
+.settings-tab-container .enterprise-card {
+  padding: 32px !important;
+  border-radius: 20px !important;
+}
+
+.settings-tab-container .enterprise-card h4 {
+  font-size: 20px !important;
+  font-weight: 850 !important;
+  letter-spacing: -0.02em !important;
+  margin-bottom: 8px !important;
+}
+
+/* Inner diagnostic grids and cards */
+.settings-tab-container .bg-slate-950,
+.settings-tab-container .bg-slate-900,
+.settings-tab-container .bg-slate-900\/50 {
+  border-radius: 12px !important;
+  padding: 16px 20px !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Text metrics inside cards */
+.settings-tab-container .bg-slate-950 span[class*="text-[8px]"],
+.settings-tab-container .bg-slate-950 span[class*="text-[9px]"],
+.settings-tab-container .bg-slate-950 span[class*="text-[10px]"],
+.settings-tab-container .bg-slate-900 span[class*="text-[8px]"],
+.settings-tab-container .bg-slate-900 span[class*="text-[9px]"],
+.settings-tab-container .bg-slate-900 span[class*="text-[10px]"] {
+  font-size: 13.5px !important;
+  font-weight: 800 !important;
+  color: var(--text-muted) !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+}
+
+/* Value texts */
+.settings-tab-container .bg-slate-950 span[class*="text-sm"],
+.settings-tab-container .bg-slate-950 span[class*="text-lg"],
+.settings-tab-container .bg-slate-900 span[class*="text-sm"],
+.settings-tab-container .bg-slate-900 span[class*="text-lg"],
+.settings-tab-container .bg-slate-950 span[class*="text-white"],
+.settings-tab-container .bg-slate-900 span[class*="text-white"] {
+  font-size: 21px !important;
+  font-weight: 950 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Version & deploy info subpanels */
+.settings-tab-container div[class*="col-span"] {
+  border-radius: 12px !important;
+  padding: 16px 20px !important;
+  font-size: 15.5px !important;
+}
+
+/* Table cells and text */
+.settings-tab-container table.dashboard-table th {
+  font-size: 14.5px !important;
+  padding: 14px 18px !important;
+  font-weight: 850 !important;
+}
+
+.settings-tab-container table.dashboard-table td {
+  font-size: 15.5px !important;
+  padding: 14px 18px !important;
+}
+
+/* Badges in settings */
+.settings-tab-container span[class*="text-[9px]"],
+.settings-tab-container span[class*="text-[10px]"] {
+  font-size: 13.5px !important;
+  font-weight: 850 !important;
+}
+
+.settings-sub-heading {
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.05em !important;
+}
+
+.settings-days-btn {
+  font-size: 14px !important;
+  font-weight: 850 !important;
+  padding: 4px 10px !important;
+}
+
+.settings-grid-label {
+  font-size: 15px !important;
+  font-weight: 850 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+}
+
+.settings-grid-value {
+  font-size: 26px !important;
+  font-weight: 950 !important;
+}
+
+/* ── Table Typography Scale Ups ── */
+.admin-dashboard-container .enterprise-card table.dashboard-table td {
+  padding: 1.25rem 1.5rem !important;
+  font-size: 14.5px !important;
+}
+
+.admin-dashboard-container table.dashboard-table td .btn-enterprise,
+.admin-dashboard-container table.dashboard-table td button {
+  font-size: 12.5px !important;
+  padding: 8px 16px !important;
+  font-weight: 850 !important;
+  border-radius: 8px !important;
+}
+
+.admin-dashboard-container table.dashboard-table td .ds-badge {
+  font-size: 11px !important;
+  padding: 5px 12px !important;
+  font-weight: 850 !important;
+}
+
+/* ── Phase 6.2I: Premium Typography, Card Values & Speech Dashboard Overrides ── */
+
+/* Section title scale-up */
+.admin-dashboard-container .section-heading {
+  font-size: 20px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.015em !important;
+}
+
+/* KPI value dominance */
+.admin-dashboard-container .kpi-card-value {
+  font-size: 42px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.03em !important;
+}
+
+/* Intelligence and Speech Dashboard cards labels & values */
+.admin-dashboard-container .intelligence-card span.tracking-widest {
+  font-size: 16.5px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.1em !important;
+}
+
+.admin-dashboard-container .intelligence-card .metric-value-standard {
+  font-size: 39px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.025em !important;
+  line-height: 1.1 !important;
+}
+
+.admin-dashboard-container .intelligence-card .metric-value-reduced {
+  font-size: 30px !important;
+  font-weight: 900 !important;
+  letter-spacing: -0.02em !important;
+  line-height: 1.15 !important;
+}
+
+.admin-dashboard-container .intelligence-card span.text-xs {
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+}
+
+.admin-dashboard-container .intelligence-card .flex-col span.text-xs {
+  font-size: 16.5px !important;
+  line-height: 1.6 !important;
+  font-weight: 850 !important;
+}
+
+/* Master Data tab buttons font */
+.admin-dashboard-container .master-data-tabs button {
+  font-size: 13.5px !important;
+  font-weight: 850 !important;
+}
+
+/* Filter controls and input element fonts */
+.admin-dashboard-container select,
+.admin-dashboard-container input[type="text"],
+.admin-dashboard-container input[type="date"] {
+  font-size: 14.5px !important;
+  font-weight: 600 !important;
+}
+
+.admin-dashboard-container label {
+  font-size: 12.5px !important;
+  font-weight: 750 !important;
+}
+
+/* Notification drawer item details */
+.admin-dashboard-container .notification-drawer-item {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+}
+.admin-dashboard-container .notification-drawer-item span {
+  font-size: 11.5px !important;
+  font-weight: 750 !important;
+}
+
+/* ── Phase 6.2I: Premium gradients for Export & Action buttons ── */
+.admin-dashboard-container button.bg-green-600 {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border: 1px solid #059669 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+  border-radius: 6px !important;
+}
+.admin-dashboard-container button.bg-green-600:hover {
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35) !important;
+}
+
+.admin-dashboard-container button.bg-emerald-600 {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+  border: 1px solid #047857 !important;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2) !important;
+  border-radius: 6px !important;
+}
+.admin-dashboard-container button.bg-emerald-600:hover {
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%) !important;
+  box-shadow: 0 6px 16px rgba(5, 150, 105, 0.35) !important;
+}
+
+.admin-dashboard-container button.bg-purple-600 {
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%) !important;
+  border: 1px solid #6d28d9 !important;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2) !important;
+  border-radius: 6px !important;
+}
+.admin-dashboard-container button.bg-purple-600:hover {
+  background: linear-gradient(135deg, #a78bfa 0%, #6d28d9 100%) !important;
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35) !important;
+}
+
+.admin-dashboard-container button.bg-sky-600 {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%) !important;
+  border: 1px solid #0284c7 !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2) !important;
+  border-radius: 6px !important;
+}
+.admin-dashboard-container button.bg-sky-600:hover {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%) !important;
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35) !important;
+}
+
+/* Light Theme gradient blue button overrides */
+.theme-light .admin-dashboard-container button.btn-enterprise-primary,
+.theme-light .admin-dashboard-container button.bg-blue-600,
+.theme-light .admin-dashboard-container button.bg-amber-500 {
+  background: linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 85%, #818cf8) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25) !important;
+}
+.theme-light .admin-dashboard-container button.btn-enterprise-primary:hover,
+.theme-light .admin-dashboard-container button.bg-blue-600:hover,
+.theme-light .admin-dashboard-container button.bg-amber-500:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 90%, #ffffff 10%) 0%, color-mix(in srgb, var(--primary) 75%, #818cf8) 100%) !important;
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4) !important;
+  transform: translateY(-1.5px) !important;
+}
+
+/* Light Theme Expand / Secondary action button overrides */
+.theme-light .admin-dashboard-container button.btn-enterprise-secondary {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  color: var(--primary) !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 30%, #cbd5e1) !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04) !important;
+}
+.theme-light .admin-dashboard-container button.btn-enterprise-secondary:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #dbeafe 100%) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15) !important;
+}
+
+/* Light Theme View / Update action button overrides */
+.theme-light .admin-dashboard-container .btn-view-update {
+  background: linear-gradient(135deg, var(--primary) 0%, #818cf8 100%) !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.20) !important;
+}
+.theme-light .admin-dashboard-container .btn-view-update:hover {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 90%, #ffffff 10%) 0%, #818cf8 100%) !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35) !important;
+}
+
+/* ── Light Theme Hardcoded text color mappings to fix contrast ── */
+.theme-light .admin-dashboard-container span.text-white,
+.theme-light .admin-dashboard-container span.text-slate-200,
+.theme-light .admin-dashboard-container span.text-slate-300,
+.theme-light .admin-dashboard-container span.text-slate-400,
+.theme-light .admin-dashboard-container div.text-slate-200,
+.theme-light .admin-dashboard-container div.text-slate-350,
+.theme-light .admin-dashboard-container p.text-slate-200,
+.theme-light .admin-dashboard-container p.text-slate-400 {
+  color: var(--text-primary) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   Phase 6.2K — Final Enterprise Typography and Tooltip Polish
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Analytics Hover Tooltip - solid opaque dark surface */
+.analytics-tooltip {
+  background: #0f1623 !important;
+  border: 1px solid rgba(255,255,255,0.12) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06) !important;
+  backdrop-filter: none !important;
+  color: #f1f5f9 !important;
+}
+.theme-light .analytics-tooltip {
+  background-color: #ffffff !important;
+  background: #ffffff !important;
+  opacity: 1 !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0,0,0,0.02) !important;
+  color: #1e293b !important;
+}
+.theme-light .analytics-tooltip * {
+  color: #1e293b !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+.theme-light .analytics-tooltip .text-amber-400,
+.theme-light .analytics-tooltip .text-amber-500 {
+  color: #b45309 !important;
+}
+.theme-light .analytics-tooltip .text-emerald-400,
+.theme-light .analytics-tooltip .text-emerald-500 {
+  color: #15803d !important;
+}
+.theme-light .analytics-tooltip .text-rose-400,
+.theme-light .analytics-tooltip .text-rose-500 {
+  color: #b91c1c !important;
+}
+
+/* Settings and System tab typography classes */
+.settings-sub-heading { font-size: 17px !important; font-weight: 900 !important; letter-spacing: 0.05em !important; }
+.settings-days-btn { font-size: 14px !important; font-weight: 850 !important; padding: 4px 10px !important; }
+.settings-grid-label { font-size: 15px !important; font-weight: 850 !important; text-transform: uppercase !important; letter-spacing: 0.04em !important; }
+.settings-grid-value { font-size: 26px !important; font-weight: 950 !important; }
+
+/* KPI card label override */
+.admin-dashboard-container .kpi-card .kpi-card-label { font-size: 14.5px !important; font-weight: 900 !important; letter-spacing: 0.1em !important; }
+
+/* Intelligence and Speech card heading override */
+.admin-dashboard-container .intelligence-card span[class*="tracking-widest"] { font-size: 16.5px !important; font-weight: 900 !important; letter-spacing: 0.1em !important; }
+
+/* Intelligence card metric value reinforcement */
+.admin-dashboard-container .intelligence-card .metric-value-standard { font-size: 42px !important; font-weight: 900 !important; letter-spacing: -0.025em !important; line-height: 1.1 !important; }
+.admin-dashboard-container .intelligence-card .metric-value-reduced { font-size: 33px !important; font-weight: 900 !important; letter-spacing: -0.02em !important; line-height: 1.15 !important; }
+.admin-dashboard-container .intelligence-card .metric-value-standard *,
+.admin-dashboard-container .intelligence-card .metric-value-reduced * {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  line-height: inherit !important;
+}
+
+/* Expanded stats numeric counters */
+.expanded-numeric-value {
+  font-size: 15.5px !important;
+  font-weight: 900 !important;
+  display: inline-block;
+}
+
+/* Responsive overrides for charts to scale fluidly across viewports and zooms */
+.admin-dashboard-container .chart-card {
+  min-height: 480px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+}
+
+.admin-dashboard-container .chart-card svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: clamp(260px, 22vw, 360px) !important;
+  overflow: visible !important;
+}
+
+.admin-dashboard-container .donut-chart-wrap {
+  width: clamp(230px, 18vw, 340px) !important;
+  height: clamp(230px, 18vw, 340px) !important;
+  flex-shrink: 1 !important;
+  aspect-ratio: 1 / 1 !important;
+}
+
+@media (max-width: 1400px) {
+  .admin-dashboard-container .chart-card {
+    min-height: 400px !important;
+  }
+  .admin-dashboard-container .chart-card svg {
+    max-height: clamp(220px, 18vw, 290px) !important;
+  }
+  .admin-dashboard-container .donut-chart-wrap {
+    width: clamp(200px, 15vw, 280px) !important;
+    height: clamp(200px, 15vw, 280px) !important;
+  }
 }

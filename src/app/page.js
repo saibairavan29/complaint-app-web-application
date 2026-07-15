@@ -4,6 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { projectsData, locationsData } from "../data/projects";
 import { translations } from "../translations";
 import SearchableSelect from "../components/SearchableSelect";
+import { getTranslatedProjectName } from "../utils/translationHelper";
+
+const BACKEND_URL = (process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000").replace(/\/$/, "");
 
 // WAV encoder helper functions
 function encodeWAV(samples, sampleRate) {
@@ -13,6 +16,7 @@ function encodeWAV(samples, sampleRate) {
   }
   const mergedSamples = new Float32Array(totalLength);
   let offset = 0;
+
   for (let i = 0; i < samples.length; i++) {
     mergedSamples.set(samples[i], offset);
     offset += samples[i].length;
@@ -74,11 +78,14 @@ export default function Home() {
   // Navigation & Localization Screen States
   const [screen, setScreen] = useState("lang"); // "lang" | "form" | "success"
   const [lang, setLang] = useState("en"); // "en" | "hi" | "ta" | "te" | "mr" | "or"
+  const [isHydrated, setIsHydrated] = useState(false);
 
   // Master Data State (Fetched from Django API or Fallback)
   const [projectsList, setProjectsList] = useState([]);
   const [locationsList, setLocationsList] = useState([]);
   const [isUsingFallback, setIsUsingFallback] = useState(false);
+  const [loadingProjects, setLoadingProjects] = useState(false);
+  const [loadingLocations, setLoadingLocations] = useState(false);
 
   // Form State
   const [selectedProject, setSelectedProject] = useState(""); // Stores name or ID
@@ -92,7 +99,9 @@ export default function Home() {
 
   // Audio Recorder State
   const [recordingState, setRecordingState] = useState("idle"); // "idle" | "recording" | "saved" | "playing"
+  const [engineState, setEngineState] = useState("starting"); // "starting" | "ready" | "error"
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [totalDuration, setTotalDuration] = useState(0);
   const [audioUrl, setAudioUrl] = useState("");
   const [audioBlob, setAudioBlob] = useState(null);
 
@@ -125,16 +134,27 @@ export default function Home() {
   const [previewError, setPreviewError] = useState("");
   const [isManualFallback, setIsManualFallback] = useState(false);
   const [manualComplaintText, setManualComplaintText] = useState("");
+  const [playbackEnded, setPlaybackEnded] = useState(false);
 
   // Refs
   const audioContextRef = useRef(null);
-  const scriptProcessorRef = useRef(null);
+  const audioWorkletNodeRef = useRef(null);
   const streamRef = useRef(null);
   const samplesRef = useRef([]);
   const recordingStateRef = useRef("idle");
   const timerRef = useRef(null);
   const audioPlayerRef = useRef(null);
   const fileInputRef = useRef(null);
+  const timerDisplayRef = useRef(null);
+  const recordingStartTimestampRef = useRef(null);
+  const recordingStopTimestampRef = useRef(null);
+  const overflowCountRef = useRef(0);
+  const rollingBufferRef = useRef([]);
+  const rollingBufferSamplesCountRef = useRef(0);
+  const recordingEnabledRef = useRef(false);
+  const engineStateRef = useRef("starting");
+  const callbackIntervalsRef = useRef([]);
+
 
   // Translation Dictionary Shortcut
   const t = translations[lang] || translations.en;
@@ -145,43 +165,31 @@ export default function Home() {
 
   // Bilingual Helper
   const getBilingualName = (obj) => {
-    if (!obj) return "";
-    const localizedNames = obj.localized_names || {};
-    const englishName = obj.name || localizedNames['en'] || "";
-    let localName = "";
-    
-    if (lang === 'en') {
-      const otherLangs = Object.keys(localizedNames).filter(k => k !== 'en' && localizedNames[k]);
-      if (otherLangs.length > 0) {
-        localName = localizedNames[otherLangs[0]];
-      }
-    } else {
-      localName = localizedNames[lang];
-    }
-    
-    if (localName && localName !== englishName) {
-      if (lang === 'en') {
-        return `${englishName} (${localName})`;
-      } else {
-        return `${localName} (${englishName})`;
-      }
-    }
-    return englishName;
+    return getTranslatedProjectName(obj, lang);
   };
 
-  // Load saved language and fetch Projects from Django REST API on boot
+  // Language-First: always show language selection on page load.
+  // Uses sessionStorage (not localStorage) so language persists within the
+  // same browser session but resets on a new tab / page refresh.
   useEffect(() => {
-    const savedLang = localStorage.getItem("worker_lang");
-    if (savedLang) {
-      setLang(savedLang);
-      setScreen("form");
+    const sessionLang = sessionStorage.getItem("worker_lang_session");
+    if (sessionLang) {
+      setLang(sessionLang);
     }
+    // Always open the language selection screen first — no auto-bypass.
+    setScreen("lang");
+    setIsHydrated(true);
     fetchProjects();
+
+    return () => {
+      cleanupAudioEngine();
+    };
   }, []);
 
   const fetchProjects = async () => {
+    setLoadingProjects(true);
     try {
-      const res = await fetch("http://localhost:8000/api/projects/");
+      const res = await fetch(`${BACKEND_URL}/api/projects/`);
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
@@ -203,6 +211,8 @@ export default function Home() {
       }));
       setProjectsList(fallbackList);
       setIsUsingFallback(true);
+    } finally {
+      setLoadingProjects(false);
     }
   };
 
@@ -233,8 +243,9 @@ export default function Home() {
       return;
     }
 
+    setLoadingLocations(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/projects/${projectVal}/locations/`);
+      const res = await fetch(`${BACKEND_URL}/api/projects/${projectVal}/locations/`);
       if (res.ok) {
         const data = await res.json();
         setLocationsList(data);
@@ -251,8 +262,17 @@ export default function Home() {
         is_active: true
       }));
       setLocationsList(fallbackLocs);
+    } finally {
+      setLoadingLocations(false);
     }
   };
+
+  // Update document language dynamically
+  useEffect(() => {
+    if (typeof document !== "undefined" && document.documentElement) {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
 
   // Cleanup local file URLs on unmount
   useEffect(() => {
@@ -263,27 +283,180 @@ export default function Home() {
     };
   }, [photoUrl, audioUrl]);
 
-  // Audio timer ticker
-  useEffect(() => {
-    if (recordingState === "recording") {
-      timerRef.current = setInterval(() => {
-        setRecordingDuration((prev) => prev + 1);
-      }, 1000);
-    } else {
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+  // Audio timer ticker removed to avoid state re-renders during recording
+
+
+  // Handle Voice Recording using Web Audio API (Compile direct to 16-bit WAV)
+  const cleanupAudioEngine = () => {
+    if (audioWorkletNodeRef.current) {
+      try {
+        audioWorkletNodeRef.current.disconnect();
+      } catch (e) {
+        console.warn("Error disconnecting AudioWorkletNode:", e);
       }
+      audioWorkletNodeRef.current = null;
     }
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [recordingState]);
+    if (streamRef.current) {
+      try {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      } catch (e) {
+        console.warn("Error stopping stream tracks:", e);
+      }
+      streamRef.current = null;
+    }
+    if (audioContextRef.current) {
+      try {
+        audioContextRef.current.close();
+      } catch (e) {
+        console.warn("Error closing AudioContext:", e);
+      }
+      audioContextRef.current = null;
+    }
+  };
+
+  const initializeAudioEngine = async () => {
+    if (audioContextRef.current) {
+      return;
+    }
+
+    setEngineState("starting");
+    engineStateRef.current = "starting";
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false,
+          sampleRate: 48000,
+          sampleSize: 16,
+          latency: 0,
+          voiceIsolation: false
+        }
+      });
+
+      streamRef.current = stream;
+
+      const track = stream.getAudioTracks()[0];
+      if (track) {
+        const settings = track.getSettings();
+
+        console.log("Resolved Sample Rate:", settings.sampleRate);
+        console.log("Resolved Sample Size:", settings.sampleSize);
+        console.log("Resolved Channel Count:", settings.channelCount);
+        console.log("Resolved Echo Cancellation:", settings.echoCancellation);
+        console.log("Resolved Noise Suppression:", settings.noiseSuppression);
+        console.log("Resolved Auto Gain Control:", settings.autoGainControl);
+        console.log("Resolved Latency:", settings.latency);
+        console.log("Resolved Device:", settings.deviceId);
+
+        // Verify the browser didn't ignore constraints
+        const checks = [
+          { name: "sampleRate", label: "Sample Rate", requested: 48000 },
+          { name: "sampleSize", label: "Sample Size", requested: 16 },
+          { name: "channelCount", label: "Channel Count", requested: 1 },
+          { name: "echoCancellation", label: "Echo Cancellation", requested: false },
+          { name: "noiseSuppression", label: "Noise Suppression", requested: false },
+          { name: "autoGainControl", label: "Auto Gain Control", requested: false }
+        ];
+
+        checks.forEach(check => {
+          const resolved = settings[check.name];
+          if (resolved !== undefined && resolved !== check.requested) {
+            console.log(
+              `Browser ignored requested microphone constraint:\n${check.name}\nRequested:\n${check.requested}\nResolved:\n${resolved}`
+            );
+          }
+        });
+      }
+
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      const audioContext = new AudioContextClass();
+      audioContextRef.current = audioContext;
+
+      console.log("audioContext.sampleRate:", audioContext.sampleRate);
+      console.log("audioContext.baseLatency:", audioContext.baseLatency);
+      console.log("audioContext.outputLatency:", audioContext.outputLatency);
+      console.log("audioContext.state:", audioContext.state);
+
+      if (audioContext.state === "suspended") {
+        await audioContext.resume().catch(e => console.warn("Failed to resume AudioContext on init:", e));
+      }
+
+      const source = audioContext.createMediaStreamSource(stream);
+
+      console.log("MediaStreamSource channelCount:", source.channelCount);
+      console.log("MediaStreamSource channelCountMode:", source.channelCountMode);
+
+      audioContext.source = source; // Prevent garbage collection
+
+      await audioContext.audioWorklet.addModule('/recorder-processor.js');
+
+      const recorderNode = new AudioWorkletNode(audioContext, 'recorder-processor');
+      audioWorkletNodeRef.current = recorderNode;
+
+      let lastMessageTime = Date.now();
+      const expectedIntervalMs = (4096 / audioContext.sampleRate) * 1000;
+      const maxRollingSamples = audioContext.sampleRate * 2; // 2 seconds
+
+      // Accumulate Float32 PCM chunks
+      recorderNode.port.onmessage = (event) => {
+        const { type, samples } = event.data;
+
+        if (type === "samples") {
+          const now = Date.now();
+          const interval = now - lastMessageTime;
+          lastMessageTime = now;
+
+          // Event loop lag check
+          if (interval > 1000) {
+            console.warn(`Recording pipeline warning: main thread message processing latency detected (${interval.toFixed(1)} ms).`);
+            overflowCountRef.current += 1;
+          }
+
+          // Slicing Invariant: Deep copy using slice for both collections to prevent shared reference bugs
+          if (recordingEnabledRef.current) {
+            samplesRef.current.push(samples.slice());
+            callbackIntervalsRef.current.push(interval);
+          }
+
+          const copiedChunk = samples.slice();
+          rollingBufferRef.current.push(copiedChunk);
+          rollingBufferSamplesCountRef.current += copiedChunk.length;
+          while (rollingBufferSamplesCountRef.current > maxRollingSamples) {
+            const removed = rollingBufferRef.current.shift();
+            rollingBufferSamplesCountRef.current -= removed.length;
+          }
+        } else if (type === "done") {
+          if (recorderNode._flushResolve) {
+            recorderNode._flushResolve();
+          }
+        }
+      };
+
+      // Audio graph: mic → worklet → silent sink (keeps AudioContext alive).
+      const silentGain = audioContext.createGain();
+      silentGain.gain.value = 0;
+
+      source.connect(recorderNode);
+      recorderNode.connect(silentGain);
+      silentGain.connect(audioContext.destination);
+
+      setEngineState("ready");
+      engineStateRef.current = "ready";
+    } catch (err) {
+      console.error("Microphone access or AudioContext initialization error:", err);
+      setEngineState("error");
+      engineStateRef.current = "error";
+      cleanupAudioEngine();
+    }
+  };
 
   // Handle Voice Recording using Web Audio API (Compile direct to 16-bit WAV)
   const startRecording = async () => {
-    samplesRef.current = [];
-    setRecordingDuration(0);
+    window.__firstAudioBufferLogged = false;
+    setPlaybackEnded(false);
     setFileValidationError("");
     if (audioUrl) {
       URL.revokeObjectURL(audioUrl);
@@ -291,57 +464,155 @@ export default function Home() {
       setAudioBlob(null);
     }
 
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
-
-      const AudioContext = window.AudioContext || window.webkitAudioContext;
-      const audioContext = new AudioContext({ sampleRate: 16000 });
-      audioContextRef.current = audioContext;
-
-      const source = audioContext.createMediaStreamSource(stream);
-      const processor = audioContext.createScriptProcessor(4096, 1, 1);
-      scriptProcessorRef.current = processor;
-
-      processor.onaudioprocess = (e) => {
-        if (recordingStateRef.current !== "recording") return;
-        const inputData = e.inputBuffer.getChannelData(0);
-        samplesRef.current.push(new Float32Array(inputData));
-      };
-
-      source.connect(processor);
-      processor.connect(audioContext.destination);
-
-      setRecordingState("recording");
-      recordingStateRef.current = "recording";
-    } catch (err) {
-      console.error("Microphone access error:", err);
-      alert("Microphone permission denied or not supported on this device.");
+    if (!audioContextRef.current) {
+      await initializeAudioEngine();
+      if (engineStateRef.current === "error") {
+        alert("Microphone permission denied or not supported on this device.");
+        return;
+      }
     }
+
+    // Resume AudioContext if suspended
+    if (audioContextRef.current && audioContextRef.current.state === "suspended") {
+      await audioContextRef.current.resume().catch(e => console.warn("Failed to resume AudioContext:", e));
+    }
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    samplesRef.current.length = 0;
+    callbackIntervalsRef.current.length = 0;
+    overflowCountRef.current = 0;
+    setRecordingDuration(0);
+
+    setRecordingState("preparing");
+    recordingStateRef.current = "preparing";
+
+    recordingStartTimestampRef.current = Date.now();
+
+    // Copy pre-roll first, then enable recording to remove any race condition
+    const preRoll = rollingBufferRef.current.map(chunk => chunk.slice());
+    samplesRef.current.push(...preRoll);
+    recordingEnabledRef.current = true;
+
+    // Set timeout for minimum 1000 ms to perform pure UI update
+    setTimeout(() => {
+      if (recordingStateRef.current === "preparing") {
+
+        setRecordingState("recording");
+        recordingStateRef.current = "recording";
+
+        if (timerDisplayRef.current) {
+          timerDisplayRef.current.innerText = formatTime(0);
+        }
+
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+
+        let localSeconds = 0;
+        timerRef.current = setInterval(() => {
+          localSeconds += 1;
+
+          if (timerDisplayRef.current) {
+            timerDisplayRef.current.innerText = formatTime(localSeconds);
+          }
+
+          if (localSeconds >= 300) {
+            stopRecording();
+          }
+        }, 1000);
+      }
+    }, 1000);
   };
 
-  const stopRecording = () => {
-    if (recordingStateRef.current !== "recording") return;
+
+  const stopRecording = async () => {
+    if (recordingStateRef.current !== "recording" && recordingStateRef.current !== "preparing") return;
 
     recordingStateRef.current = "saved";
     setRecordingState("saved");
+    setPlaybackEnded(false);
 
-    if (scriptProcessorRef.current) {
-      scriptProcessorRef.current.disconnect();
-      scriptProcessorRef.current = null;
+    const actualSampleRate = audioContextRef.current ? audioContextRef.current.sampleRate : 16000;
+
+    const stopTime = Date.now();
+    recordingStopTimestampRef.current = stopTime;
+    const elapsedSeconds = (stopTime - recordingStartTimestampRef.current) / 1000;
+
+    const timeout = (ms) => new Promise((resolve) => setTimeout(() => resolve("timeout"), ms));
+
+    // Wait for the done message before setting recordingEnabledRef to false
+    if (audioWorkletNodeRef.current) {
+      const node = audioWorkletNodeRef.current;
+      const flushPromise = new Promise((resolve) => {
+        node._flushResolve = resolve;
+        node.port.postMessage({ type: "flush" });
+      });
+
+      const flushResult = await Promise.race([
+        flushPromise.then(() => "flushed"),
+        timeout(500).then(() => "timeout")
+      ]);
+
+      if (flushResult === "timeout") {
+        console.warn("AudioWorklet flush timed out after 500 ms.");
+      }
+      node._flushResolve = null;
     }
-    if (audioContextRef.current) {
-      audioContextRef.current.close();
-      audioContextRef.current = null;
+
+    // Disable recording flag after flush completes to capture the final render quantum
+    recordingEnabledRef.current = false;
+
+    const totalSamples = samplesRef.current.reduce((acc, s) => acc + s.length, 0);
+    const calculatedDuration = totalSamples / actualSampleRate;
+
+    const merged = new Float32Array(totalSamples);
+    let offset = 0;
+    for (const chunk of samplesRef.current) {
+      merged.set(chunk, offset);
+      offset += chunk.length;
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
+
+    let peakAmplitude = 0;
+    let minVal = 0;
+    let maxVal = 0;
+    let sumOfSquares = 0;
+    let totalSampleCount = 0;
+    for (let i = 0; i < samplesRef.current.length; i++) {
+      const chunk = samplesRef.current[i];
+      totalSampleCount += chunk.length;
+      for (let j = 0; j < chunk.length; j++) {
+        const val = chunk[j];
+        if (val > maxVal) maxVal = val;
+        if (val < minVal) minVal = val;
+        const absVal = Math.abs(val);
+        if (absVal > peakAmplitude) peakAmplitude = absVal;
+        sumOfSquares += val * val;
+      }
     }
+
+    const rmsLevel = totalSampleCount > 0 ? Math.sqrt(sumOfSquares / totalSampleCount) : 0;
+
+    let minInterval = Infinity;
+    let maxInterval = -Infinity;
+    let sumIntervals = 0;
+    const intervals = callbackIntervalsRef.current;
+
+    if (intervals.length > 0) {
+      for (const val of intervals) {
+        if (val < minInterval) minInterval = val;
+        if (val > maxInterval) maxInterval = val;
+        sumIntervals += val;
+      }
+    }
+
+    const avgInterval = intervals.length > 0 ? (sumIntervals / intervals.length) : 0;
 
     // Enforce 1.5s duration limit
-    const totalSamples = samplesRef.current.reduce((acc, s) => acc + s.length, 0);
-    const durationInSeconds = totalSamples / 16000;
+    const durationInSeconds = totalSamples / actualSampleRate;
     if (durationInSeconds < 1.5) {
       setFileValidationError(
         lang === "hi" ? "❌ आवाज की रिकॉर्डिंग कम से कम 1.5 सेकंड की होनी चाहिए।" : "❌ Voice recording must be at least 1.5 seconds."
@@ -350,12 +621,24 @@ export default function Home() {
       return;
     }
 
-    const wavBlob = encodeWAV(samplesRef.current, 16000);
+    const finalDur = Math.round(durationInSeconds);
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (timerDisplayRef.current) {
+      timerDisplayRef.current.innerText = formatTime(finalDur);
+    }
+    setTotalDuration(finalDur);
+    setRecordingDuration(finalDur);
+
+    const wavBlob = encodeWAV(samplesRef.current, actualSampleRate);
+
     const url = URL.createObjectURL(wavBlob);
-    
+
     setAudioUrl(url);
     setAudioBlob(wavBlob);
-    
+
     setPreviewState("recording_complete");
     // Trigger real-time preview
     generateSpeechPreview(wavBlob);
@@ -364,12 +647,45 @@ export default function Home() {
   const playAudio = () => {
     if (audioUrl) {
       const audio = new Audio(audioUrl);
+      audio.currentTime = 0;
       audioPlayerRef.current = audio;
       setRecordingState("playing");
+      setRecordingDuration(0);
+      setPlaybackEnded(false);
 
-      audio.play();
+      // Web Audio API playback gain enhancement (Preview boost only, keeps exported WAV raw)
+      if (audioContextRef.current) {
+        try {
+          const ctx = audioContextRef.current;
+          if (ctx.state === "suspended") {
+            ctx.resume().catch(e => console.warn("Failed to resume AudioContext on playback:", e));
+          }
+          const source = ctx.createMediaElementSource(audio);
+          const gainNode = ctx.createGain();
+          gainNode.gain.value = 2.5; // Apply a 2.5x gain boost for preview playback
+          source.connect(gainNode);
+          gainNode.connect(ctx.destination);
+        } catch (e) {
+          console.warn("Failed to apply preview playback gain boost via Web Audio API:", e);
+        }
+      }
+
+      const startPlayback = () => {
+        audio.play().catch((err) => {
+          console.error("Playback failed:", err);
+        });
+      };
+
+      audio.addEventListener("canplay", startPlayback, { once: true });
+
+      audio.ontimeupdate = () => {
+        setRecordingDuration(Math.floor(audio.currentTime));
+      };
+
       audio.onended = () => {
         setRecordingState("saved");
+        setRecordingDuration(totalDuration);
+        setPlaybackEnded(true);
       };
     }
   };
@@ -378,17 +694,27 @@ export default function Home() {
     if (audioPlayerRef.current) {
       audioPlayerRef.current.pause();
       setRecordingState("saved");
+      setRecordingDuration(totalDuration);
     }
   };
 
   const deleteRecording = () => {
     stopAudioPlayback();
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    if (timerDisplayRef.current) {
+      timerDisplayRef.current.innerText = formatTime(0);
+    }
     if (audioUrl) {
       URL.revokeObjectURL(audioUrl);
       setAudioUrl("");
       setAudioBlob(null);
     }
     setRecordingDuration(0);
+    setTotalDuration(0);
+    setPlaybackEnded(false);
     setRecordingState("idle");
     recordingStateRef.current = "idle";
     setAudioUploadProgress(0);
@@ -419,9 +745,9 @@ export default function Home() {
     setPreviewTranslationConfidence(null);
     setPreviewLanguagePair(null);
     setPreviewProcessingTime(null);
-    
+
     setPreviewState("uploading");
-    
+
     try {
       const formData = new FormData();
       formData.append("audio", blob, "preview.wav");
@@ -432,18 +758,25 @@ export default function Home() {
       await new Promise(resolve => setTimeout(resolve, 300));
       setPreviewState("transcribing");
 
-      const transcriptionPromise = fetch("http://localhost:8000/api/complaints/preview-speech/", {
+      const transcriptionPromise = fetch(`${BACKEND_URL}/api/complaints/preview-speech/`, {
         method: "POST",
         body: formData,
       });
 
-      // Halfway simulation for translation state
-      const timeoutId = setTimeout(() => {
-        setPreviewState("translating");
-      }, 900);
+      // Sequential state updates for visual progression
+      let curState = "transcribing";
+      const intervalId = setInterval(() => {
+        if (curState === "transcribing") {
+          curState = "translating";
+          setPreviewState("translating");
+        } else if (curState === "translating") {
+          curState = "finalizing";
+          setPreviewState("finalizing");
+        }
+      }, 1200);
 
       const res = await transcriptionPromise;
-      clearTimeout(timeoutId);
+      clearInterval(intervalId);
 
       if (res.ok) {
         const data = await res.json();
@@ -539,7 +872,7 @@ export default function Home() {
       updateStatus("uploading");
       const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
       const formData = new FormData();
-      
+
       // Pass file object or blob
       if (isPhoto) {
         formData.append("file", file);
@@ -689,7 +1022,7 @@ export default function Home() {
       language: lang,
       photo_url: photoUrlResult || null,
       audio_url: audioUrlResult || null,
-      
+
       // Phase 5.6 speech preview integration, manual fallback
       transcript: effectiveTranscript,
       english_translation: effectiveTranslation,
@@ -703,27 +1036,17 @@ export default function Home() {
     };
 
     if (isUsingFallback) {
-      // Mock submit delay
-      setTimeout(() => {
-        const mockTicket = {
-          referenceNumber: `CMP-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`,
-          project: finalProjectName,
-          location: finalLocationName,
-          category: selectedCategory,
-          status: "Pending",
-          timestamp: new Date().toISOString()
-        };
-        setSuccessDetails(mockTicket);
-        setUploadingState("success");
-        setScreen("success");
-        window.scrollTo(0, 0);
-      }, 1000);
+      alert(
+        lang === 'hi'
+          ? '⚠️ सिस्टम ऑफलाइन है। आपकी शिकायत सहेजी नहीं जा सकती। कृपया इंटरनेट कनेक्शन जांचें और पुनः प्रयास करें।'
+          : '⚠️ System is offline. Your complaint could not be saved. Please check your connection and try again.'
+      );
       return;
     }
 
     // Real POST request to Django server
     try {
-      const res = await fetch("http://localhost:8000/api/complaints/", {
+      const res = await fetch(`${BACKEND_URL}/api/complaints/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -734,7 +1057,7 @@ export default function Home() {
       if (res.ok) {
         const resData = await res.json();
         const serverComplaint = resData.data || {};
-        
+
         setSuccessDetails({
           referenceNumber: serverComplaint.reference_number || `CMP-${new Date().getFullYear()}-XXXXX`,
           project: finalProjectName,
@@ -743,7 +1066,7 @@ export default function Home() {
           status: serverComplaint.status || "Pending",
           timestamp: serverComplaint.created_at || new Date().toISOString()
         });
-        
+
         setUploadingState("success");
         setScreen("success");
         window.scrollTo(0, 0);
@@ -841,37 +1164,55 @@ export default function Home() {
     setScreen("form");
   };
 
+  if (!isHydrated) {
+    return (
+      <div className="flex-1 flex justify-center bg-slate-900 w-full min-h-screen">
+        <div className="w-full min-w-[320px] max-w-[600px] bg-slate-900 min-h-screen flex flex-col shadow-2xl relative border-x-4 border-slate-950 items-center justify-center">
+          {/* Silent empty layout to prevent English flash */}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 flex justify-center bg-slate-900 w-full min-h-screen">
       {/* Mobile-first centered frame */}
       <div className="w-full min-w-[320px] max-w-[600px] bg-slate-50 min-h-screen flex flex-col shadow-2xl relative border-x-4 border-slate-950">
-        
+
         {/* Warning Hazard Stripes */}
         <div className="h-4 bg-hazard-stripes border-b-2 border-slate-950 w-full"></div>
 
-        {/* Dynamic localized Header */}
-        <header className="bg-safety-yellow text-slate-950 border-b-4 border-slate-950 px-4 py-3 flex flex-col justify-center items-center shadow-md select-none">
-          <div className="flex items-center gap-2">
-            <span className="text-3xl font-black">🦺</span>
-            <h1 className="text-xl font-extrabold tracking-tight uppercase leading-none">
-              {t.title}
-            </h1>
-          </div>
-          <p className="text-[11px] font-bold text-slate-800 tracking-wider text-center mt-1 uppercase">
-            {t.subtitle}
-          </p>
-        </header>
+        {/* Dynamic localized Header — ONLY visible if screen is not "lang" */}
+        {screen !== "lang" && (
+          <header className="bg-safety-yellow text-slate-950 border-b-4 border-slate-950 px-4 py-3 flex flex-col justify-center items-center shadow-md select-none animate-fade-in">
+            <div className="flex items-center gap-2">
+              <span className="text-3xl font-black">🦺</span>
+              <h1 className="text-xl font-extrabold tracking-tight uppercase leading-none">
+                {t.title}
+              </h1>
+            </div>
+            <p className="text-[11px] font-bold text-slate-800 tracking-wider text-center mt-1 uppercase">
+              {t.subtitle}
+            </p>
+          </header>
+        )}
 
         {/* Scrollable Main Area */}
         <main className="flex-1 p-4 flex flex-col animate-fade-in pb-24">
-          
+
           {/* SCREEN 1: LANGUAGE SELECTION */}
           {screen === "lang" && (
             <div className="flex-1 flex flex-col justify-center py-4 animate-fade-in">
-              <h2 className="text-lg font-extrabold text-slate-950 text-center mb-6 border-b-4 border-slate-950 pb-2">
-                {t.selectLang}
-              </h2>
-              
+              <div className="flex flex-col items-center justify-center mb-8 gap-3">
+                <span className="text-5xl animate-bounce">🦺</span>
+                <h1 className="text-2xl font-black text-slate-950 tracking-tight text-center uppercase">
+                  Worker Welfare Portal
+                </h1>
+                <p className="text-xs font-bold text-slate-600 uppercase tracking-wider text-center">
+                  Select Language / भाषा चुनें / மொழியைத் தேர்ந்தெடுக்கவும்
+                </p>
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 {Object.keys(translations).map((langKey) => {
                   const item = translations[langKey];
@@ -880,7 +1221,7 @@ export default function Home() {
                       key={langKey}
                       onClick={() => {
                         setLang(langKey);
-                        localStorage.setItem("worker_lang", langKey);
+                        sessionStorage.setItem("worker_lang_session", langKey);
                         setScreen("form");
                       }}
                       className="py-3 px-3 text-left border-industrial shadow-industrial bg-white text-slate-950 font-black text-xs hover:bg-safety-yellow active-press transition-all rounded-none flex items-center justify-between"
@@ -897,7 +1238,7 @@ export default function Home() {
           {/* SCREEN 2: MAIN COMPLAINT FORM */}
           {screen === "form" && (
             <div className="flex flex-col gap-5 flex-1">
-              
+
               {/* Language Switch bar */}
               <div className="flex items-center justify-between bg-slate-900 text-white p-2 border-industrial-sm shadow-industrial-sm">
                 <span className="text-sm font-extrabold uppercase pl-1">🌐 {t.langName}</span>
@@ -933,6 +1274,7 @@ export default function Home() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-black text-slate-950 uppercase tracking-wide flex items-center gap-1">
                   🏢 {t.selectProject} <span className="text-red-600">*</span>
+                  {loadingProjects && <span className="text-xs text-blue-600 animate-pulse ml-2 font-semibold">(Loading...)</span>}
                 </label>
                 <SearchableSelect
                   options={projectsList}
@@ -945,7 +1287,8 @@ export default function Home() {
                   language={lang}
                   id="project-select"
                   getBilingualName={getBilingualName}
-                  emptyMessage={lang === "hi" ? "कोई मिलान वाली परियोजना नहीं मिली" : "No matching projects found"}
+                  emptyMessage={t.noProjectsFound}
+                  isLoading={loadingProjects}
                 />
               </div>
 
@@ -967,6 +1310,7 @@ export default function Home() {
               <div className="flex flex-col gap-1.5">
                 <label className="text-sm font-black text-slate-950 uppercase tracking-wide flex items-center gap-1">
                   📍 {t.selectLocation} <span className="text-red-600">*</span>
+                  {loadingLocations && <span className="text-xs text-blue-600 animate-pulse ml-2 font-semibold">(Loading...)</span>}
                 </label>
                 {selectedProject ? (
                   <SearchableSelect
@@ -977,7 +1321,8 @@ export default function Home() {
                     language={lang}
                     id="location-select"
                     getBilingualName={getBilingualName}
-                    emptyMessage={lang === "hi" ? "कोई मिलान वाले स्थान नहीं मिले" : "No matching locations found"}
+                    emptyMessage={t.noLocationsFound}
+                    isLoading={loadingLocations}
                   />
                 ) : (
                   <div className="w-full px-4 py-3 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700 rounded-lg text-base cursor-not-allowed font-bold">
@@ -992,31 +1337,32 @@ export default function Home() {
                   🏷️ {t.categoryTitle} <span className="text-red-600">*</span>
                 </label>
                 <div className="grid grid-cols-2 gap-3.5">
-                  {Object.entries(t.categories).map(([key, label]) => {
-                    const isSelected = selectedCategory === key;
-                    return (
-                      <button
-                        type="button"
-                        key={key}
-                        onClick={() => setSelectedCategory(key)}
-                        className={`p-4 border-industrial flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-150 rounded-none relative select-none ${
-                          isSelected
+                  {Object.entries(t.categories)
+                    .filter(([key]) => ["water", "electricity", "toilet", "accommodation", "food", "safety", "other"].includes(key))
+                    .map(([key, label]) => {
+                      const isSelected = selectedCategory === key;
+                      return (
+                        <button
+                          type="button"
+                          key={key}
+                          onClick={() => setSelectedCategory(key)}
+                          className={`p-4 border-industrial flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-150 rounded-none relative select-none ${isSelected
                             ? "bg-safety-yellow shadow-industrial-sm translate-x-0.5 translate-y-0.5"
                             : "bg-white shadow-industrial hover:bg-slate-100"
-                        }`}
-                      >
-                        <div className="text-3xl mb-2">{label.split(" ").slice(-1)[0]}</div>
-                        <div className="text-sm font-black text-slate-950 leading-tight">
-                          {label.substring(0, label.lastIndexOf(" ") !== -1 ? label.lastIndexOf(" ") : label.length)}
-                        </div>
-                        {isSelected && (
-                          <div className="absolute top-1 right-1 bg-slate-950 text-safety-yellow w-5 h-5 flex items-center justify-center text-[10px] font-black border-2 border-slate-950">
-                            ✓
+                            }`}
+                        >
+                          <div className="text-3xl mb-2">{t.categoryIcons?.[key] || "📦"}</div>
+                          <div className="text-sm font-black text-slate-950 leading-tight">
+                            {label}
                           </div>
-                        )}
-                      </button>
-                    );
-                  })}
+                          {isSelected && (
+                            <div className="absolute top-1 right-1 bg-slate-950 text-safety-yellow w-5 h-5 flex items-center justify-center text-[10px] font-black border-2 border-slate-950">
+                              ✓
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                 </div>
               </div>
 
@@ -1030,7 +1376,7 @@ export default function Home() {
                 <span className="text-sm font-extrabold text-slate-950 uppercase">
                   {t.photoTitle}
                 </span>
-                
+
                 <input
                   type="file"
                   accept="image/*"
@@ -1079,16 +1425,30 @@ export default function Home() {
 
                 <div className="flex flex-col items-center bg-white p-3 border-2 border-slate-950 gap-3">
                   <div className="flex items-center justify-between w-full border-b border-slate-300 pb-2">
-                    <span className={`text-xs font-black uppercase px-2 py-0.5 border-2 border-slate-950 ${
+                    <span className={`text-xs font-black uppercase px-2 py-0.5 border-2 border-slate-950 ${recordingState === "preparing" ? "bg-amber-400 text-slate-950 animate-pulse" :
                       recordingState === "recording" ? "bg-red-500 text-white animate-pulse" :
-                      recordingState === "saved" ? "bg-green-500 text-white" :
-                      recordingState === "playing" ? "bg-blue-500 text-white" : "bg-slate-300 text-slate-800"
-                    }`}>
-                      {recordingState === "recording" ? t.recordingStatus :
-                       recordingState === "saved" ? t.savedStatus :
-                       recordingState === "playing" ? t.playingStatus : t.idleStatus}
+                        recordingState === "saved" ? "bg-green-500 text-white" :
+                          recordingState === "playing" ? "bg-blue-500 text-white" : "bg-slate-300 text-slate-800"
+                      }`}>
+                      {recordingState === "preparing" ? (
+                        <span className="flex items-center gap-1.5">
+                          <svg className="animate-spin h-3 w-3 text-slate-950" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          {lang === "hi" ? "🎤 माइक्रोफ़ोन तैयार किया जा रहा है... कृपया अभी न बोलें..." : "🎤 Preparing microphone... Please wait before speaking..."}
+                        </span>
+                      ) : (
+                        recordingState === "recording" ? (lang === "hi" ? "🎤 अब बोलें" : "🎤 Speak Now") :
+                          recordingState === "saved" ? t.savedStatus :
+                            recordingState === "playing" ? t.playingStatus : t.idleStatus
+                      )}
                     </span>
-                    <span className="font-mono font-bold text-lg text-slate-950">
+                    <span
+                      ref={timerDisplayRef}
+                      className="font-mono font-bold text-lg text-slate-950"
+                      style={{ display: recordingState === "preparing" ? "none" : "inline-block" }}
+                    >
                       {formatTime(recordingDuration)}
                     </span>
                   </div>
@@ -1104,11 +1464,15 @@ export default function Home() {
                       </button>
                     )}
 
-                    {recordingState === "recording" && (
+                    {(recordingState === "recording" || recordingState === "preparing") && (
                       <button
                         type="button"
                         onClick={stopRecording}
-                        className="py-3 px-6 bg-slate-950 text-white font-extrabold text-sm uppercase border-industrial-sm shadow-industrial-sm active-press flex items-center gap-1.5 animate-pulse rounded-none"
+                        disabled={recordingState === "preparing"}
+                        className={`py-3 px-6 text-white font-extrabold text-sm uppercase border-industrial-sm shadow-industrial-sm flex items-center gap-1.5 rounded-none ${recordingState === "preparing"
+                          ? "bg-slate-400 text-slate-700 cursor-not-allowed shadow-none"
+                          : "bg-slate-950 active-press animate-pulse cursor-pointer"
+                          }`}
                       >
                         ⏹ {t.recordStop}
                       </button>
@@ -1121,7 +1485,7 @@ export default function Home() {
                           onClick={playAudio}
                           className="py-3 px-4 bg-green-500 hover:bg-green-600 text-slate-950 font-extrabold text-sm uppercase border-industrial-sm shadow-industrial-sm active-press flex items-center gap-1 rounded-none"
                         >
-                          {t.recordPlay}
+                          {playbackEnded ? t.recordReplay : t.recordPlay}
                         </button>
                         <button
                           type="button"
@@ -1146,7 +1510,7 @@ export default function Home() {
                         onClick={stopAudioPlayback}
                         className="py-3 px-6 bg-blue-500 text-slate-950 font-extrabold text-sm uppercase border-industrial-sm shadow-industrial-sm active-press flex items-center gap-1.5 rounded-none"
                       >
-                        ⏸ Stop Playback
+                        {t.stopPlayback}
                       </button>
                     )}
                   </div>
@@ -1158,19 +1522,19 @@ export default function Home() {
                 <div className="border-industrial p-5 bg-slate-100 flex flex-col gap-4 shadow-industrial-sm animate-fade-in text-slate-950">
                   <div className="flex items-center justify-between border-b-2 border-slate-950 pb-2">
                     <span className="text-xs font-black uppercase flex items-center gap-1.5 text-slate-950">
-                      🤖 {lang === "hi" ? "भाषण पूर्वावलोकन" : 
-                          lang === "ta" ? "பேச்சு முன்னோட்டம்" :
+                      🤖 {lang === "hi" ? "भाषण पूर्वावलोकन" :
+                        lang === "ta" ? "பேச்சு முன்னோட்டம்" :
                           lang === "te" ? "స్పీచ్ ప్రివ్యూ" : "Speech Preview"}
                     </span>
-                    <span className={`text-[10px] font-black uppercase border border-slate-950 px-2 py-0.5 ${
-                      previewState === "error" ? "bg-red-500 text-white" :
+                    <span className={`text-[10px] font-black uppercase border border-slate-950 px-2 py-0.5 ${previewState === "error" ? "bg-red-500 text-white" :
                       previewState === "ready" ? "bg-green-500 text-white" :
-                      "bg-amber-400 animate-pulse text-slate-950"
-                    }`}>
+                        "bg-amber-400 animate-pulse text-slate-950"
+                      }`}>
                       {previewState === "recording_complete" && (lang === "hi" ? "रिकॉर्डिंग पूर्ण" : "Recording Complete")}
                       {previewState === "uploading" && (lang === "hi" ? "ऑडियो अपलोड हो रहा है" : "Uploading Audio")}
                       {previewState === "transcribing" && (lang === "hi" ? "प्रतिलेखन हो रहा है" : "Transcribing")}
                       {previewState === "translating" && (lang === "hi" ? "अनुवाद हो रहा है" : "Translating")}
+                      {previewState === "finalizing" && (lang === "hi" ? "अंतिम रूप दिया जा रहा है" : "Finalizing")}
                       {previewState === "ready" && (lang === "hi" ? "तैयार" : "Ready")}
                       {previewState === "error" && (lang === "hi" ? "त्रुटि" : "Error")}
                     </span>
@@ -1183,6 +1547,7 @@ export default function Home() {
                           {previewState === "uploading" && (t.uploadingAudio || "Uploading Audio...")}
                           {previewState === "transcribing" && (t.transcribing || "Transcribing Audio...")}
                           {previewState === "translating" && (t.translating || "Translating to English...")}
+                          {previewState === "finalizing" && (t.finalizingResults || "Finalizing results...")}
                         </span>
                       </div>
                       <SpeechPreviewSkeleton />
@@ -1199,7 +1564,7 @@ export default function Home() {
                           onClick={() => generateSpeechPreview(audioBlob)}
                           className="w-full py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs uppercase tracking-wide border-2 border-slate-950 shadow-sm active-press flex items-center justify-center gap-1.5 rounded-none"
                         >
-                          🔄 Try Processing Again
+                          {t.tryAgain}
                         </button>
                         <button
                           type="button"
@@ -1220,12 +1585,12 @@ export default function Home() {
                       {isManualFallback && (
                         <div className="flex flex-col gap-1.5 border-t-2 border-slate-350 pt-3 animate-fade-in text-slate-950">
                           <label className="text-xs font-black uppercase text-slate-700">
-                            Describe your issue manually:
+                            {t.describeManually}
                           </label>
                           <textarea
                             value={manualComplaintText}
                             onChange={(e) => setManualComplaintText(e.target.value)}
-                            placeholder="Describe your issue manually"
+                            placeholder={t.describeManually}
                             rows={4}
                             className="w-full p-3 border-2 border-slate-950 bg-white text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
                           />
@@ -1266,16 +1631,15 @@ export default function Home() {
               <div className="h-16"></div>
 
               {/* FLOATING ACTION SUBMIT BUTTON */}
-              <div className="fixed bottom-0 left-0 right-0 max-w-[450px] mx-auto bg-slate-50 border-t-4 border-slate-950 p-3 z-30 flex justify-center">
+              <div className="fixed bottom-0 left-0 right-0 max-w-[600px] mx-auto bg-slate-50 border-t-4 border-slate-950 p-3 z-30 flex justify-center">
                 <button
                   type="button"
                   onClick={handleFormSubmit}
-                  disabled={uploadingState !== "idle" && uploadingState !== "failed"}
-                  className={`w-full py-4 font-black text-lg uppercase tracking-wider border-industrial shadow-industrial flex items-center justify-center gap-2 rounded-none transition-all ${
-                    uploadingState !== "idle" && uploadingState !== "failed"
-                      ? "bg-slate-400 text-slate-700 cursor-not-allowed"
-                      : "bg-safety-orange text-white hover:bg-orange-600 active-press-orange cursor-pointer"
-                  }`}
+                  disabled={(uploadingState !== "idle" && uploadingState !== "failed") || recordingState === "preparing"}
+                  className={`w-full py-4 font-black text-lg uppercase tracking-wider border-industrial shadow-industrial flex items-center justify-center gap-2 rounded-none transition-all ${(uploadingState !== "idle" && uploadingState !== "failed") || recordingState === "preparing"
+                    ? "bg-slate-400 text-slate-700 cursor-not-allowed shadow-none"
+                    : "bg-safety-orange text-white hover:bg-orange-600 active-press-orange cursor-pointer"
+                    }`}
                 >
                   ⚡ {t.submitBtn}
                 </button>
@@ -1285,7 +1649,7 @@ export default function Home() {
               {mediaReminderType !== null && (
                 <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
                   <div className="bg-white border-industrial shadow-industrial-lg w-full max-w-[380px] p-5 flex flex-col gap-4 animate-fade-in">
-                    
+
                     <h3 className="text-lg font-black text-slate-950 uppercase border-b-2 border-slate-950 pb-2">
                       {mediaReminderType === "both_missing" ? t.bothMissingTitle : t.oneMissingTitle}
                     </h3>
@@ -1294,9 +1658,9 @@ export default function Home() {
                       {mediaReminderType === "both_missing"
                         ? t.bothMissingText
                         : t.oneMissingText.replace(
-                            "{item}",
-                            photoFile === null ? t.missingPhoto : t.missingAudio
-                          )}
+                          "{item}",
+                          photoFile === null ? t.missingPhoto : t.missingAudio
+                        )}
                     </p>
 
                     <div className="flex flex-col gap-2.5 mt-2">
@@ -1308,11 +1672,11 @@ export default function Home() {
                         {mediaReminderType === "both_missing"
                           ? t.addMedia
                           : t.addMissingMedia.replace(
-                              "{item}",
-                              photoFile === null ? t.missingPhoto : t.missingAudio
-                            )}
+                            "{item}",
+                            photoFile === null ? t.missingPhoto : t.missingAudio
+                          )}
                       </button>
-                      
+
                       <button
                         type="button"
                         onClick={handleProceedAnyway}
@@ -1330,9 +1694,9 @@ export default function Home() {
               {uploadingState !== "idle" && uploadingState !== "success" && (
                 <div className="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4">
                   <div className="bg-white border-industrial shadow-industrial-lg w-full max-w-[380px] p-5 flex flex-col gap-4 animate-fade-in text-slate-950">
-                    
+
                     <h3 className="text-lg font-black uppercase border-b-2 border-slate-950 pb-2">
-                      {uploadingState === "failed" ? t.uploadFailedTitle : "Processing Submission..."}
+                      {uploadingState === "failed" ? t.uploadFailedTitle : t.processingSubmission}
                     </h3>
 
                     <div className="flex flex-col gap-3">
@@ -1411,7 +1775,7 @@ export default function Home() {
                             onClick={() => setUploadingState("idle")}
                             className="py-2.5 bg-slate-200 text-slate-800 font-bold text-xs uppercase border border-slate-400 active-press rounded-none"
                           >
-                            Cancel Submission
+                            {t.cancelSubmission}
                           </button>
                         </>
                       ) : (
@@ -1431,7 +1795,7 @@ export default function Home() {
           {/* SCREEN 3: SUCCESS CARD */}
           {screen === "success" && successDetails && (
             <div className="flex-1 flex flex-col gap-6 py-6 animate-fade-in text-slate-950">
-              
+
               <div className="flex flex-col items-center text-center gap-2">
                 <div className="w-20 h-20 bg-green-500 text-slate-950 flex items-center justify-center text-5xl font-black rounded-full border-4 border-slate-950 shadow-industrial animate-bounce mt-4">
                   ✓
@@ -1446,7 +1810,7 @@ export default function Home() {
 
               {/* Logged details (Note: NO reference number printed here as requested) */}
               <div className="bg-white border-industrial shadow-industrial-lg p-5 flex flex-col gap-4">
-                
+
                 <div className="flex flex-col gap-3">
                   <span className="text-xs font-black uppercase text-slate-900 border-b border-slate-200 pb-1">
                     📋 {t.detailsHeader}
@@ -1492,7 +1856,7 @@ export default function Home() {
           )}
 
         </main>
-        
+
         {/* Warning Stripes bottom accent */}
         <div className="h-4 bg-hazard-stripes border-t-2 border-slate-950 w-full mt-auto"></div>
 

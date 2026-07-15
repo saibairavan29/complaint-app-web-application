@@ -309,3 +309,39 @@ class SecurityEvent(models.Model):
 
     def __str__(self):
         return f"[{self.event_type}] {self.username or 'IP: '+str(self.ip_address)} at {self.created_at}"
+
+
+class BusinessUnit(models.Model):
+    name = models.CharField(max_length=255, unique=True, help_text="Business Unit name")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+
+class SystemSetting(models.Model):
+    key = models.CharField(max_length=100, unique=True)
+    value = models.TextField()
+    description = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['key']
+
+    def __str__(self):
+        return f"{self.key} = {self.value}"
+
+    @classmethod
+    def get_setting(cls, key, default=None):
+        try:
+            return cls.objects.get(key=key).value
+        except Exception:
+            from django.conf import settings
+            return getattr(settings, key, default)
+
+

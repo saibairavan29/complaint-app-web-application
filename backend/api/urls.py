@@ -27,6 +27,9 @@ from api.views import (
     MasterLanguageView,
     MasterLanguageDetailView,
     MasterBusinessUnitView,
+    MasterBusinessUnitDetailView,
+    MasterSettingView,
+    MasterSettingDetailView,
 )
 
 router = DefaultRouter()
@@ -63,5 +66,8 @@ urlpatterns = [
     path('master/languages/', MasterLanguageView.as_view(), name='master-languages'),
     path('master/languages/<int:pk>/', MasterLanguageDetailView.as_view(), name='master-language-detail'),
     path('master/business-units/', MasterBusinessUnitView.as_view(), name='master-business-units'),
+    path('master/business-units/<int:pk>/', MasterBusinessUnitDetailView.as_view(), name='master-business-unit-detail'),
+    path('master/settings/', MasterSettingView.as_view(), name='master-settings'),
+    path('master/settings/<int:pk>/', MasterSettingDetailView.as_view(), name='master-setting-detail'),
     path('', include(router.urls)),
 ]

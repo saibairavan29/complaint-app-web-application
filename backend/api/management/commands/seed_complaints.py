@@ -112,6 +112,7 @@ class Command(BaseCommand):
                 ref_num = f"CMP-{year}-{rand_code}"
 
             # Create complaint object
+            sub_type = 'TEXT_AND_VOICE' if audio else 'TEXT'
             complaint = Complaint.objects.create(
                 project=project,
                 location=location,
@@ -122,7 +123,11 @@ class Command(BaseCommand):
                 audio_url=audio,
                 original_text=orig_text,
                 english_translation=eng_translation,
-                reference_number=ref_num
+                reference_number=ref_num,
+                has_audio=bool(audio),
+                submission_type=sub_type,
+                transcription_status='COMPLETED' if audio else 'COMPLETED',
+                translation_status='COMPLETED'
             )
 
             # Assign historical date

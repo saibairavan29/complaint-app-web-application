@@ -6,6 +6,9 @@ from django.db.models import Avg, Count
 from django.utils import timezone
 from datetime import timedelta
 import os
+import logging
+
+logger = logging.getLogger('system')
 
 from api.models import (
     Complaint, SpeechProcessingLog, BackupLog, 
@@ -114,8 +117,8 @@ class DashboardDiagnosticsView(APIView):
             tasks_last_hour = Success.objects.filter(stopped__gte=last_hour).count() + Failure.objects.filter(stopped__gte=last_hour).count()
             processing_rate = round(tasks_last_hour / 60.0, 2)
             
-            # Average Queue Wait Time (using SpeechProcessingLog + Complaint correlation)
-            logs = SpeechProcessingLog.objects.select_related('complaint').all()
+            # Average Queue Wait Time (using latest 100 SpeechProcessingLog + Complaint correlation)
+            logs = SpeechProcessingLog.objects.select_related('complaint').order_by('-created_at')[:100]
             total_wait = 0.0
             wait_count = 0
             for log in logs:
@@ -127,14 +130,14 @@ class DashboardDiagnosticsView(APIView):
                     wait_count += 1
             avg_wait_time = round(total_wait / wait_count, 1) if wait_count > 0 else 0.0
             
-            # Average Processing Time (from Success/Failure models)
+            # Average Processing Time (from Success/Failure models, limited to latest 100)
             total_proc_time = 0.0
             task_count = 0
-            for t in Success.objects.all():
+            for t in Success.objects.order_by('-stopped')[:100]:
                 if t.started and t.stopped:
                     total_proc_time += (t.stopped - t.started).total_seconds()
                     task_count += 1
-            for t in Failure.objects.all():
+            for t in Failure.objects.order_by('-stopped')[:100]:
                 if t.started and t.stopped:
                     total_proc_time += (t.stopped - t.started).total_seconds()
                     task_count += 1
@@ -145,7 +148,7 @@ class DashboardDiagnosticsView(APIView):
             throughput_per_hour = round(completed_last_24 / 24.0, 1)
             
         except Exception as q_err:
-            pass
+            logger.exception("Queue telemetry calculation failed")
             
         running_queue = 0
         try:
@@ -153,8 +156,8 @@ class DashboardDiagnosticsView(APIView):
             stats = Stat.get_all()
             for stat in stats:
                 running_queue += len(stat.task_threads) if hasattr(stat, 'task_threads') else 0
-        except Exception:
-            pass
+        except Exception as stat_err:
+            logger.exception("Queue running tasks stat retrieval failed")
 
         queue_metrics = {
             "pending": pending_queue,

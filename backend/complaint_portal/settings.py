@@ -132,6 +132,14 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_REFERRER_POLICY = "same-origin"
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
 # HSTS Settings
 SECURE_HSTS_SECONDS = env.int('SECURE_HSTS_SECONDS', default=31536000)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -275,8 +283,8 @@ OPENAI_STT_MODEL = env('OPENAI_STT_MODEL', default='gpt-4o-mini-transcribe')
 OPENAI_TRANSLATION_MODEL = env('OPENAI_TRANSLATION_MODEL', default='gpt-4o-mini')
 
 # Gemini Model Configuration
-GEMINI_STT_MODEL = env('GEMINI_STT_MODEL', default='gemini-3-flash-preview')
-GEMINI_TRANSLATION_MODEL = env('GEMINI_TRANSLATION_MODEL', default='gemini-3-flash-preview')
+GEMINI_STT_MODEL = env('GEMINI_STT_MODEL', default='gemini-2.5-flash')
+GEMINI_TRANSLATION_MODEL = env('GEMINI_TRANSLATION_MODEL', default='gemini-2.5-flash')
 
 
 # Separate API Keys and Providers
@@ -326,5 +334,9 @@ TESTING = (
     (not OPENAI_API_KEY and not GOOGLE_API_KEY)
 )
 
-
-
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}

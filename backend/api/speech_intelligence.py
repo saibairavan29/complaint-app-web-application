@@ -10,8 +10,33 @@ import random
 import traceback
 from django.utils import timezone
 from django.conf import settings
-from api.models import Complaint, SpeechProcessingLog, QueueFailureLog, SystemErrorLog
-from openai import OpenAI
+from api.models import Complaint, SpeechProcessingLog, QueueFailureLog, SystemErrorLog, SystemSetting
+_openai_client = None
+_google_client = None
+
+def get_openai_client(api_key):
+    global _openai_client
+    if _openai_client is None or _openai_client.api_key != api_key:
+        from openai import OpenAI
+        _openai_client = OpenAI(api_key=api_key)
+    return _openai_client
+
+def get_google_client(api_key):
+    global _google_client
+    if _google_client is None or getattr(_google_client, '_cached_api_key', None) != api_key:
+        from google import genai
+        _google_client = genai.Client(api_key=api_key)
+        _google_client._cached_api_key = api_key
+    return _google_client
+
+def log_low_confidence_preview_task(translation_confidence, language):
+    """
+    Asynchronous Q-task to log low confidence speech translation previews.
+    """
+    SystemErrorLog.objects.create(
+        error_type='speech',
+        message=f"Low confidence speech translation preview: {round(translation_confidence * 100, 1)}% for language {language}."
+    )
 
 def normalize_audio_wav(input_path):
     """
@@ -74,23 +99,23 @@ def normalize_audio_wav(input_path):
             scale = 29490.0 / peak
             samples = [int(s * scale) for s in samples]
  
-    # 4. Trim leading/trailing silence
-    # noise floor threshold: PCM value of 1000
-    threshold = 1000
-    start_idx = 0
-    end_idx = len(samples)
-    
-    for i, s in enumerate(samples):
-        if abs(s) > threshold:
-            start_idx = max(0, i - 1600)  # leave a small buffer of 0.1s (1600 samples)
-            break
-    for i in range(len(samples) - 1, -1, -1):
-        if abs(samples[i]) > threshold:
-            end_idx = min(len(samples), i + 1600)
-            break
-            
-    if start_idx < end_idx:
-        samples = samples[start_idx:end_idx]
+    # 4. Trim leading/trailing silence (Bypassed to prevent cutting off soft speech / ending words)
+    # threshold = 1000
+    # start_idx = 0
+    # end_idx = len(samples)
+    # 
+    # for i, s in enumerate(samples):
+    #     if abs(s) > threshold:
+    #         start_idx = max(0, i - 1600)  # leave a small buffer of 0.1s (1600 samples)
+    #         break
+    # for i in range(len(samples) - 1, -1, -1):
+    #     if abs(samples[i]) > threshold:
+    #         end_idx = min(len(samples), i + 1600)
+    #         break
+    #         
+    # if start_idx < end_idx:
+    #     samples = samples[start_idx:end_idx]
+
         
     # Save normalized WAV file
     out_path = input_path.replace(".wav", "_normalized.wav")
@@ -102,7 +127,8 @@ def normalize_audio_wav(input_path):
             dest.setnchannels(1)
             dest.setsampwidth(2)
             dest.setframerate(target_rate)
-            packed = struct.pack(f"<{len(samples)}h", *samples)
+            clamped_samples = [max(-32768, min(32767, int(s))) for s in samples]
+            packed = struct.pack(f"<{len(clamped_samples)}h", *clamped_samples)
             dest.writeframes(packed)
         return out_path
     except Exception as e:
@@ -179,25 +205,30 @@ def get_mock_fallback_data(language_code, category):
 def estimate_confidence(text, language_code, category=None):
     """
     Estimates transcription and translation confidence.
-    If the text has signs of Whisper failure or contains specific trigger words,
-    or category is 'low_confidence', we return < 0.70 (e.g. 0.55).
+    Low confidence should only occur when justified (e.g., Whisper hallucination, repetition loops, empty text).
     """
     if category == 'low_confidence':
         return 0.65, 0.55
-    if text:
-        lower_txt = text.lower()
-        if any(w in lower_txt for w in ['verify', 'low', 'garbage', 'poor', 'bad', 'dummy', 'translation confidence is low']):
-            return 0.65, 0.55
-            
-    if not text:
-        return 0.50, 0.50
+    if not text or not text.strip():
+        return 0.0, 0.0
         
-    words = text.strip().split()
-    if len(words) < 3:
+    lower_txt = text.lower().strip()
+    
+    # Common Whisper hallucination phrases (e.g. when recording silence or static noise)
+    hallucinations = [
+        "thank you", "thanks for watching", "subscribe", "please subscribe",
+        "you watched", "you guys", "watch next", "bye bye", "youtube"
+    ]
+    if any(h == lower_txt or lower_txt.startswith(h) for h in hallucinations):
+        return 0.45, 0.40
+        
+    words = lower_txt.split()
+    if len(words) < 2:
         return 0.65, 0.60
         
+    # Check for duplicate word loops (e.g. Whisper looping indefinitely)
     unique_words = set(words)
-    if len(words) > 10 and len(unique_words) / len(words) < 0.4:
+    if len(words) > 8 and len(unique_words) / len(words) < 0.35:
         return 0.55, 0.50
         
     return 0.95, 0.92
@@ -255,11 +286,25 @@ def call_gpt_translation_with_retry(client, text):
         try:
             response = client.chat.completions.create(
                 model=translation_model,
+                temperature=0.3,
                 messages=[
                     {"role": "system", "content": (
-                        "You are a professional translator. Translate the following worker complaint transcript to natural English. "
-                        "You must preserve worker intent, complaint severity, urgency, and meaning. "
-                        "Do NOT summarize, rewrite, rephrase, or simplify. Only translate. Return ONLY the translated text."
+                        "You are a senior professional translator specializing in construction industry worker complaints "
+                        "from Indian languages (Hindi, Tamil, Telugu, Malayalam, Kannada, Marathi, Bengali, Gujarati, Punjabi, Odia, Assamese) to fluent, native-quality English.\n\n"
+                        "TRANSLATION APPROACH:\n"
+                        "- Translate the SEMANTIC MEANING, not individual words. The output must read as if written by a native English speaker lodging a workplace complaint.\n"
+                        "- Preserve the worker's intent, urgency, emotional tone, and complaint severity exactly as expressed.\n"
+                        "- Use domain-appropriate construction and workplace terminology. For example: "
+                        "'earthing wire' (not 'earth wire'), 'electrical panel' (not 'light board'), 'safety helmet' (not 'head cap'), "
+                        "'scaffolding' (not 'bamboo stand'), 'personal protective equipment' or 'PPE', 'rebar' or 'steel rod', "
+                        "'concrete mix' (not 'cement water'), 'drinking water supply', 'sewage', 'camp accommodation', 'site supervisor'.\n"
+                        "- If the original contains informal or colloquial phrasing, translate to natural informal English — do NOT produce stiff or bureaucratic output.\n"
+                        "- Do not add, invent, summarize, or omit any information present in the original.\n\n"
+                        "NAMING RULES (CRITICAL):\n"
+                        "1. Do NOT translate proper project names, company names, business unit names, complaint reference IDs, or location codes.\n"
+                        "2. Do NOT translate English abbreviations (CMRL, TWCC, DMRC, RVNL, NHPC, etc.). Preserve them exactly.\n"
+                        "3. DO translate general context words that appear alongside abbreviations (e.g. 'Camp' in 'CMRL Camp', 'site' in 'TWCC site').\n\n"
+                        "OUTPUT RULE: Return ONLY the translated English text. No explanations, no prefixes, no quotes."
                     )},
                     {"role": "user", "content": text}
                 ],
@@ -277,16 +322,92 @@ def call_gpt_translation_with_retry(client, text):
     raise last_error
 
 
+def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code):
+    """
+    Calls Gemini in a single multimodal roundtrip to transcribe AND translate.
+    Returns: (transcript, english_translation, detected_lang_name)
+    """
+    from google.genai import types
+    client = get_google_client(google_key)
+    
+    stt_model = getattr(settings, 'GEMINI_STT_MODEL', 'gemini-2.0-flash')
+    if stt_model.startswith('models/'):
+        stt_model = stt_model[len('models/'):]
+        
+    with open(audio_path, 'rb') as f:
+        audio_bytes = f.read()
+    system_instruction = (
+        "You are an expert transcriber and professional translator specializing in construction worker complaints.\n\n"
+        "YOUR TASKS:\n"
+        "1. Transcribe the attached audio recording verbatim in its original spoken language.\n"
+        "2. Translate that transcript into fluent, natural-sounding, native-quality English.\n"
+        "3. Detect the spoken language.\n\n"
+        "TRANSLATION RULES:\n"
+        "- Translate semantic meaning, not literal words. Preserve the emotional urgency, tone, and severity.\n"
+        "- Use standard construction terminology: 'earthing wire', 'electrical panel', 'safety helmet', 'scaffolding', 'PPE', 'sewage', 'accommodation'.\n"
+        "- Do NOT translate proper names, company names, business units, or abbreviations (CMRL, TWCC, etc.).\n\n"
+        "JSON SCHEMA:\n"
+        "You must return output strictly as a JSON object matching this schema:\n"
+        "{\n"
+        "  \"transcript\": \"original language text\",\n"
+        "  \"english_translation\": \"fluent English translation\",\n"
+        "  \"detected_language\": \"Hindi | Tamil | Telugu | Marathi | Odia | English\"\n"
+        "}"
+    )
+    backoffs = [2, 4]
+    last_error = None
+    
+    for attempt in range(3):
+        try:
+            response = client.models.generate_content(
+                model=stt_model,
+                contents=[
+                    types.Part.from_bytes(data=audio_bytes, mime_type='audio/wav'),
+                    "Transcribe and translate this worker complaint."
+                ],
+                config=types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    response_mime_type="application/json",
+                    temperature=0.2,
+                )
+            )
+            
+            import json
+            data = json.loads(response.text.strip())
+            
+            # Step 4 JSON schema validation:
+            transcript = data.get("transcript")
+            english_translation = data.get("english_translation")
+            detected_language = data.get("detected_language")
+            
+            # Verify required fields exist and contain valid truthy string values
+            if not transcript or not isinstance(transcript, str) or not transcript.strip():
+                raise ValueError("JSON schema validation failed: 'transcript' is missing, empty, or not a string.")
+            if not english_translation or not isinstance(english_translation, str) or not english_translation.strip():
+                raise ValueError("JSON schema validation failed: 'english_translation' is missing, empty, or not a string.")
+            if not detected_language or not isinstance(detected_language, str) or not detected_language.strip():
+                raise ValueError("JSON schema validation failed: 'detected_language' is missing, empty, or not a string.")
+                
+            return (
+                transcript.strip(),
+                english_translation.strip(),
+                detected_language.strip()
+            )
+        except Exception as e:
+            last_error = e
+            if attempt < len(backoffs):
+                time.sleep(backoffs[attempt])
+            else:
+                break
+                
+    raise last_error
+
+
 def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=None):
     """
-    Calls Gemini with inline audio for transcription with exponential backoff.
-    Uses the new google-genai SDK (google.genai).
-    """
-    from google import genai
+    Calls Gemini with inline audio for transcription with exponential backoff.    """
     from google.genai import types
-    import time
-    
-    client = genai.Client(api_key=google_key)
+    client = get_google_client(google_key)
     backoffs = [2, 4, 8]
     last_error = None
     
@@ -340,10 +461,8 @@ def call_gemini_translation_with_retry(google_key, text):
     Calls Gemini with a text prompt for translation with exponential backoff.
     Uses the new google-genai SDK (google.genai).
     """
-    from google import genai
-    import time
-    
-    client = genai.Client(api_key=google_key)
+    from google.genai import types as genai_types
+    client = get_google_client(google_key)
     backoffs = [2, 4, 8]
     last_error = None
     
@@ -352,18 +471,37 @@ def call_gemini_translation_with_retry(google_key, text):
     if translation_model.startswith('models/'):
         translation_model = translation_model[len('models/'):]
     
-    prompt = (
-        f"You are a professional translator. Translate the following worker complaint transcript to natural English. "
-        f"You must preserve worker intent, complaint severity, urgency, and meaning. "
-        f"Do NOT summarize, rewrite, rephrase, or simplify. Only translate. Return ONLY the translated text.\n\n"
-        f"Text to translate:\n{text}"
+    system_instruction = (
+        "You are a senior professional translator specializing in construction industry worker complaints "
+        "from Indian languages (Hindi, Tamil, Telugu, Malayalam, Kannada, Marathi, Bengali, Gujarati, Punjabi, Odia, Assamese) to fluent, native-quality English.\n\n"
+        "TRANSLATION APPROACH:\n"
+        "- Translate the SEMANTIC MEANING, not individual words. The output must read as if written by a native English speaker lodging a workplace complaint.\n"
+        "- Preserve the worker's intent, urgency, emotional tone, and complaint severity exactly as expressed.\n"
+        "- Use domain-appropriate construction and workplace terminology. For example: "
+        "'earthing wire' (not 'earth wire'), 'electrical panel' (not 'light board'), 'safety helmet' (not 'head cap'), "
+        "'scaffolding' (not 'bamboo stand'), 'personal protective equipment' or 'PPE', 'rebar' or 'steel rod', "
+        "'concrete mix' (not 'cement water'), 'drinking water supply', 'sewage', 'camp accommodation', 'site supervisor'.\n"
+        "- If the original contains informal or colloquial phrasing, translate to natural informal English — do NOT produce stiff or bureaucratic output.\n"
+        "- Do not add, invent, summarize, or omit any information present in the original.\n\n"
+        "NAMING RULES (CRITICAL):\n"
+        "1. Do NOT translate proper project names, company names, business unit names, complaint reference IDs, or location codes.\n"
+        "2. Do NOT translate English abbreviations (CMRL, TWCC, DMRC, RVNL, NHPC, etc.). Preserve them exactly.\n"
+        "3. DO translate general context words that appear alongside abbreviations (e.g. 'Camp' in 'CMRL Camp', 'site' in 'TWCC site').\n\n"
+        "OUTPUT RULE: Return ONLY the translated English text. No explanations, no prefixes, no quotes."
     )
+
+    prompt = f"Translate the following construction worker complaint to fluent English:\n\n{text}"
     
     for attempt in range(4):
         try:
             response = client.models.generate_content(
                 model=translation_model,
-                contents=prompt
+                contents=prompt,
+                config=genai_types.GenerateContentConfig(
+                    system_instruction=system_instruction,
+                    temperature=0.3,
+                    max_output_tokens=1024,
+                )
             )
             return response.text.strip()
         except Exception as e:
@@ -400,8 +538,7 @@ def transcribe_audio(audio_path, language_code=None):
     else:
         if not openai_key:
             raise ValueError("OPENAI_API_KEY is missing for OpenAI Speech Provider.")
-        from openai import OpenAI
-        client = OpenAI(api_key=openai_key)
+        client = get_openai_client(openai_key)
         with open(audio_path, 'rb') as audio_file:
             return call_whisper_with_retry(client, audio_file, whisper_lang)
 
@@ -422,8 +559,7 @@ def translate_text(text):
     else:
         if not openai_key:
             raise ValueError("OPENAI_API_KEY is missing for OpenAI Translation Provider.")
-        from openai import OpenAI
-        client = OpenAI(api_key=openai_key)
+        client = get_openai_client(openai_key)
         return call_gpt_translation_with_retry(client, text)
 
 
@@ -541,9 +677,20 @@ def _run_verify_speech_transcription(complaint_id):
             processing_time_ms=int((time.time() - start_time_all) * 1000)
         )
         return
- 
-    speech_provider = getattr(settings, 'SPEECH_PROVIDER', 'OpenAI')
-    translation_provider = getattr(settings, 'TRANSLATION_PROVIDER', 'OpenAI')
+    # Calculate and save audio duration
+    try:
+        import wave
+        with wave.open(normalized_audio_path or temp_audio_path, 'rb') as wf:
+            frames = wf.getnframes()
+            rate = wf.getframerate()
+            duration_secs = round(frames / float(rate), 1)
+            complaint.audio_duration_seconds = duration_secs
+            complaint.save()
+    except Exception:
+        pass
+
+    speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', getattr(settings, 'SPEECH_PROVIDER', 'Gemini'))
+    translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', getattr(settings, 'TRANSLATION_PROVIDER', 'Gemini'))
     openai_key = getattr(settings, 'OPENAI_API_KEY', '')
     google_key = getattr(settings, 'GOOGLE_API_KEY', '')
     
@@ -582,11 +729,21 @@ def _run_verify_speech_transcription(complaint_id):
             backend_translation = trans_en
             detected_lang = det_lang_name
         else:
-            # Call unified speech transcription
-            backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
+            if speech_provider == 'Gemini' and translation_provider == 'Gemini':
+                try:
+                    backend_transcript, backend_translation, detected_lang = call_gemini_joint_stt_and_translation(
+                        google_key, normalized_audio_path, complaint.language
+                    )
+                except Exception as e:
+                    # Fallback to legacy sequential model if needed
+                    backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
+                    backend_translation = translate_text(backend_transcript)
+            else:
+                # Call unified speech transcription
+                backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
                 
-            # Call unified text translation
-            backend_translation = translate_text(backend_transcript)
+                # Call unified text translation
+                backend_translation = translate_text(backend_transcript)
             
     except Exception as e:
         err_reason = str(e)

@@ -1,0 +1,11 @@
+.env
+.env.production
+.env.local
+.env.*
+!.env.example
+*.pyc
+__pycache__/
+db.sqlite3
+backups/
+media/
+*.log

@@ -1,6 +1,18 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from api.models import Project, Location, Complaint, Category, Language
+from api.models import Project, Location, Complaint, Category, Language, BusinessUnit, SystemSetting
+
+@admin.register(BusinessUnit)
+class BusinessUnitAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'created_at')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+
+@admin.register(SystemSetting)
+class SystemSettingAdmin(admin.ModelAdmin):
+    list_display = ('key', 'value', 'description', 'updated_at')
+    search_fields = ('key', 'value')
+
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
@@ -98,8 +110,9 @@ admin.site.has_permission = lambda request: request.user.is_active and request.u
 
 # Set custom headers, titles, and emergency recovery descriptions
 admin.site.site_header = format_html(
-    'Worker Welfare Portal Developer Admin | <a href="http://localhost:3000/admin-dashboard" '
-    'style="color: #f59e0b; text-decoration: underline; font-weight: bold; margin-left: 15px;">Admin Dashboard</a>'
+    'Worker Welfare Portal Developer Admin | <a href="{}" '
+    'style="color: #f59e0b; text-decoration: underline; font-weight: bold; margin-left: 15px;">Admin Dashboard</a>',
+    'http://localhost:3000/admin-dashboard'
 )
 admin.site.site_title = "Developer Admin Portal"
 admin.site.index_title = "Database Administration & Emergency Recovery Console"

@@ -3,6 +3,7 @@ from api.models import Project, Location, Complaint, Notification, UserActivity,
 from django.contrib.auth import get_user_model
 import random
 from datetime import datetime
+from api.utils import CATEGORY_TRANSLATIONS, get_bilingual_name, get_bilingual_category
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -35,10 +36,15 @@ class SpeechProcessingLogSerializer(serializers.ModelSerializer):
 
 
 class ComplaintSerializer(serializers.ModelSerializer):
-    # Enable reading names of project and location in GET responses, but writing IDs in POST requests
-    project_name = serializers.ReadOnlyField(source='project.name')
-    location_name = serializers.ReadOnlyField(source='location.name')
+    project_name = serializers.SerializerMethodField()
+    location_name = serializers.SerializerMethodField()
     speech_logs = SpeechProcessingLogSerializer(many=True, read_only=True)
+
+    def get_project_name(self, obj):
+        return get_bilingual_name(obj.project, obj.language or 'en')
+
+    def get_location_name(self, obj):
+        return get_bilingual_name(obj.location, obj.language or 'en')
 
     class Meta:
         model = Complaint
@@ -102,16 +108,32 @@ class ComplaintSerializer(serializers.ModelSerializer):
             'translation_language_pair'
         ]
 
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['category'] = get_bilingual_category(instance.category, instance.language or 'en')
+        return rep
+
     def create(self, validated_data):
-        # Automatically generate unique reference number: CMP-YYYY-XXXXX
-        year = datetime.now().year
-        while True:
-            rand_code = random.randint(10000, 99999)
-            ref_num = f"CMP-{year}-{rand_code}"
-            if not Complaint.objects.filter(reference_number=ref_num).exists():
-                validated_data['reference_number'] = ref_num
-                break
+        from django.db import transaction, IntegrityError
         
+        attempts = 0
+        while attempts < 10:
+            try:
+                with transaction.atomic():
+                    year = datetime.now().year
+                    rand_code = random.randint(10000, 99999)
+                    ref_num = f"CMP-{year}-{rand_code}"
+                    if not Complaint.objects.filter(reference_number=ref_num).exists():
+                        validated_data['reference_number'] = ref_num
+                        return super().create(validated_data)
+            except IntegrityError:
+                pass
+            attempts += 1
+            
+        # Fallback in case of 10 straight failures
+        year = datetime.now().year
+        rand_code = random.randint(100000, 999999)
+        validated_data['reference_number'] = f"CMP-{year}-{rand_code}"
         return super().create(validated_data)
 
 

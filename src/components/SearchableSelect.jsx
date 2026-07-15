@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import { getTranslatedProjectName } from "../utils/translationHelper";
 
 export default function SearchableSelect({
   options = [],
@@ -35,27 +36,7 @@ export default function SearchableSelect({
     if (getBilingualName) {
       return getBilingualName(option);
     }
-    const localizedNames = option.localized_names || {};
-    const englishName = option.name || localizedNames["en"] || "";
-    let localName = "";
-    
-    if (language === "en") {
-      const otherLangs = Object.keys(localizedNames).filter(k => k !== "en" && localizedNames[k]);
-      if (otherLangs.length > 0) {
-        localName = localizedNames[otherLangs[0]];
-      }
-    } else {
-      localName = localizedNames[language];
-    }
-
-    if (localName && localName !== englishName) {
-      if (language === "en") {
-        return `${englishName} (${localName})`;
-      } else {
-        return `${localName} (${englishName})`;
-      }
-    }
-    return englishName;
+    return getTranslatedProjectName(option, language);
   };
 
   // Synchronize input text with the selected value when dropdown is closed
@@ -113,7 +94,7 @@ export default function SearchableSelect({
     return options.filter((opt) => {
       if (opt.is_active === false) return false;
       const engName = (opt.name || "").toLowerCase();
-      const localName = (opt.localized_names?.[language] || "").toLowerCase();
+      const localName = getTranslatedProjectName(opt, language).toLowerCase();
       return engName.includes(query) || localName.includes(query);
     });
   }, [options, debouncedQuery, language, isOpen, value]);
@@ -365,13 +346,16 @@ export default function SearchableSelect({
                       }`}
                     >
                       {language !== "en" && option.localized_names?.[language] && option.localized_names[language] !== (option.name || option.localized_names["en"]) ? (
-                        <div className="flex flex-col justify-center py-1 text-left w-full">
-                          <span className="font-semibold text-sm leading-tight text-slate-800 dark:text-slate-100">{option.name || option.localized_names?.["en"] || ""}</span>
-                          <span className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">({option.localized_names[language]})</span>
+                        <div className="flex items-center py-1 text-left w-full">
+                          <span className="font-semibold text-sm leading-tight text-slate-800 dark:text-slate-100">
+                            {option.localized_names[language]} ({option.name || option.localized_names?.["en"] || ""})
+                          </span>
                         </div>
                       ) : (
-                        <div className="flex flex-col justify-center py-1 text-left w-full">
-                          <span className="font-semibold text-sm leading-tight text-slate-800 dark:text-slate-100">{option.name || option.localized_names?.["en"] || ""}</span>
+                        <div className="flex items-center py-1 text-left w-full">
+                          <span className="font-semibold text-sm leading-tight text-slate-800 dark:text-slate-100">
+                            {option.name || option.localized_names?.["en"] || ""}
+                          </span>
                         </div>
                       )}
                       {isSelected && (

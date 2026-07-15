@@ -24,6 +24,12 @@ class ApiConfig(AppConfig):
         openai_key = getattr(settings, 'OPENAI_API_KEY', '')
         google_key = getattr(settings, 'GOOGLE_API_KEY', '')
         is_testing = getattr(settings, 'TESTING', False)
+        if is_testing:
+            from django.core.cache import cache
+            try:
+                cache.clear()
+            except Exception:
+                pass
 
         openai_loaded = "YES" if openai_key else "NO"
 
