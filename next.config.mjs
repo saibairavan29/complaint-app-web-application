@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {},
+
   webpack: (config, { webpack }) => {
     config.plugins.push(
       new webpack.WatchIgnorePlugin({
