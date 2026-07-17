@@ -13,6 +13,7 @@ from django.conf import settings
 import logging
 logger = logging.getLogger('api')
 from django.db.models import Count, Min, Q
+from django.db.models.functions import TruncMonth
 from django.http import FileResponse
 from django.utils import timezone
 from datetime import timedelta
@@ -1017,19 +1018,43 @@ class DashboardAnalyticsView(APIView):
         location_data = sorted(location_data, key=lambda x: x['count'], reverse=True)
 
         # Monthly Trend breakdowns
-        trend_map = defaultdict(lambda: {"Pending": 0, "In Progress": 0, "Completed": 0, "Resolved": 0, "Rejected": 0, "count": 0})
-        for item in complaints.extra(select={'month': "strftime('%%Y-%%m', created_at)"}).values('month', 'status').annotate(count=Count('id')):
-            m = item['month']
-            st = item['status']
-            cnt = item['count']
-            trend_map[m][st] = cnt
-            trend_map[m]["count"] += cnt
+        trend_map = defaultdict(
+            lambda: {
+                "Pending": 0,
+                "In Progress": 0,
+                "Completed": 0,
+                "Resolved": 0,
+                "Rejected": 0,
+                "count": 0,
+            }
+        )
+
+        monthly_data = (
+            complaints
+            .annotate(month=TruncMonth("created_at"))
+            .values("month", "status")
+            .annotate(count=Count("id"))
+        )
+
+        for item in monthly_data:
+            month = item["month"].strftime("%Y-%m")
+            status = item["status"]
+            count = item["count"]
+
+            trend_map[month][status] = count
+            trend_map[month]["count"] += count
 
         trend_data = []
-        for m, stats in sorted(trend_map.items()):
-            pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
-            trend_data.append({"month": m, "percentage": pct, **stats})
 
+        for month, stats in sorted(trend_map.items()):
+            pct = round((stats["count"] / total_count) * 100, 1) if total_count > 0 else 0.0
+
+            trend_data.append({
+                "month": month,
+                "percentage": pct,
+                **stats
+            })
+        
         # Calculate drill-down list
         drilldown_complaints = ComplaintSerializer(complaints.order_by('-created_at'), many=True).data
 
