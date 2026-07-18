@@ -1045,10 +1045,10 @@ class DashboardAnalyticsView(APIView):
 
         for item in monthly_data:
             month = item["month"].strftime("%Y-%m")
-            status = item["status"]
+            complaint_status = item["status"]
             count = item["count"]
 
-            trend_map[month][status] = count
+            trend_map[month][complaint_status] = count
             trend_map[month]["count"] += count
 
         trend_data = []
