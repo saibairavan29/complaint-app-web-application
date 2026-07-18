@@ -921,6 +921,13 @@ class DashboardAnalyticsView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get(self, request):
+        print("=" * 60)
+        print("DashboardAnalyticsView called")
+        print("Authenticated:", request.user.is_authenticated)
+        print("Username:", request.user)
+        print("Staff:", request.user.is_staff)
+        print("Superuser:", request.user.is_superuser)
+        print("=" * 60)
         range_type = request.query_params.get('range_type')
         start_date = request.query_params.get('start_date')
         end_date = request.query_params.get('end_date')
