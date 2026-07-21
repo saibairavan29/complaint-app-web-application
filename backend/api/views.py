@@ -365,6 +365,7 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             normalized_path = normalize_audio_wav(temp_audio_path)
             
             logger.info(f"[FORENSIC STEP 22] Audio sent to Whisper. Path: {normalized_path}, Lang: {language}")
+            logger.info("NEXT STEP: deciding provider")
             
             # Process transcription & translation
             is_testing = getattr(settings, 'TESTING', False)
@@ -381,8 +382,8 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             
             # Run Whisper or Fallback simulator
             if is_testing:
-                # Use fallback simulation
-                trans, trans_en, det_lang_name = get_mock_fallback_data(language, category)
+                  logger.info(">>> USING MOCK FALLBACK <<<")
+                  trans, trans_en, det_lang_name = get_mock_fallback_data(language, category)
                 transcript_text = trans
                 translation_text = trans_en
                 detected_language = det_lang_name
@@ -416,17 +417,45 @@ class ComplaintViewSet(viewsets.ModelViewSet):
                     }, status=status.HTTP_400_BAD_REQUEST)
  
                 try:
+                    logger.info("=" * 70)
+                    logger.info("PREVIEW SPEECH")
+                    logger.info("speech_provider=%r", speech_provider)
+                    logger.info("translation_provider=%r", translation_provider)
+                    logger.info("is_testing=%r", is_testing)
+                    logger.info("google_key exists=%r", bool(google_key))
+                    logger.info("=" * 70)
                     if not is_testing and speech_provider == 'Gemini' and translation_provider == 'Gemini':
+
+                        logger.info(">>> USING GEMINI JOINT STT <<<")
+
                         try:
                             from api.speech_intelligence import call_gemini_joint_stt_and_translation
-                            transcript_text, translation_text, detected_language = call_gemini_joint_stt_and_translation(
-                                google_key, normalized_path, language
+
+                            transcript_text, translation_text, detected_language = (
+                                call_gemini_joint_stt_and_translation(
+                                    google_key,
+                                    normalized_path,
+                                    language
+                                )
                             )
+
                         except Exception as e:
-                            # Fallback to legacy sequential model if needed
+
+                            logger.exception("JOINT GEMINI FAILED - FALLING BACK")
+
                             from api.speech_intelligence import transcribe_audio, translate_text
+
                             transcript_text = transcribe_audio(normalized_path, language)
                             translation_text = translate_text(transcript_text)
+
+                    else:
+
+                        logger.info(">>> USING SEQUENTIAL STT <<<")
+
+                        from api.speech_intelligence import transcribe_audio, translate_text
+
+                        transcript_text = transcribe_audio(normalized_path, language)
+                        translation_text = translate_text(transcript_text)
                     else:
                         from api.speech_intelligence import transcribe_audio, translate_text
                         transcript_text = transcribe_audio(normalized_path, language)

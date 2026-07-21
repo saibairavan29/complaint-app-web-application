@@ -328,6 +328,8 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
     Calls Gemini in a single multimodal roundtrip to transcribe AND translate.
     Returns: (transcript, english_translation, detected_lang_name)
     """
+    logger.info("######## ENTERED GEMINI JOINT FUNCTION ########")
+    
     from google.genai import types
     client = get_google_client(google_key)
     
@@ -381,6 +383,7 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
             logger.info("RAW GEMINI RESPONSE:")
             logger.info(response.text)
             logger.info("=" * 80)
+            logger.info("######## ENTERED GEMINI JOINT FUNCTION ########")
             # ---------- DEBUG END ----------
             
             import json
