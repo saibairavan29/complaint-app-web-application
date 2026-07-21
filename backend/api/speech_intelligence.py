@@ -752,12 +752,6 @@ def _run_verify_speech_transcription(complaint_id):
             backend_translation = trans_en
             detected_lang = det_lang_name
         else:
-            logger.info("=" * 60)
-    logger.info("speech_provider = %r", speech_provider)
-    logger.info("translation_provider = %r", translation_provider)
-    logger.info("google_key exists = %s", bool(google_key))
-    logger.info("TESTING = %s", is_test_mode)
-    logger.info("=" * 60)
             if speech_provider == 'Gemini' and translation_provider == 'Gemini':
                 try:
                     backend_transcript, backend_translation, detected_lang = call_gemini_joint_stt_and_translation(
