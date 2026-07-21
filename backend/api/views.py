@@ -468,6 +468,15 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_200_OK)
             
         except Exception as ex:
+            import traceback
+            logger.exception("PREVIEW SPEECH FAILED")
+            traceback.print_exc()
+            return Response(
+                {
+                    "detail": str(ex)
+                },
+                status=500
+            )
             # Cleanup on main thread error
             if os.path.exists(temp_audio_path):
                 try:
