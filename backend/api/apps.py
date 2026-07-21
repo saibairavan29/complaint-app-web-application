@@ -18,12 +18,34 @@ class ApiConfig(AppConfig):
 
     def run_startup_validation(self):
         from django.conf import settings
+        from api.models import SystemSetting
         
-        speech_provider = getattr(settings, 'SPEECH_PROVIDER', 'OpenAI')
-        translation_provider = getattr(settings, 'TRANSLATION_PROVIDER', 'OpenAI')
+        # Hydrate settings API keys from SystemSetting database if absent in env/settings
+        if not getattr(settings, 'OPENAI_API_KEY', ''):
+            db_openai_key = SystemSetting.get_setting('OPENAI_API_KEY', '')
+            if db_openai_key:
+                settings.OPENAI_API_KEY = db_openai_key
+                os.environ['OPENAI_API_KEY'] = db_openai_key
+
+        if not getattr(settings, 'GOOGLE_API_KEY', ''):
+            db_google_key = SystemSetting.get_setting('GOOGLE_API_KEY', '')
+            if db_google_key:
+                settings.GOOGLE_API_KEY = db_google_key
+                os.environ['GOOGLE_API_KEY'] = db_google_key
+                os.environ['GEMINI_API_KEY'] = db_google_key
+
+        speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', getattr(settings, 'SPEECH_PROVIDER', 'OpenAI'))
+        translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', getattr(settings, 'TRANSLATION_PROVIDER', 'OpenAI'))
         openai_key = getattr(settings, 'OPENAI_API_KEY', '')
         google_key = getattr(settings, 'GOOGLE_API_KEY', '')
         is_testing = getattr(settings, 'TESTING', False)
+
+        logger.info("=" * 60)
+        logger.info("settings.TESTING = %r", settings.TESTING)
+        logger.info("settings.GOOGLE_API_KEY exists = %r", bool(settings.GOOGLE_API_KEY))
+        logger.info("SystemSetting GOOGLE_API_KEY exists = %r", bool(SystemSetting.get_setting("GOOGLE_API_KEY", "")))
+        logger.info("=" * 60)
+        
         if is_testing:
             from django.core.cache import cache
             try:

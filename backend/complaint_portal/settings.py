@@ -322,10 +322,7 @@ elif OPENAI_API_KEY and not GOOGLE_API_KEY:
 import sys
 TESTING = (
     'test' in sys.argv or 
-    any('verify_' in arg for arg in sys.argv) or 
-    (SPEECH_PROVIDER == 'OpenAI' and not OPENAI_API_KEY) or
-    (SPEECH_PROVIDER == 'Gemini' and not GOOGLE_API_KEY) or
-    (not OPENAI_API_KEY and not GOOGLE_API_KEY)
+    any('verify_' in arg for arg in sys.argv)
 )
 
 CACHES = {
