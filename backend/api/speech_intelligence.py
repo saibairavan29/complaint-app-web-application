@@ -455,6 +455,14 @@ def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=No
                     prompt
                 ]
             )
+
+            logger.info("=" * 80)
+            logger.info("GEMINI STT RESPONSE")
+            logger.info("Model: %s", stt_model)
+            logger.info("Language Hint: %s", whisper_lang)
+            logger.info(response.text)
+            logger.info("=" * 80)
+
             return response.text.strip()
         except Exception as e:
             last_error = e
@@ -514,6 +522,10 @@ def call_gemini_translation_with_retry(google_key, text):
                     max_output_tokens=1024,
                 )
             )
+            logger.info("=" * 80)
+            logger.info("GEMINI TRANSLATION RESPONSE")
+            logger.info(response.text)
+            logger.info("=" * 80)
             return response.text.strip()
         except Exception as e:
             last_error = e
@@ -740,6 +752,12 @@ def _run_verify_speech_transcription(complaint_id):
             backend_translation = trans_en
             detected_lang = det_lang_name
         else:
+            logger.info("=" * 60)
+    logger.info("speech_provider = %r", speech_provider)
+    logger.info("translation_provider = %r", translation_provider)
+    logger.info("google_key exists = %s", bool(google_key))
+    logger.info("TESTING = %s", is_test_mode)
+    logger.info("=" * 60)
             if speech_provider == 'Gemini' and translation_provider == 'Gemini':
                 try:
                     backend_transcript, backend_translation, detected_lang = call_gemini_joint_stt_and_translation(
