@@ -382,8 +382,8 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             
             # Run Whisper or Fallback simulator
             if is_testing:
-                  logger.info(">>> USING MOCK FALLBACK <<<")
-                  trans, trans_en, det_lang_name = get_mock_fallback_data(language, category)
+                logger.info(">>> USING MOCK FALLBACK <<<")
+                trans, trans_en, det_lang_name = get_mock_fallback_data(language, category)
                 transcript_text = trans
                 translation_text = trans_en
                 detected_language = det_lang_name
@@ -454,10 +454,6 @@ class ComplaintViewSet(viewsets.ModelViewSet):
 
                         from api.speech_intelligence import transcribe_audio, translate_text
 
-                        transcript_text = transcribe_audio(normalized_path, language)
-                        translation_text = translate_text(transcript_text)
-                    else:
-                        from api.speech_intelligence import transcribe_audio, translate_text
                         transcript_text = transcribe_audio(normalized_path, language)
                         translation_text = translate_text(transcript_text)
                 except Exception as e:
