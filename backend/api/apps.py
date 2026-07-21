@@ -27,13 +27,6 @@ class ApiConfig(AppConfig):
                 settings.OPENAI_API_KEY = db_openai_key
                 os.environ['OPENAI_API_KEY'] = db_openai_key
 
-        if not getattr(settings, 'GOOGLE_API_KEY', ''):
-            db_google_key = SystemSetting.get_setting('GOOGLE_API_KEY', '')
-            if db_google_key:
-                settings.GOOGLE_API_KEY = db_google_key
-                os.environ['GOOGLE_API_KEY'] = db_google_key
-                os.environ['GEMINI_API_KEY'] = db_google_key
-
         speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', getattr(settings, 'SPEECH_PROVIDER', 'OpenAI'))
         translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', getattr(settings, 'TRANSLATION_PROVIDER', 'OpenAI'))
         openai_key = getattr(settings, 'OPENAI_API_KEY', '')

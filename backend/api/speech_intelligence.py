@@ -362,6 +362,7 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
     
     for attempt in range(3):
         try:
+            logger.info("Calling Gemini model: %s", stt_model)
             response = client.models.generate_content(
                 model=stt_model,
                 contents=[
@@ -451,6 +452,7 @@ def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=No
             with open(audio_path, 'rb') as f:
                 audio_bytes = f.read()
             
+            logger.info("Calling Gemini model: %s", stt_model)
             response = client.models.generate_content(
                 model=stt_model,
                 contents=[
@@ -516,6 +518,7 @@ def call_gemini_translation_with_retry(google_key, text):
     
     for attempt in range(4):
         try:
+            logger.info("Calling Gemini model: %s", translation_model)
             response = client.models.generate_content(
                 model=translation_model,
                 contents=prompt,
