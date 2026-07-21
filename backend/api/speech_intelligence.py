@@ -1,3 +1,4 @@
+from PIL.Image import logger
 import os
 import wave
 import struct
@@ -371,6 +372,16 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
                     temperature=0.2,
                 )
             )
+            # ---------- DEBUG START ----------
+            logger.info("=" * 80)
+            logger.info("GEMINI JOINT STT DEBUG")
+            logger.info("Model: %s", stt_model)
+            logger.info("Language passed: %s", language_code)
+            logger.info("Audio bytes: %d", len(audio_bytes))
+            logger.info("RAW GEMINI RESPONSE:")
+            logger.info(response.text)
+            logger.info("=" * 80)
+            # ---------- DEBUG END ----------
             
             import json
             data = json.loads(response.text.strip())
