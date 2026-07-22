@@ -794,7 +794,7 @@ export default function Home() {
       }
     } catch (err) {
       console.error("Error generating speech preview:", err);
-      setPreviewError("We could not clearly understand the recording.");
+      setPreviewError(err.message || "We could not clearly understand the recording.");
       setPreviewTranscript("");
       setPreviewTranslation("");
       setPreviewDetectedLanguage("");

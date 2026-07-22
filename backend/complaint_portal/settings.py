@@ -280,6 +280,10 @@ OPENAI_TRANSLATION_MODEL = env('OPENAI_TRANSLATION_MODEL', default='gpt-4o-mini'
 GEMINI_STT_MODEL = env('GEMINI_STT_MODEL', default='gemini-2.0-flash')
 GEMINI_TRANSLATION_MODEL = env('GEMINI_TRANSLATION_MODEL', default='gemini-2.0-flash')
 
+print("=" * 80)
+print("FINAL SETTINGS MODEL =", GEMINI_STT_MODEL)
+print("=" * 80)
+
 
 # Separate API Keys and Providers
 raw_openai_key = env('OPENAI_API_KEY', default='')

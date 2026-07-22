@@ -1,5 +1,112 @@
-from PIL.Image import logger
 import os
+import logging
+import re
+import json
+import traceback
+
+logger = logging.getLogger(__name__)
+
+class SpeechIntelligenceError(Exception):
+    """Custom exception class for Speech Intelligence errors."""
+    pass
+
+def safe_extract_text(response):
+    """
+    Safely extracts text from a google-genai response object.
+    Supports response.text, response.candidates, response.parts, etc.
+    Avoids raising ValueError when response.text doesn't exist.
+    """
+    if not response:
+        return ""
+    # Try accessing response.text directly (catching any ValueError)
+    try:
+        if hasattr(response, 'text') and response.text:
+            return response.text
+    except Exception:
+        pass
+
+    # Inspect candidates list
+    if hasattr(response, 'candidates') and response.candidates:
+        candidate = response.candidates[0]
+        if hasattr(candidate, 'content') and candidate.content:
+            content = candidate.content
+            if hasattr(content, 'parts') and content.parts:
+                part_texts = []
+                for part in content.parts:
+                    if hasattr(part, 'text') and part.text:
+                        part_texts.append(part.text)
+                if part_texts:
+                    return "".join(part_texts)
+
+    # Inspect top-level parts (if any)
+    if hasattr(response, 'parts') and response.parts:
+        part_texts = []
+        for part in response.parts:
+            if hasattr(part, 'text') and part.text:
+                part_texts.append(part.text)
+        if part_texts:
+            return "".join(part_texts)
+
+    return ""
+
+def clean_json_text(text):
+    """
+    If JSON is wrapped inside ```json ... ```, removes the markdown before parsing.
+    """
+    if not text:
+        return ""
+    text_str = text.strip()
+    match = re.search(r'```(?:json)?\s*(.*?)\s*```', text_str, re.DOTALL)
+    if match:
+        return match.group(1).strip()
+    return text_str
+
+def is_valid_json(text):
+    """
+    Validates that the extracted content is valid JSON before calling json.loads().
+    """
+    if not text:
+        return False
+    text = text.strip()
+    if not ((text.startswith('{') and text.endswith('}')) or (text.startswith('[') and text.endswith(']'))):
+        return False
+    try:
+        json.loads(text)
+        return True
+    except ValueError:
+        return False
+
+def log_model_lifecycle(final_model):
+    from api.models import SystemSetting
+    from django.conf import settings
+    import os
+    
+    stt_setting_val = "Not Set"
+    trans_setting_val = "Not Set"
+    try:
+        stt_setting = SystemSetting.objects.filter(key='GEMINI_STT_MODEL').first()
+        if stt_setting:
+            stt_setting_val = stt_setting.value
+    except Exception:
+        pass
+        
+    try:
+        trans_setting = SystemSetting.objects.filter(key='GEMINI_TRANSLATION_MODEL').first()
+        if trans_setting:
+            trans_setting_val = trans_setting.value
+    except Exception:
+        pass
+
+    logger.info("------------------------------------------")
+    logger.info(f"FINAL MODEL SENT TO GOOGLE = {final_model}")
+    logger.info(f"settings.GEMINI_STT_MODEL = {getattr(settings, 'GEMINI_STT_MODEL', 'Not Set')}")
+    logger.info(f"settings.GEMINI_TRANSLATION_MODEL = {getattr(settings, 'GEMINI_TRANSLATION_MODEL', 'Not Set')}")
+    logger.info(f"os.getenv(GEMINI_STT_MODEL) = {os.getenv('GEMINI_STT_MODEL', 'Not Set')}")
+    logger.info(f"os.getenv(GEMINI_TRANSLATION_MODEL) = {os.getenv('GEMINI_TRANSLATION_MODEL', 'Not Set')}")
+    logger.info(f"SystemSetting(GEMINI_STT_MODEL) = {stt_setting_val}")
+    logger.info(f"SystemSetting(GEMINI_TRANSLATION_MODEL) = {trans_setting_val}")
+    logger.info("------------------------------------------")
+
 import wave
 import struct
 import time
@@ -363,6 +470,7 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
     for attempt in range(3):
         try:
             logger.info("Calling Gemini model: %s", stt_model)
+            log_model_lifecycle(stt_model)
             response = client.models.generate_content(
                 model=stt_model,
                 contents=[
@@ -375,39 +483,59 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
                     temperature=0.2,
                 )
             )
-            # ---------- DEBUG START ----------
-            logger.info("=" * 80)
-            logger.info("GEMINI JOINT STT DEBUG")
-            logger.info("Model: %s", stt_model)
-            logger.info("Language passed: %s", language_code)
-            logger.info("Audio bytes: %d", len(audio_bytes))
-            logger.info("RAW GEMINI RESPONSE:")
-            logger.info(response.text)
-            logger.info("=" * 80)
-            logger.info("######## ENTERED GEMINI JOINT FUNCTION ########")
-            # ---------- DEBUG END ----------
+            # Safe text extraction and cleaning (Requirements 1, 2, 3, 4)
+            extracted_text = safe_extract_text(response)
+            cleaned_text = clean_json_text(extracted_text)
             
+            # Validation of JSON string format before parsing (Requirement 5)
+            if not is_valid_json(cleaned_text):
+                tb_summary = traceback.format_exc()
+                candidates_info = getattr(response, 'candidates', None)
+                resp_text_info = None
+                try:
+                    resp_text_info = response.text if hasattr(response, 'text') else None
+                except Exception:
+                    pass
+                
+                # Detailed diagnostic logging on failure (Requirement 6)
+                logger.error(
+                    "JSON validation/parsing failed for Gemini Joint STT/Translation.\n"
+                    f"Model: {stt_model}\n"
+                    f"Response Object: {response}\n"
+                    f"Response Text (safe): {resp_text_info}\n"
+                    f"Candidates: {candidates_info}\n"
+                    f"Traceback: {tb_summary}"
+                )
+                
+                # Do NOT swallow exceptions silently (Requirement 7) and do not retry JSON error (Requirement 9)
+                raise SpeechIntelligenceError(
+                    f"Gemini response content is not valid JSON. Cleaned response: {cleaned_text}"
+                )
+                
             import json
-            data = json.loads(response.text.strip())
+            data = json.loads(cleaned_text)
             
-            # Step 4 JSON schema validation:
+            # JSON schema validation:
             transcript = data.get("transcript")
             english_translation = data.get("english_translation")
             detected_language = data.get("detected_language")
             
             # Verify required fields exist and contain valid truthy string values
             if not transcript or not isinstance(transcript, str) or not transcript.strip():
-                raise ValueError("JSON schema validation failed: 'transcript' is missing, empty, or not a string.")
+                raise SpeechIntelligenceError("JSON schema validation failed: 'transcript' is missing, empty, or not a string.")
             if not english_translation or not isinstance(english_translation, str) or not english_translation.strip():
-                raise ValueError("JSON schema validation failed: 'english_translation' is missing, empty, or not a string.")
+                raise SpeechIntelligenceError("JSON schema validation failed: 'english_translation' is missing, empty, or not a string.")
             if not detected_language or not isinstance(detected_language, str) or not detected_language.strip():
-                raise ValueError("JSON schema validation failed: 'detected_language' is missing, empty, or not a string.")
+                raise SpeechIntelligenceError("JSON schema validation failed: 'detected_language' is missing, empty, or not a string.")
                 
             return (
                 transcript.strip(),
                 english_translation.strip(),
                 detected_language.strip()
             )
+        except SpeechIntelligenceError as e:
+            # Do NOT retry for JSON/validation errors
+            raise e
         except Exception as e:
             last_error = e
             if attempt < len(backoffs):
@@ -420,7 +548,8 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
 
 def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=None):
     """
-    Calls Gemini with inline audio for transcription with exponential backoff.    """
+    Calls Gemini with inline audio for transcription with exponential backoff.
+    """
     from google.genai import types
     client = get_google_client(google_key)
     backoffs = [2, 4, 8]
@@ -453,6 +582,7 @@ def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=No
                 audio_bytes = f.read()
             
             logger.info("Calling Gemini model: %s", stt_model)
+            log_model_lifecycle(stt_model)
             response = client.models.generate_content(
                 model=stt_model,
                 contents=[
@@ -461,14 +591,17 @@ def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=No
                 ]
             )
 
+            # Safe extraction of text according to Requirements 1, 2, 3
+            extracted_text = safe_extract_text(response)
+
             logger.info("=" * 80)
             logger.info("GEMINI STT RESPONSE")
             logger.info("Model: %s", stt_model)
             logger.info("Language Hint: %s", whisper_lang)
-            logger.info(response.text)
+            logger.info(extracted_text)
             logger.info("=" * 80)
 
-            return response.text.strip()
+            return extracted_text.strip()
         except Exception as e:
             last_error = e
             if attempt < len(backoffs):
@@ -519,6 +652,7 @@ def call_gemini_translation_with_retry(google_key, text):
     for attempt in range(4):
         try:
             logger.info("Calling Gemini model: %s", translation_model)
+            log_model_lifecycle(translation_model)
             response = client.models.generate_content(
                 model=translation_model,
                 contents=prompt,
@@ -528,11 +662,14 @@ def call_gemini_translation_with_retry(google_key, text):
                     max_output_tokens=1024,
                 )
             )
+            # Safe extraction of text according to Requirements 1, 2, 3
+            extracted_text = safe_extract_text(response)
+
             logger.info("=" * 80)
             logger.info("GEMINI TRANSLATION RESPONSE")
-            logger.info(response.text)
+            logger.info(extracted_text)
             logger.info("=" * 80)
-            return response.text.strip()
+            return extracted_text.strip()
         except Exception as e:
             last_error = e
             if attempt < len(backoffs):
@@ -663,13 +800,6 @@ def _run_verify_speech_transcription(complaint_id):
         )
         return
  
-    language_map = {
-        'en': 'en', 'hi': 'hi', 'ta': 'ta', 'te': 'te',
-        'mr': 'mr', 'or': 'or', 'bn': 'bn', 'pa': 'pa',
-        'gu': 'gu', 'as': 'as', 'kn': 'kn', 'ml': 'ml'
-    }
-    whisper_lang = language_map.get(complaint.language, None)
- 
     temp_audio_path = None
     normalized_audio_path = None
     start_time_all = time.time()
@@ -678,125 +808,189 @@ def _run_verify_speech_transcription(complaint_id):
     is_test_mode = getattr(settings, 'TESTING', False)
  
     try:
-        temp_dir = tempfile.gettempdir()
-        temp_audio_path = os.path.join(temp_dir, f"complaint_{complaint_id}_original.wav")
-        
-        if not is_mock_url:
-            urllib.request.urlretrieve(audio_url, temp_audio_path)
-            normalized_audio_path = normalize_audio_wav(temp_audio_path)
-            complaint.normalized_audio_url = audio_url.replace("_original", "_normalized")
-            complaint.save()
-        else:
-            normalized_audio_path = temp_audio_path
-            # Write a small placeholder file so that it exists
-            with open(normalized_audio_path, 'wb') as f:
-                f.write(b"RIFF\x24\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00\x80\x3e\x00\x00\x00\x7d\x00\x00\x02\x00\x10\x00data\x00\x00\x00\x00")
-            complaint.normalized_audio_url = "http://demo-normalized-audio.wav"
-            complaint.save()
-    except Exception as e:
-        error_msg = f"Audio download/normalization error: {str(e)}"
-        complaint.transcription_status = 'FAILED'
-        complaint.transcription_error = error_msg
-        complaint.save()
-        SpeechProcessingLog.objects.create(
-            complaint=complaint,
-            attempt_number=attempt,
-            status='FAILED',
-            error_message=error_msg,
-            processing_time_ms=int((time.time() - start_time_all) * 1000)
-        )
-        return
-    # Calculate and save audio duration
-    try:
-        import wave
-        with wave.open(normalized_audio_path or temp_audio_path, 'rb') as wf:
-            frames = wf.getnframes()
-            rate = wf.getframerate()
-            duration_secs = round(frames / float(rate), 1)
-            complaint.audio_duration_seconds = duration_secs
-            complaint.save()
-    except Exception:
-        pass
-
-    speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', getattr(settings, 'SPEECH_PROVIDER', 'Gemini'))
-    translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', getattr(settings, 'TRANSLATION_PROVIDER', 'Gemini'))
-    openai_key = getattr(settings, 'OPENAI_API_KEY', '')
-    google_key = getattr(settings, 'GOOGLE_API_KEY', '')
-    
-    backend_transcript = ""
-    backend_translation = ""
-    language_names = {
-        'en': 'English', 'hi': 'Hindi', 'ta': 'Tamil', 'te': 'Telugu',
-        'mr': 'Marathi', 'or': 'Odia', 'bn': 'Bengali', 'pa': 'Punjabi',
-        'gu': 'Gujarati', 'as': 'Assamese', 'kn': 'Kannada', 'ml': 'Malayalam'
-    }
-    detected_lang = language_names.get(complaint.language, complaint.language)
-    
-    use_mock_fallback = False
-    err_reason = ""
- 
-    # Process transcription and translation
-    try:
-        if is_test_mode:
-            use_mock_fallback = True
-        else:
-            # Validate provider configurations
-            if speech_provider == 'OpenAI' and (not openai_key or openai_key.startswith('GEMINI_')):
-                raise ValueError("Speech provider configuration is invalid: Invalid key format or prefix mismatch for OpenAI.")
-            elif speech_provider == 'Gemini' and not google_key:
-                raise ValueError("Speech provider configuration is invalid: GOOGLE_API_KEY is missing for Gemini.")
-                
-            if translation_provider == 'OpenAI' and (not openai_key or openai_key.startswith('GEMINI_')):
-                raise ValueError("Translation provider configuration is invalid: Invalid key format or prefix mismatch for OpenAI.")
-            elif translation_provider == 'Gemini' and not google_key:
-                raise ValueError("Translation provider configuration is invalid: GOOGLE_API_KEY is missing for Gemini.")
- 
-        if use_mock_fallback:
-            # Deterministic test cases helper for test runners verification
-            trans, trans_en, det_lang_name = get_test_deterministic_mock(complaint.language, complaint.category)
-            backend_transcript = trans
-            backend_translation = trans_en
-            detected_lang = det_lang_name
-        else:
-            if speech_provider == 'Gemini' and translation_provider == 'Gemini':
-                try:
-                    backend_transcript, backend_translation, detected_lang = call_gemini_joint_stt_and_translation(
-                        google_key, normalized_audio_path, complaint.language
-                    )
-                except Exception as e:
-                    # Fallback to legacy sequential model if needed
-                    backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
-                    backend_translation = translate_text(backend_transcript)
-            else:
-                # Call unified speech transcription
-                backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
-                
-                # Call unified text translation
-                backend_translation = translate_text(backend_transcript)
+        try:
+            temp_dir = tempfile.gettempdir()
+            temp_audio_path = os.path.join(temp_dir, f"complaint_{complaint_id}_original.wav")
             
-    except Exception as e:
-        err_reason = str(e)
+            if not is_mock_url:
+                urllib.request.urlretrieve(audio_url, temp_audio_path)
+                normalized_audio_path = normalize_audio_wav(temp_audio_path)
+                complaint.normalized_audio_url = audio_url.replace("_original", "_normalized")
+                complaint.save()
+            else:
+                normalized_audio_path = temp_audio_path
+                # Write a small placeholder file so that it exists
+                with open(normalized_audio_path, 'wb') as f:
+                    f.write(b"RIFF\x24\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00\x80\x3e\x00\x00\x00\x7d\x00\x00\x02\x00\x10\x00data\x00\x00\x00\x00")
+                complaint.normalized_audio_url = "http://demo-normalized-audio.wav"
+                complaint.save()
+        except Exception as e:
+            error_msg = f"Audio download/normalization error: {str(e)}"
+            complaint.transcription_status = 'FAILED'
+            complaint.transcription_error = error_msg
+            complaint.save()
+            SpeechProcessingLog.objects.create(
+                complaint=complaint,
+                attempt_number=attempt,
+                status='FAILED',
+                error_message=error_msg,
+                processing_time_ms=int((time.time() - start_time_all) * 1000)
+            )
+            return
+            
+        # Calculate and save audio duration
+        try:
+            import wave
+            with wave.open(normalized_audio_path or temp_audio_path, 'rb') as wf:
+                frames = wf.getnframes()
+                rate = wf.getframerate()
+                duration_secs = round(frames / float(rate), 1)
+                complaint.audio_duration_seconds = duration_secs
+                complaint.save()
+        except Exception:
+            pass
+
+        speech_provider = SystemSetting.get_setting('SPEECH_PROVIDER', getattr(settings, 'SPEECH_PROVIDER', 'Gemini'))
+        translation_provider = SystemSetting.get_setting('TRANSLATION_PROVIDER', getattr(settings, 'TRANSLATION_PROVIDER', 'Gemini'))
+        openai_key = getattr(settings, 'OPENAI_API_KEY', '')
+        google_key = getattr(settings, 'GOOGLE_API_KEY', '')
+        
+        backend_transcript = ""
+        backend_translation = ""
+        language_names = {
+            'en': 'English', 'hi': 'Hindi', 'ta': 'Tamil', 'te': 'Telugu',
+            'mr': 'Marathi', 'or': 'Odia', 'bn': 'Bengali', 'pa': 'Punjabi',
+            'gu': 'Gujarati', 'as': 'Assamese', 'kn': 'Kannada', 'ml': 'Malayalam'
+        }
+        detected_lang = language_names.get(complaint.language, complaint.language)
+        
+        use_mock_fallback = False
+        err_reason = ""
+     
+        # Process transcription and translation
+        try:
+            if is_test_mode:
+                use_mock_fallback = True
+            else:
+                # Validate provider configurations
+                if speech_provider == 'OpenAI' and (not openai_key or openai_key.startswith('GEMINI_')):
+                    raise ValueError("Speech provider configuration is invalid: Invalid key format or prefix mismatch for OpenAI.")
+                elif speech_provider == 'Gemini' and not google_key:
+                    raise ValueError("Speech provider configuration is invalid: GOOGLE_API_KEY is missing for Gemini.")
+                    
+                if translation_provider == 'OpenAI' and (not openai_key or openai_key.startswith('GEMINI_')):
+                    raise ValueError("Translation provider configuration is invalid: Invalid key format or prefix mismatch for OpenAI.")
+                elif translation_provider == 'Gemini' and not google_key:
+                    raise ValueError("Translation provider configuration is invalid: GOOGLE_API_KEY is missing for Gemini.")
+     
+            if use_mock_fallback:
+                # Deterministic test cases helper for test runners verification
+                trans, trans_en, det_lang_name = get_test_deterministic_mock(complaint.language, complaint.category)
+                backend_transcript = trans
+                backend_translation = trans_en
+                detected_lang = det_lang_name
+            else:
+                if speech_provider == 'Gemini' and translation_provider == 'Gemini':
+                    try:
+                        backend_transcript, backend_translation, detected_lang = call_gemini_joint_stt_and_translation(
+                            google_key, normalized_audio_path, complaint.language
+                        )
+                    except Exception as e:
+                        # Fallback to legacy sequential model if needed
+                        backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
+                        backend_translation = translate_text(backend_transcript)
+                else:
+                    # Call unified speech transcription
+                    backend_transcript = transcribe_audio(normalized_audio_path, complaint.language)
+                    
+                    # Call unified text translation
+                    backend_translation = translate_text(backend_transcript)
+                
+        except Exception as e:
+            err_reason = str(e)
+            duration = int((time.time() - start_time_all) * 1000)
+            
+            # In production, do NOT generate fabricated fallback complaints
+            complaint.transcription_status = 'FAILED'
+            complaint.translation_status = 'FAILED'
+            complaint.transcription_error = "Unable to transcribe audio"
+            complaint.save()
+            
+            SpeechProcessingLog.objects.create(
+                complaint=complaint,
+                attempt_number=attempt,
+                status='FAILED',
+                error_message=f"Transcription failed: {err_reason}",
+                processing_time_ms=duration
+            )
+            
+            SystemErrorLog.objects.create(
+                error_type='speech',
+                message=f"Transcription failed for Complaint {complaint.reference_number}: {err_reason}"
+            )
+            return
+     
         duration = int((time.time() - start_time_all) * 1000)
-        
-        # In production, do NOT generate fabricated fallback complaints
-        complaint.transcription_status = 'FAILED'
-        complaint.translation_status = 'FAILED'
-        complaint.transcription_error = "Unable to transcribe audio"
+     
+        # Clean preview inputs
+        preview_transcript = complaint.transcript or ""
+     
+        # Calculate similarity & verify
+        if use_mock_fallback:
+            verification_score = 1.0
+            verification_result = 'FALLBACK_TRANSLATION'
+            complaint.translation_verification_result = 'FALLBACK_TRANSLATION'
+            complaint.transcript = backend_transcript
+            complaint.original_text = backend_transcript
+            complaint.english_translation = backend_translation
+        else:
+            verification_score = calculate_similarity(preview_transcript, backend_transcript)
+            
+            if verification_score >= 0.90:
+                verification_result = 'VERIFIED'
+                complaint.translation_verification_result = 'VERIFIED'
+            else:
+                verification_result = 'MISMATCH_REPLACED'
+                complaint.translation_verification_result = 'MISMATCH_REPLACED'
+                complaint.transcript = backend_transcript
+                complaint.original_text = backend_transcript
+                complaint.english_translation = backend_translation
+     
+        # Dynamic confidence estimation
+        backend_confidence, backend_translation_confidence = estimate_confidence(
+            backend_transcript, complaint.language, complaint.category
+        )
+        if use_mock_fallback and backend_translation_confidence >= 0.70:
+            backend_confidence = 0.96
+            backend_translation_confidence = 0.93
+    
+        # Save tracking fields
+        complaint.transcript_confidence = backend_confidence
+        complaint.translation_confidence = backend_translation_confidence
+        complaint.speech_processing_duration_ms = duration
+        complaint.translation_language_pair = f"{complaint.language.upper()} -> EN"
+        complaint.detected_language = detected_lang
+        complaint.transcription_status = 'COMPLETED'
+        complaint.translation_status = 'COMPLETED'
+        complaint.last_transcription_attempt = timezone.now()
         complaint.save()
-        
+     
+        # Create SpeechProcessingLog entry
+        msg_suffix = f" (Mock Fallback Applied)" if use_mock_fallback else f" (Similarity: {round(verification_score * 100, 1)}%)"
+        log_err_msg = f"Verification Result: {verification_result}{msg_suffix}"
+        if backend_translation_confidence < 0.70:
+            log_err_msg += f" - Warning: Translation confidence is low ({round(backend_translation_confidence * 100, 1)}%)"
+    
         SpeechProcessingLog.objects.create(
             complaint=complaint,
             attempt_number=attempt,
-            status='FAILED',
-            error_message=f"Transcription failed: {err_reason}",
-            processing_time_ms=duration
+            status='COMPLETED',
+            error_message=log_err_msg,
+            processing_time_ms=duration,
+            verification_score=verification_score,
+            verification_result=verification_result
         )
-        
-        SystemErrorLog.objects.create(
-            error_type='speech',
-            message=f"Transcription failed for Complaint {complaint.reference_number}: {err_reason}"
-        )
-        
+    finally:
         # Clean up local temp files
         for p in [temp_audio_path, normalized_audio_path]:
             if p and os.path.exists(p):
@@ -804,76 +998,6 @@ def _run_verify_speech_transcription(complaint_id):
                     os.remove(p)
                 except:
                     pass
-        return
- 
-    duration = int((time.time() - start_time_all) * 1000)
- 
-    # Clean preview inputs
-    preview_transcript = complaint.transcript or ""
- 
-    # Calculate similarity & verify
-    if use_mock_fallback:
-        verification_score = 1.0
-        verification_result = 'FALLBACK_TRANSLATION'
-        complaint.translation_verification_result = 'FALLBACK_TRANSLATION'
-        complaint.transcript = backend_transcript
-        complaint.original_text = backend_transcript
-        complaint.english_translation = backend_translation
-    else:
-        verification_score = calculate_similarity(preview_transcript, backend_transcript)
-        
-        if verification_score >= 0.90:
-            verification_result = 'VERIFIED'
-            complaint.translation_verification_result = 'VERIFIED'
-        else:
-            verification_result = 'MISMATCH_REPLACED'
-            complaint.translation_verification_result = 'MISMATCH_REPLACED'
-            complaint.transcript = backend_transcript
-            complaint.original_text = backend_transcript
-            complaint.english_translation = backend_translation
- 
-    # Dynamic confidence estimation
-    backend_confidence, backend_translation_confidence = estimate_confidence(
-        backend_transcript, complaint.language, complaint.category
-    )
-    if use_mock_fallback and backend_translation_confidence >= 0.70:
-        backend_confidence = 0.96
-        backend_translation_confidence = 0.93
-
-    # Save tracking fields
-    complaint.transcript_confidence = backend_confidence
-    complaint.translation_confidence = backend_translation_confidence
-    complaint.speech_processing_duration_ms = duration
-    complaint.translation_language_pair = f"{complaint.language.upper()} -> EN"
-    complaint.detected_language = detected_lang
-    complaint.transcription_status = 'COMPLETED'
-    complaint.translation_status = 'COMPLETED'
-    complaint.last_transcription_attempt = timezone.now()
-    complaint.save()
- 
-    # Create SpeechProcessingLog entry
-    msg_suffix = f" (Mock Fallback Applied)" if use_mock_fallback else f" (Similarity: {round(verification_score * 100, 1)}%)"
-    log_err_msg = f"Verification Result: {verification_result}{msg_suffix}"
-    if backend_translation_confidence < 0.70:
-        log_err_msg += f" - Warning: Translation confidence is low ({round(backend_translation_confidence * 100, 1)}%)"
-
-    SpeechProcessingLog.objects.create(
-        complaint=complaint,
-        attempt_number=attempt,
-        status='COMPLETED',
-        error_message=log_err_msg,
-        processing_time_ms=duration,
-        verification_score=verification_score,
-        verification_result=verification_result
-    )
- 
-    # Cleanup local temp files
-    for p in [temp_audio_path, normalized_audio_path]:
-        if p and os.path.exists(p):
-            try:
-                os.remove(p)
-            except:
-                pass
  
  
 def transcribe_and_translate_audio_task(complaint_id):

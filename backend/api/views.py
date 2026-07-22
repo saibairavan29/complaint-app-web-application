@@ -330,10 +330,12 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             return Response({"detail": "No audio file provided."}, status=status.HTTP_400_BAD_REQUEST)
             
         # Save uploaded file to temp file
-        temp_dir = tempfile.gettempdir()
-        temp_audio_path = os.path.join(temp_dir, f"preview_{random.randint(10000, 99999)}.wav")
+        temp_audio_path = None
+        normalized_path = None
         
         try:
+            temp_dir = tempfile.gettempdir()
+            temp_audio_path = os.path.join(temp_dir, f"preview_{random.randint(10000, 99999)}.wav")
             with open(temp_audio_path, 'wb+') as destination:
                 for chunk in audio_file.chunks():
                     destination.write(chunk)
@@ -474,14 +476,6 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             
             duration = int((time.time() - start_time) * 1000)
             
-            # Clean up temp files
-            for p in [temp_audio_path, normalized_path]:
-                if p and os.path.exists(p):
-                    try:
-                        os.remove(p)
-                    except:
-                        pass
-                        
             return Response({
                 "transcript": transcript_text,
                 "english_translation": translation_text,
@@ -498,17 +492,18 @@ class ComplaintViewSet(viewsets.ModelViewSet):
             traceback.print_exc()
             return Response(
                 {
-                    "detail": str(ex)
+                    "detail": f"Preview generation failed: {str(ex)}"
                 },
-                status=500
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-            # Cleanup on main thread error
-            if os.path.exists(temp_audio_path):
-                try:
-                    os.remove(temp_audio_path)
-                except:
-                    pass
-            return Response({"detail": f"Preview generation failed: {str(ex)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        finally:
+            # Clean up temp files always executes using finally
+            for p in [temp_audio_path, normalized_path]:
+                if p and os.path.exists(p):
+                    try:
+                        os.remove(p)
+                    except Exception as clean_err:
+                        logger.warning(f"Failed to delete temp file {p}: {clean_err}")
 
     @action(detail=False, methods=['post'], url_path='bulk-reprocess')
     def bulk_reprocess(self, request):
