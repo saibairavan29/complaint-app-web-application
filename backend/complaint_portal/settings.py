@@ -277,8 +277,8 @@ OPENAI_STT_MODEL = env('OPENAI_STT_MODEL', default='gpt-4o-mini-transcribe')
 OPENAI_TRANSLATION_MODEL = env('OPENAI_TRANSLATION_MODEL', default='gpt-4o-mini')
 
 # Gemini Model Configuration
-GEMINI_STT_MODEL = env('GEMINI_STT_MODEL', default='gemini-2.0-flash')
-GEMINI_TRANSLATION_MODEL = env('GEMINI_TRANSLATION_MODEL', default='gemini-2.0-flash')
+GEMINI_STT_MODEL = env('GEMINI_STT_MODEL', default='gemini-2.5-flash')
+GEMINI_TRANSLATION_MODEL = env('GEMINI_TRANSLATION_MODEL', default='gemini-2.5-flash')
 
 print("=" * 80)
 print("FINAL SETTINGS MODEL =", GEMINI_STT_MODEL)

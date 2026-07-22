@@ -440,7 +440,7 @@ def call_gemini_joint_stt_and_translation(google_key, audio_path, language_code)
     from google.genai import types
     client = get_google_client(google_key)
     
-    stt_model = getattr(settings, 'GEMINI_STT_MODEL', 'gemini-2.0-flash')
+    stt_model = getattr(settings, 'GEMINI_STT_MODEL', 'gemini-2.5-flash')
     if stt_model.startswith('models/'):
         stt_model = stt_model[len('models/'):]
         
@@ -555,7 +555,7 @@ def call_gemini_transcription_with_retry(google_key, audio_path, whisper_lang=No
     backoffs = [2, 4, 8]
     last_error = None
     
-    stt_model = getattr(settings, 'GEMINI_STT_MODEL', 'gemini-2.0-flash')
+    stt_model = getattr(settings, 'GEMINI_STT_MODEL', 'gemini-2.5-flash')
     # Ensure correct model name format for new SDK (strip leading 'models/' if present)
     if stt_model.startswith('models/'):
         stt_model = stt_model[len('models/'):]
@@ -623,7 +623,7 @@ def call_gemini_translation_with_retry(google_key, text):
     backoffs = [2, 4, 8]
     last_error = None
     
-    translation_model = getattr(settings, 'GEMINI_TRANSLATION_MODEL', 'gemini-2.0-flash')
+    translation_model = getattr(settings, 'GEMINI_TRANSLATION_MODEL', 'gemini-2.5-flash')
     # Ensure correct model name format for new SDK (strip leading 'models/' if present)
     if translation_model.startswith('models/'):
         translation_model = translation_model[len('models/'):]
